@@ -5,131 +5,86 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Name</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <div class="header-left">
-                <h1 class="name">Your Name</h1>
-                <p class="name-zh">你的名字</p>
-            </div>
-            <nav class="nav-icons">
-                <a href="mailto:your@email.com" class="nav-icon" aria-label="Email">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                        <polyline points="22,6 12,13 2,6"></polyline>
-                    </svg>
-                </a>
-                <a href="/notes" class="nav-icon" aria-label="Notes">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                    </svg>
-                </a>
-                <a href="https://github.com/legallchaperone" class="nav-icon" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                    </svg>
-                </a>
-                <a href="https://twitter.com/yourusername" class="nav-icon" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                    </svg>
-                </a>
-                <button id="theme-toggle" class="nav-icon theme-btn" aria-label="Toggle theme">
-                    <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="5"></circle>
-                        <line x1="12" y1="1" x2="12" y2="3"></line>
-                        <line x1="12" y1="21" x2="12" y2="23"></line>
-                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                        <line x1="1" y1="12" x2="3" y2="12"></line>
-                        <line x1="21" y1="12" x2="23" y2="12"></line>
-                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                    </svg>
-                    <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                    </svg>
-                </button>
-                <div class="lang-toggle">
-                    <button id="lang-en" class="lang-btn active">EN</button>
-                    <span class="lang-sep">/</span>
-                    <button id="lang-zh" class="lang-btn">中</button>
+    <div class="wrapper-masthead">
+        <div class="container">
+            <header class="masthead clearfix">
+                <div class="site-info">
+                    <h1 class="site-name"><a href="/">Your Name</a></h1>
+                    <p class="site-description">你的名字</p>
                 </div>
-            </nav>
-        </header>
+                <nav>
+                    <a href="mailto:your@email.com"><i class="svg-icon email"></i></a>
+                    <a href="/notes"><i class="svg-icon notes"></i></a>
+                    <a href="https://github.com/legallchaperone"><i class="svg-icon github"></i></a>
+                    <a href="https://twitter.com/yourusername"><i class="svg-icon twitter"></i></a>
+                    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+                        <i class="svg-icon sun"></i>
+                        <i class="svg-icon moon"></i>
+                    </button>
+                    <span class="lang-toggle">
+                        <button id="lang-en" class="lang-btn active">EN</button>
+                        <span>/</span>
+                        <button id="lang-zh" class="lang-btn">中</button>
+                    </span>
+                </nav>
+            </header>
+        </div>
+    </div>
 
-        <!-- Main Content -->
-        <main class="main">
-            <!-- About Section -->
-            <section class="about">
-                <img src="https://via.placeholder.com/180" alt="Profile photo" class="avatar">
-                <div class="about-text">
-                    <p data-en="I am a researcher exploring the frontiers of AI and LLM agents." data-zh="我是一名研究员，探索 AI 和 LLM Agent 的前沿。">I am a researcher exploring the frontiers of AI and LLM agents.</p>
-                    <p data-en="I study agents." data-zh="我研究智能体。">I study agents.</p>
-                </div>
-            </section>
+    <div id="main" role="main" class="container">
+        <article class="page">
+            <h1>About</h1>
+            <div class="entry">
+                <p><img style="float:right; padding-left:10px" src="https://via.placeholder.com/180" width="180" height="180" alt="Profile photo"></p>
 
-            <!-- Selected Work -->
-            <section class="section">
-                <h2 class="section-title" data-en="Selected Work" data-zh="精选工作">Selected Work</h2>
-                <ul class="work-list">
-                    <li class="work-item">
-                        <p class="work-title">Project One</p>
-                        <p class="work-meta" data-en="Description of your first project and what it does." data-zh="你的第一个项目的描述及其功能。">Description of your first project and what it does.</p>
-                        <p class="work-links">
-                            <a href="#">paper</a> |
-                            <a href="#">repo</a> |
-                            <a href="#">demo</a>
-                        </p>
+                <p data-en="I am a researcher at [Your Institution]." data-zh="我是 [你的机构] 的研究员。">I am a researcher at [Your Institution].</p>
+
+                <p data-en="I study agents." data-zh="我研究智能体。">I study agents.</p>
+
+                <h1 id="selected-work" data-en="Selected Work" data-zh="精选工作">Selected Work</h1>
+
+                <ul>
+                    <li>
+                        <p><strong>Project One</strong><br>
+                        Your Name, Collaborator Name<br>
+                        <span data-en="Conference/Journal 2024" data-zh="会议/期刊 2024">Conference/Journal 2024</span><br>
+                        <a href="#">paper</a> |
+                        <a href="#">repo</a> |
+                        <a href="#">demo</a></p>
                     </li>
-                    <li class="work-item">
-                        <p class="work-title">Project Two</p>
-                        <p class="work-meta" data-en="Description of your second project goes here." data-zh="在此填写你的第二个项目描述。">Description of your second project goes here.</p>
-                        <p class="work-links">
-                            <a href="#">paper</a> |
-                            <a href="#">repo</a>
-                        </p>
+                    <li>
+                        <p><strong>Project Two</strong><br>
+                        Your Name, Another Collaborator<br>
+                        <span data-en="Conference 2023" data-zh="会议 2023">Conference 2023</span><br>
+                        <a href="#">paper</a> |
+                        <a href="#">repo</a></p>
                     </li>
-                    <li class="work-item">
-                        <p class="work-title">Project Three</p>
-                        <p class="work-meta" data-en="Description of your third project goes here." data-zh="在此填写你的第三个项目描述。">Description of your third project goes here.</p>
-                        <p class="work-links">
-                            <a href="#">paper</a> |
-                            <a href="#">repo</a>
-                        </p>
+                    <li>
+                        <p><strong>Project Three</strong><br>
+                        Your Name<br>
+                        <span data-en="Workshop 2023" data-zh="研讨会 2023">Workshop 2023</span><br>
+                        <a href="#">paper</a> |
+                        <a href="#">repo</a></p>
                     </li>
                 </ul>
-            </section>
 
-            <!-- Notes Section -->
-            <section class="section">
-                <h2 class="section-title" data-en="Notes" data-zh="笔记">Notes</h2>
-                <ul class="notes-list">
+                <h1 id="notes" data-en="Notes" data-zh="笔记">Notes</h1>
+                <ul>
                     <li><a href="/notes" data-en="Research Notes — My digital garden of LLM, Agent, and AI research." data-zh="研究笔记 — 我的 LLM、Agent 和 AI 研究数字花园。">Research Notes — My digital garden of LLM, Agent, and AI research.</a></li>
                 </ul>
-            </section>
 
-            <!-- Recent Readings -->
-            <section class="section">
-                <h2 class="section-title" data-en="Recent Readings" data-zh="最近阅读">Recent Readings</h2>
-                <ul class="readings-list">
+                <h1 id="recent-readings" data-en="Recent Readings" data-zh="最近阅读">Recent Readings</h1>
+                <ul>
                     <li>Book Title One (Author)</li>
                     <li>Book Title Two (Author)</li>
                     <li>Book Title Three (Author)</li>
                 </ul>
-            </section>
-        </main>
 
-        <!-- Footer -->
-        <footer class="footer">
-            <p data-en="(last updated: Jan 2026)" data-zh="（最后更新：2026年1月）">(last updated: Jan 2026)</p>
-        </footer>
+                <p data-en="(last updated: Jan 2026)" data-zh="（最后更新：2026年1月）">(last updated: Jan 2026)</p>
+            </div>
+        </article>
     </div>
 
     <script src="script.js"></script>
