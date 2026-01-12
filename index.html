@@ -1,8 +1,158 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Coming Soon</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Wenxin Chen · Academic CV</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body></body>
+<body>
+    <div class="wrapper-masthead">
+        <div class="container">
+            <header class="masthead clearfix">
+                <div class="site-info">
+                    <h1 class="site-name"><a href="/">Wenxin Chen</a></h1>
+                    <p class="site-description" data-en="Undergraduate researcher in EEG, vision-language models, and affective computing." data-zh="专注于 EEG、视觉-语言模型与情感计算的本科生科研。"></p>
+                </div>
+                <nav>
+                    <a href="mailto:simonchen24@sjtu.edu.cn" title="Email"><span class="svg-icon email"></span></a>
+                    <a href="https://github.com/legallchaperone" title="GitHub"><span class="svg-icon github"></span></a>
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+                        <span class="svg-icon sun"></span>
+                        <span class="svg-icon moon"></span>
+                    </button>
+                    <div class="lang-toggle" aria-label="Language">
+                        <button class="lang-btn" id="lang-en" type="button">EN</button>
+                        <span>/</span>
+                        <button class="lang-btn" id="lang-zh" type="button">中文</button>
+                    </div>
+                </nav>
+            </header>
+        </div>
+    </div>
+
+    <main class="container page">
+        <section class="entry">
+            <div class="hero">
+                <h2 data-en="Contact" data-zh="联系方式"></h2>
+                <p class="contact-line">
+                    <span data-en="Shanghai Jiao Tong University · UM-SJTU JI" data-zh="上海交通大学 · 密西根学院"></span>
+                    <span class="dot">•</span>
+                    <a href="mailto:simonchen24@sjtu.edu.cn">simonchen24@sjtu.edu.cn</a>
+                    <span class="dot">•</span>
+                    <a href="https://github.com/legallchaperone">github.com/legallchaperone</a>
+                </p>
+            </div>
+        </section>
+
+        <section class="entry">
+            <h2 data-en="Education" data-zh="教育背景"></h2>
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <h3 data-en="Shanghai Jiao Tong University · UM-SJTU Joint Institute" data-zh="上海交通大学 · 密西根学院"></h3>
+                        <p class="muted" data-en="B.Eng. in Electronic & Computer Engineering" data-zh="工学学士：电子与计算机工程（ECE）"></p>
+                    </div>
+                    <span class="time" data-en="Sep 2024 – Jun 2028" data-zh="2024.09 – 2028.06"></span>
+                </div>
+                <ul>
+                    <li>
+                        <span class="badge" data-en="GPA 3.79/4.0" data-zh="GPA 3.79/4.0"></span>
+                        <span class="badge" data-en="Top 10%" data-zh="排名 前 10%"></span>
+                    </li>
+                    <li data-en="Key coursework: Data Structures & Algorithms (A), Honors Mathematics (A+), Linear Algebra." data-zh="核心课程：数据结构与算法（A）、荣誉数学（A+）、线性代数。"></li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="entry">
+            <h2 data-en="Publications" data-zh="学术成果"></h2>
+            <ul class="list-compact">
+                <li>
+                    <p data-en="Wei Gu, Luo Tianming*, Qiran Zhang*, Mohan Ye*, Xiao Shen*, Wenxin Chen*, Yunhuan Li, Yichen Zhang, Jing Hong, Bao-liang Lu, Wei-Long Zheng. \"CerebraGloss: Instruction-Tuning a Large Vision-Language Model for Fine-Grained Clinical EEG Interpretation.\" Under Review. (* equal contribution)" data-zh="魏固，罗天明*，张麒麟*，叶默涵*，沈晓*，陈文新*，李云欢，张逸辰，洪静，卢宝亮，郑伟龙。\"CerebraGloss：面向细粒度临床 EEG 解读的视觉-语言模型指令微调。\" 审稿中。（* 共同贡献）"></p>
+                </li>
+                <li>
+                    <p data-en="Wei Gu, Wenxin Chen, Bao-liang Lu, Wei-Long Zheng. \"BrainTune: An Artifact-Aware Meta-Contrastive Framework for Fast and Lasting Personalization of EEG Emotion Models.\" Under Review." data-zh="魏固，陈文新，卢宝亮，郑伟龙。\"BrainTune：面向 EEG 情绪模型的伪迹感知元对比快速与持久个性化框架。\" 审稿中。"></p>
+                </li>
+            </ul>
+        </section>
+
+        <section class="entry">
+            <h2 data-en="Research Experience" data-zh="科研经历"></h2>
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <h3 data-en="BCMI Lab · Shanghai Jiao Tong University" data-zh="上海交通大学 BCMI 实验室"></h3>
+                        <p class="muted" data-en="Undergraduate Research Assistant" data-zh="本科科研助理"></p>
+                    </div>
+                    <span class="time" data-en="May 2025 – Dec 2025" data-zh="2025.05 – 2025.12"></span>
+                </div>
+                <div class="project">
+                    <h4 data-en="Project 1: CerebraGloss (Clinical EEG Open-Ended Interpretation)" data-zh="项目一：CerebraGloss（临床 EEG 开放式解读 / LVLM 指令学习）"></h4>
+                    <ul>
+                        <li data-en="Goal: expand EEG waveform interpretation from classification to interactive, open-ended outputs (description, QA, MCQ)." data-zh="项目目标：将临床 EEG “波形判读”从传统分类扩展为可生成、可交互的开放式输出（描述/问答/选择题等）。"></li>
+                        <li data-en="Built EEG-text instruction data engine for multi-task prompts and evaluation." data-zh="构建 EEG-文本指令数据引擎，生成多任务指令样本并支持系统评测。"></li>
+                        <li data-en="Standardized training/evaluation pipeline with reproducible splits and ablations." data-zh="统一训练与评测流程，完成对比实验与消融分析。"></li>
+                        <li data-en="Curated CerebraGloss-Bench for open-ended interpretation benchmarks." data-zh="整理 CerebraGloss-Bench 评测集用于衡量开放式解读能力。"></li>
+                    </ul>
+                </div>
+                <div class="project">
+                    <h4 data-en="Project 2: BrainTune (Real-time EEG Emotion Recognition)" data-zh="项目二：BrainTune（EEG 情绪识别实时落地 + 快速/持久个性化）"></h4>
+                    <ul>
+                        <li data-en="Goal: reduce offline preprocessing and enable rapid, durable personalization." data-zh="项目目标：减少离线预处理依赖，实现少量校准下的快速与持久个性化。"></li>
+                        <li data-en="Designed real-time compatible data stream and feature pipeline." data-zh="设计实时兼容的数据流与特征处理链路。"></li>
+                        <li data-en="Integrated artifact-aware modeling with meta-contrastive strategy." data-zh="结合 artifact-aware 建模与 meta-contrastive 策略提升适配效率。"></li>
+                        <li data-en="Organized evaluations across datasets/sessions for latency and stability." data-zh="多数据集、多 session 设置下系统化验证实时性与稳定性。"></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="entry">
+            <h2 data-en="Campus Experience" data-zh="校园经历"></h2>
+            <ul class="list-compact">
+                <li data-en="Teaching Assistant, Honors Mathematics (Fall 2025): support 90+ students in Q&A sessions." data-zh="荣誉数学课程助教（2025 秋）：负责答疑与学习支持，服务 90+ 学生。"></li>
+                <li data-en="Student Union (Tech Dept.): organized Linux install party and VSCode workshops." data-zh="交大密西根学院学生会（技术部）：组织 Linux 安装派对、VSCode Workshop 等技术向活动。"></li>
+            </ul>
+        </section>
+
+        <section class="entry">
+            <h2 data-en="Awards" data-zh="荣誉奖项"></h2>
+            <ul class="list-compact">
+                <li>
+                    <span data-en="University Physics Competition (UPC) · Team Gold" data-zh="大学生物理竞赛（UPC）· 团体金奖"></span>
+                    <span class="time" data-en="Fall 2024" data-zh="2024 秋"></span>
+                </li>
+                <li>
+                    <span data-en="Outstanding Member, Student Union Tech Dept." data-zh="学生会技术部优秀成员"></span>
+                    <span class="time" data-en="2024 – 2025" data-zh="2024 – 2025 学年"></span>
+                </li>
+            </ul>
+        </section>
+
+        <section class="entry">
+            <h2 data-en="Skills" data-zh="个人技能"></h2>
+            <div class="skills">
+                <div>
+                    <h4 data-en="Programming" data-zh="编程语言"></h4>
+                    <p data-en="Python/PyTorch, C/C++, MATLAB, LaTeX" data-zh="Python/PyTorch，C/C++，MATLAB，LaTeX"></p>
+                </div>
+                <div>
+                    <h4 data-en="Tools" data-zh="工程工具"></h4>
+                    <p data-en="Git, Linux, Bash, Docker" data-zh="Git，Linux，Bash，Docker"></p>
+                </div>
+                <div>
+                    <h4 data-en="AI & ML" data-zh="AI 与机器学习"></h4>
+                    <p data-en="Agents, Transformers, Diffusion Models" data-zh="Agents，Transformer，Diffusion Model"></p>
+                </div>
+                <div>
+                    <h4 data-en="English" data-zh="英语"></h4>
+                    <p data-en="TOEFL 115/120 (Speaking 29/30)" data-zh="TOEFL 115/120（口语 29/30）"></p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
 </html>

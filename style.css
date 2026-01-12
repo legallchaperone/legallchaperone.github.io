@@ -39,6 +39,8 @@ footer, header, hgroup, menu, nav, section {
     --link-hover: #c6613f;
     --border: #e8e6dc;
     --selection-bg: rgba(204, 120, 92, 0.5);
+    --card-bg: #ffffff;
+    --shadow: rgba(20, 20, 20, 0.06);
 }
 
 [data-theme="dark"] {
@@ -50,6 +52,8 @@ footer, header, hgroup, menu, nav, section {
     --link-hover: #e8906f;
     --border: #3d3d3a;
     --selection-bg: rgba(217, 119, 87, 0.4);
+    --card-bg: #1c1c1a;
+    --shadow: rgba(0, 0, 0, 0.35);
 }
 
 /* Base */
@@ -297,6 +301,7 @@ nav a:hover {
     margin-left: 8px;
     font-size: 14px;
     color: var(--text-light);
+    gap: 4px;
 }
 
 .lang-btn {
@@ -324,6 +329,7 @@ nav a:hover {
 
 .entry {
     line-height: 1.6;
+    margin-bottom: 32px;
 }
 
 .entry ul {
@@ -377,4 +383,99 @@ nav a:hover {
 /* Language transition */
 [data-en], [data-zh] {
     transition: opacity 0.15s ease;
+}
+
+.hero {
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+}
+
+.contact-line {
+    margin-top: 6px;
+    color: var(--text-light);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+
+.dot {
+    color: var(--border);
+}
+
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    box-shadow: 0 12px 30px var(--shadow);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.muted {
+    color: var(--text-light);
+    margin-top: 4px;
+}
+
+.time {
+    color: var(--text-light);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(217, 119, 87, 0.12);
+    color: var(--text-dark);
+    font-size: 13px;
+    margin-right: 8px;
+}
+
+.project {
+    margin-top: 16px;
+}
+
+.list-compact {
+    padding-left: 20px;
+}
+
+.skills {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+}
+
+.skills h4 {
+    margin-top: 0;
+}
+
+section.entry h2 {
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 18px;
+}
+
+@media screen and (max-width: 640px) {
+    .contact-line {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .dot {
+        display: none;
+    }
 }
