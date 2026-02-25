@@ -1,0 +1,516 @@
+/* =====================================================
+   Wenxin Chen — Personal Site
+   Anthropic brand palette · Poppins + Lora
+   ===================================================== */
+
+:root {
+  --dark:       #141413;
+  --light:      #faf9f5;
+  --mid-gray:   #b0aea5;
+  --light-gray: #e8e6dc;
+  --orange:     #d97757;
+  --blue:       #6a9bcc;
+  --green:      #788c5d;
+
+  --font-head: 'Poppins', Arial, sans-serif;
+  --font-body: 'Lora', Georgia, serif;
+
+  --toc-w:     170px;
+  --profile-w: 200px;
+  --gap:       3.5rem;
+}
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--light);
+  color: var(--dark);
+  font-family: var(--font-body);
+  font-size: 19px;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Page grid ── */
+.page {
+  display: grid;
+  grid-template-columns: var(--toc-w) 1fr var(--profile-w);
+  grid-template-areas: "toc main profile";
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  gap: var(--gap);
+  min-height: 100vh;
+}
+
+/* =====================================================
+   LEFT — Table of Contents
+   ===================================================== */
+
+.toc {
+  grid-area: toc;
+  position: sticky;
+  top: 3.5rem;
+  align-self: start;
+  height: fit-content;
+}
+
+.toc-label {
+  font-family: var(--font-head);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--mid-gray);
+  margin-bottom: 0.9rem;
+}
+
+.toc ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.toc-link {
+  display: block;
+  font-family: var(--font-head);
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--mid-gray);
+  text-decoration: none;
+  padding: 0.28rem 0.6rem;
+  border-left: 2px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+  line-height: 1.5;
+}
+
+.toc-link:hover {
+  color: var(--dark);
+  border-left-color: var(--light-gray);
+}
+
+.toc-link.active {
+  color: var(--orange);
+  border-left-color: var(--orange);
+  font-weight: 500;
+}
+
+/* =====================================================
+   CENTER — Main Content
+   ===================================================== */
+
+.content {
+  grid-area: main;
+  min-width: 0;
+}
+
+/* Sections */
+section {
+  padding-bottom: 3.5rem;
+  margin-bottom: 3.5rem;
+  border-bottom: 1px solid var(--light-gray);
+}
+
+section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 5rem;
+}
+
+/* Headings */
+h1, h2, h3 {
+  font-family: var(--font-head);
+  color: var(--dark);
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.2rem;
+}
+
+section > h2 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 2px solid var(--orange);
+  display: inline-block;
+}
+
+/* Intro paragraphs */
+.intro {
+  font-size: 0.97rem;
+  line-height: 1.85;
+  color: var(--dark);
+  max-width: 62ch;
+  margin-bottom: 0.9rem;
+}
+
+.intro strong { font-weight: 600; }
+.intro em { font-style: italic; }
+
+/* ── Education ── */
+.edu-block {
+  margin-top: 2.2rem;
+}
+
+.edu-block h2 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 2px solid var(--orange);
+  display: inline-block;
+}
+
+.edu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--light-gray);
+}
+
+.edu-item:last-child { border-bottom: none; }
+
+.edu-school {
+  display: block;
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--dark);
+}
+
+.edu-degree {
+  display: block;
+  font-size: 0.83rem;
+  color: var(--mid-gray);
+  margin-top: 0.1rem;
+}
+
+.edu-date {
+  font-family: var(--font-head);
+  font-size: 0.78rem;
+  color: var(--mid-gray);
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding-top: 0.1rem;
+}
+
+/* ── Badge ── */
+.badge {
+  display: inline-block;
+  font-family: var(--font-head);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--orange);
+  background: rgba(217, 119, 87, 0.09);
+  border: 1px solid rgba(217, 119, 87, 0.28);
+  border-radius: 4px;
+  padding: 0.18rem 0.48rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+
+/* ── Publications ── */
+.pub-item {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.pub-title {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--dark);
+  margin-bottom: 0.3rem;
+  line-height: 1.45;
+}
+
+.pub-authors {
+  font-size: 0.82rem;
+  color: var(--mid-gray);
+  line-height: 1.55;
+  margin-bottom: 0.15rem;
+}
+
+.pub-venue {
+  font-size: 0.8rem;
+  font-style: italic;
+  color: var(--mid-gray);
+}
+
+/* ── Experience ── */
+.exp-item {
+  margin-bottom: 2rem;
+}
+
+.exp-item:last-child { margin-bottom: 0; }
+
+.exp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.65rem;
+}
+
+.exp-org {
+  display: block;
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--dark);
+}
+
+.exp-role {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--mid-gray);
+  font-style: italic;
+  margin-top: 0.1rem;
+}
+
+.exp-date {
+  font-family: var(--font-head);
+  font-size: 0.78rem;
+  color: var(--mid-gray);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.sub-project {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.55rem;
+}
+
+.sub-name {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--dark);
+}
+
+/* ── Bullets ── */
+.bullets {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.bullets li {
+  font-size: 0.88rem;
+  line-height: 1.72;
+  color: var(--dark);
+  padding-left: 1.1rem;
+  position: relative;
+}
+
+.bullets li::before {
+  content: '–';
+  position: absolute;
+  left: 0;
+  color: var(--mid-gray);
+}
+
+code {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 0.84em;
+  background: var(--light-gray);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+}
+
+/* ── Projects ── */
+.proj-item {
+  margin-bottom: 2rem;
+}
+
+.proj-title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.proj-name {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--dark);
+}
+
+.proj-link {
+  font-family: var(--font-head);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--orange);
+  text-decoration: none;
+}
+
+.proj-link:hover { text-decoration: underline; }
+
+.proj-desc {
+  font-size: 0.88rem;
+  line-height: 1.75;
+  color: var(--dark);
+  max-width: 60ch;
+  margin-bottom: 0.7rem;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 0.7rem;
+}
+
+.tag {
+  font-family: var(--font-head);
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--mid-gray);
+  background: var(--light-gray);
+  border-radius: 4px;
+  padding: 0.12rem 0.48rem;
+  letter-spacing: 0.02em;
+}
+
+/* ── Skills ── */
+.skills-table {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.skill-row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 1rem;
+  align-items: baseline;
+}
+
+.skill-key {
+  font-family: var(--font-head);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--mid-gray);
+  letter-spacing: 0.02em;
+}
+
+.skill-val {
+  font-size: 0.88rem;
+  color: var(--dark);
+}
+
+/* ── Awards ── */
+.awards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.award-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  font-size: 0.9rem;
+}
+
+.award-date {
+  font-family: var(--font-head);
+  font-size: 0.78rem;
+  color: var(--mid-gray);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* =====================================================
+   RIGHT — Profile Sidebar
+   ===================================================== */
+
+.profile {
+  grid-area: profile;
+  position: sticky;
+  top: 3.5rem;
+  align-self: start;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.avatar {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--light-gray);
+  margin-bottom: 0.9rem;
+}
+
+.profile-name {
+  font-family: var(--font-head);
+  font-size: 0.97rem;
+  font-weight: 600;
+  color: var(--dark);
+  margin-bottom: 0.3rem;
+}
+
+.profile-sub {
+  font-family: var(--font-head);
+  font-size: 0.76rem;
+  color: var(--mid-gray);
+  line-height: 1.6;
+}
+
+.links {
+  margin-top: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  width: 100%;
+}
+
+.link-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-head);
+  font-size: 0.78rem;
+  color: var(--dark);
+  text-decoration: none;
+  padding: 0.4rem 0.65rem;
+  border: 1px solid var(--light-gray);
+  border-radius: 7px;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.link-item:hover {
+  border-color: var(--orange);
+  color: var(--orange);
+}
+
+.link-item svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  opacity: 0.65;
+}

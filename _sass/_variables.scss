@@ -5,6 +5,13 @@
 
 @use "sass:color";
 
+// Claude/Anthropic palette
+$terracotta-color: #cc5f3d !default;
+$terracotta-color-dark: #a84831 !default;
+$slate-color: #1a1a1a !default;
+$cream-color: #ffffff !default;
+$cream-color-dark: #f5f4f0 !default;
+
 // Colors
 $red-color: #ff3636 !default;
 $red-color-dark: #b71c1c !default;
@@ -34,7 +41,7 @@ $black-color: #000000 !default;
 
 // Theme colors
 
-$code-bg-color-light: rgba($purple-color, 0.05);
+$code-bg-color-light: rgba($terracotta-color, 0.08);
 $code-bg-color-dark: #2c3237 !default;
 
 // Font awesome location

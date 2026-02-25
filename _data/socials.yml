@@ -2,4 +2,4 @@
 # the socials will be displayed in the order they are defined here
 cv_pdf: /assets/pdf/cv.pdf # path to your CV PDF file
 email: cwx@umich.edu # your email address
-github: legallchaperone # your GitHub username
+github_username: legallchaperone # your GitHub username

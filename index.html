@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wenxin Chen</title>
+  <meta name="description" content="Wenxin Chen — undergraduate researcher at SJTU-UM Joint Institute, working on brain-computer interfaces and vision-language models." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="page">
+
+    <!-- ── LEFT: sticky table of contents ── -->
+    <nav class="toc" aria-label="Page sections">
+      <p class="toc-label">On this page</p>
+      <ul>
+        <li><a href="#about"        class="toc-link">About</a></li>
+        <li><a href="#publications" class="toc-link">Publications</a></li>
+        <li><a href="#research"     class="toc-link">Research</a></li>
+        <li><a href="#projects"     class="toc-link">Projects</a></li>
+        <li><a href="#teaching"     class="toc-link">Teaching</a></li>
+        <li><a href="#skills"       class="toc-link">Skills</a></li>
+        <li><a href="#awards"       class="toc-link">Awards</a></li>
+      </ul>
+    </nav>
+
+    <!-- ── CENTER: main scrollable content ── -->
+    <main class="content">
+
+      <!-- About -------------------------------------------------- -->
+      <section id="about">
+        <h1>Wenxin Chen</h1>
+
+        <p class="intro">
+          I am an undergraduate at the <strong>SJTU–UM Joint Institute</strong> studying
+          Electrical and Computer Engineering (GPA&nbsp;3.78/4.0, Top&nbsp;10%),
+          transferring to the <strong>University of Michigan, Ann Arbor</strong> for
+          Computer Science in Fall&nbsp;2026. My research interests lie in the foundations
+          of language models — particularly understanding when and why targeted training
+          strategies (such as instruction tuning, reinforcement learning, and distillation)
+          enable small models to close the gap with much larger ones.
+        </p>
+        <p class="intro">
+          This interest grew from my work on <strong>CerebraGloss</strong> (ICLR 2026),
+          where we showed a 3B instruction-tuned model outperforming GPT-4o by 10 points
+          on domain-specific reasoning, and continues through my work on meta-learning
+          under distribution shift (<strong>BrainTune</strong>, under review). I serve as
+          a Teaching Assistant for Honors Mathematics and am building deeper foundations
+          in optimization and statistical learning theory.
+        </p>
+
+        <div class="edu-block">
+          <h2>Education</h2>
+
+          <div class="edu-item">
+            <div>
+              <span class="edu-school">University of Michigan, Ann Arbor</span>
+              <span class="edu-degree">B.S.E., Computer Science</span>
+            </div>
+            <span class="edu-date">Sep 2026 – May 2028</span>
+          </div>
+
+          <div class="edu-item">
+            <div>
+              <span class="edu-school">Shanghai Jiao Tong University – University of Michigan Joint Institute</span>
+              <span class="edu-degree">B.Eng., Electrical and Computer Engineering &nbsp;·&nbsp; GPA 3.78/4.0 · Top 10%</span>
+            </div>
+            <span class="edu-date">Sep 2024 – Aug 2028</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Publications ------------------------------------------ -->
+      <section id="publications">
+        <h2>Publications</h2>
+
+        <div class="pub-item">
+          <span class="badge">ICLR 2026</span>
+          <div class="pub-body">
+            <p class="pub-title">
+              CerebraGloss: Instruction-Tuning a Large Vision-Language Model for
+              Fine-Grained Clinical EEG Interpretation
+            </p>
+            <p class="pub-authors">
+              W. Gu, T. Luo, Q. Zhang, M. Ye, X. Shen, <strong>W. Chen</strong>,
+              Y. Li, Y. Zhang, J. Hong, B.-L. Lu, W.-L. Zheng
+            </p>
+            <p class="pub-venue">
+              International Conference on Learning Representations, 2026
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Research ---------------------------------------------- -->
+      <section id="research">
+        <h2>Research Experience</h2>
+
+        <div class="exp-item">
+          <div class="exp-header">
+            <div>
+              <span class="exp-org">BCMI Lab, Shanghai Jiao Tong University</span>
+              <span class="exp-role">Undergraduate Research Assistant · Advisor: Prof. Wei-Long Zheng</span>
+            </div>
+            <span class="exp-date">May – Dec 2025</span>
+          </div>
+
+          <div class="sub-project">
+            <span class="sub-name">CerebraGloss</span>
+            <span class="badge">ICLR 2026</span>
+          </div>
+          <ul class="bullets">
+            <li>Implemented the instruction-following data generation pipeline; engineered one-shot prompts for Gemini 2.5 Flash to synthesize diverse EEG–text samples (description, complex MCQ, multi-turn conversation), producing the 94K dataset for Stage 2 instruction tuning.</li>
+            <li>Contributed to the unified training, inference, and evaluation framework; assisted with debugging and validating experimental protocols.</li>
+            <li>Demonstrated that targeted instruction tuning on domain-specific data enables a 3B model to surpass GPT-4o by 10 points on MCQ accuracy, highlighting the gap between scale and task-specific supervision.</li>
+          </ul>
+
+          <div class="sub-project" style="margin-top: 1.1rem;">
+            <span class="sub-name">BrainTune</span>
+            <span class="badge" style="color: var(--mid-gray); background: rgba(176,174,165,0.1); border-color: rgba(176,174,165,0.3);">Under Review</span>
+          </div>
+          <ul class="bullets">
+            <li>Extended the framework to two additional EEG datasets, validating cross-dataset generalization under strong individual variability and cross-session settings.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Projects ---------------------------------------------- -->
+      <section id="projects">
+        <h2>Projects</h2>
+
+        <div class="proj-item">
+          <div class="proj-title-row">
+            <span class="proj-name">NanoBrain</span>
+            <a class="proj-link" href="https://github.com/legallchaperone/nanobrain" target="_blank" rel="noopener">↗ GitHub</a>
+          </div>
+          <p class="proj-desc">
+            A minimal CLI agent that combines OpenCode (running in Docker) with a
+            credit-assignment memory system. The agent learns which memories were useful
+            by tracking their contribution to successful outcomes, so its context
+            self-optimizes over time.
+          </p>
+          <div class="tags">
+            <span class="tag">Claude</span>
+            <span class="tag">Docker</span>
+            <span class="tag">Node.js</span>
+            <span class="tag">MCP</span>
+            <span class="tag">Memory Systems</span>
+          </div>
+          <ul class="bullets">
+            <li>Implements credit-assignment scoring (exponential moving average) to rank memories by their contribution to task success; low-performers are pruned during consolidation cycles.</li>
+            <li>Two operational modes: prompt-level strategy adjustments via <code>STRATEGY.md</code>, and direct code self-modification of memory lifecycle logic.</li>
+            <li><code>/good</code> and <code>/bad</code> commands let users directly reinforce or penalize memory contributions; full history is git-tracked for rollback.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Teaching ---------------------------------------------- -->
+      <section id="teaching">
+        <h2>Teaching &amp; Service</h2>
+
+        <div class="exp-item">
+          <div class="exp-header">
+            <div>
+              <span class="exp-org">Teaching Assistant — Honors Mathematics II</span>
+              <span class="exp-role">SJTU-UM Joint Institute</span>
+            </div>
+            <span class="exp-date">Fall 2025</span>
+          </div>
+          <ul class="bullets">
+            <li>Selected as TA for an advanced calculus/analysis course; held office hours supporting 90+ students.</li>
+            <li>Held weekly recitation sessions and developed course materials including slides in LaTeX.</li>
+            <li>Responsible for homework and exam grading.</li>
+          </ul>
+        </div>
+
+        <div class="exp-item">
+          <div class="exp-header">
+            <div>
+              <span class="exp-org">Student Union, Technology Division</span>
+              <span class="exp-role">SJTU-UM Joint Institute</span>
+            </div>
+            <span class="exp-date">2024 – 2025</span>
+          </div>
+          <ul class="bullets">
+            <li>Organized technical workshops (Linux, VSCode). Received the <strong>Outstanding Member</strong> award.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Skills ------------------------------------------------- -->
+      <section id="skills">
+        <h2>Skills</h2>
+        <div class="skills-table">
+          <div class="skill-row">
+            <span class="skill-key">Languages</span>
+            <span class="skill-val">Python, PyTorch, C/C++, MATLAB, LaTeX</span>
+          </div>
+          <div class="skill-row">
+            <span class="skill-key">Tools</span>
+            <span class="skill-val">Git, Linux, Bash, Docker, HuggingFace Transformers</span>
+          </div>
+          <div class="skill-row">
+            <span class="skill-key">ML / AI</span>
+            <span class="skill-val">LLM Instruction Tuning, Vision-Language Models, Transformer Architectures</span>
+          </div>
+          <div class="skill-row">
+            <span class="skill-key">Communication</span>
+            <span class="skill-val">TOEFL 115/120 (Speaking 29/30)</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Awards ------------------------------------------------- -->
+      <section id="awards">
+        <h2>Honors &amp; Awards</h2>
+        <div class="awards-list">
+          <div class="award-row">
+            <span>Team Gold Medal, University Physics Competition (UPC)</span>
+            <span class="award-date">Fall 2024</span>
+          </div>
+          <div class="award-row">
+            <span>Outstanding Member, Student Union Technology Division</span>
+            <span class="award-date">2024 – 2025</span>
+          </div>
+        </div>
+      </section>
+
+    </main><!-- /.content -->
+
+    <!-- ── RIGHT: static profile card ── -->
+    <aside class="profile">
+      <img src="assets/img/24_photo.jpg" alt="Wenxin Chen" class="avatar" />
+      <h2 class="profile-name">Wenxin Chen</h2>
+      <p class="profile-sub">SJTU-UM Joint Institute</p>
+      <p class="profile-sub">→ UMich CS, Fall 2026</p>
+
+      <nav class="links">
+        <a href="mailto:cwx@umich.edu" class="link-item">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="16" height="12" rx="2"/><path d="M2 7l8 5 8-5"/></svg>
+          cwx@umich.edu
+        </a>
+        <a href="https://github.com/legallchaperone" class="link-item" target="_blank" rel="noopener">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 0C4.477 0 0 4.477 0 10c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.605-3.369-1.342-3.369-1.342-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0110 4.836a9.59 9.59 0 012.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C17.138 18.163 20 14.418 20 10 20 4.477 15.523 0 10 0z" clip-rule="evenodd"/></svg>
+          GitHub
+        </a>
+        <a href="assets/pdf/cv.pdf" class="link-item" target="_blank">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h8l4 4v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2z"/><path d="M12 4v4h4M8 13v-4m0 4l-2-2m2 2l2-2"/></svg>
+          Curriculum Vitae
+        </a>
+        <!-- Add your notes link below when ready -->
+        <!-- <a href="YOUR_NOTES_URL" class="link-item" target="_blank" rel="noopener">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h12v12H4z"/><path d="M7 8h6M7 11h4"/></svg>
+          Notes
+        </a> -->
+      </nav>
+    </aside>
+
+  </div><!-- /.page -->
+
+  <script>
+    // Highlight active TOC link as user scrolls
+    const sections = document.querySelectorAll('section[id]');
+    const links    = document.querySelectorAll('.toc-link');
+
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          links.forEach(l => l.classList.remove('active'));
+          const a = document.querySelector(`.toc-link[href="#${e.target.id}"]`);
+          if (a) a.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-15% 0px -75% 0px' });
+
+    sections.forEach(s => io.observe(s));
+  </script>
+
+</body>
+</html>
