@@ -1,5 +1,3 @@
----
----
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,18 +19,38 @@
     <h1 class="blog-index-title">Blog</h1>
     <p class="blog-index-desc">Notes on research, math, and things I'm learning.</p>
 
-    {% if site.posts.size > 0 %}
-    <ul class="blog-post-list">
-      {% for post in site.posts %}
-      <li class="blog-post-item">
-        <a href="{{ post.url | relative_url }}" class="blog-post-link">{{ post.title }}</a>
-        <span class="blog-post-date">{{ post.date | date: "%b %-d, %Y" }}</span>
-      </li>
-      {% endfor %}
+    <ul class="blog-post-list" id="post-list">
+      <li style="color:var(--mid-gray);font-family:var(--font-head);font-size:.85rem;padding:.85rem 0">Loading…</li>
     </ul>
-    {% else %}
-    <p class="blog-empty">No posts yet — check back soon.</p>
-    {% endif %}
   </div>
+
+  <script>
+    function fmtDate(str) {
+      const d = new Date(str + 'T12:00:00');
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    fetch('/blog/posts.json')
+      .then(r => r.json())
+      .then(posts => {
+        const list = document.getElementById('post-list');
+        if (!posts.length) {
+          list.innerHTML = '<li class="blog-empty">No posts yet — check back soon.</li>';
+          return;
+        }
+        list.innerHTML = posts
+          .sort((a, b) => b.date.localeCompare(a.date))
+          .map(p => `
+            <li class="blog-post-item">
+              <a href="/blog/post.html?f=${encodeURIComponent(p.file)}" class="blog-post-link">${p.title}</a>
+              <span class="blog-post-date">${fmtDate(p.date)}</span>
+            </li>`)
+          .join('');
+      })
+      .catch(() => {
+        document.getElementById('post-list').innerHTML =
+          '<li class="blog-empty">No posts yet — check back soon.</li>';
+      });
+  </script>
 </body>
 </html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Post — Wenxin Chen</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/marked@13/marked.min.js"></script>
+</head>
+<body>
+  <div class="blog-wrap">
+    <nav class="blog-nav">
+      <a href="/" class="blog-back">← Wenxin Chen</a>
+      <span class="blog-nav-sep">/</span>
+      <a href="/blog/" class="blog-back">Blog</a>
+    </nav>
+
+    <article id="post-container">
+      <p style="color:var(--mid-gray);font-family:var(--font-head);font-size:.85rem">Loading…</p>
+    </article>
+
+    <footer class="blog-footer">
+      <a href="/blog/" class="blog-back">← All posts</a>
+    </footer>
+  </div>
+
+  <script>
+    function fmtDate(str) {
+      const d = new Date(str + 'T12:00:00');
+      return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    }
+
+    const params = new URLSearchParams(location.search);
+    const reqFile = params.get('f');
+
+    if (!reqFile) { location.href = '/blog/'; }
+
+    // Load manifest first so we only serve files that are explicitly listed
+    fetch('/blog/posts.json')
+      .then(r => r.json())
+      .then(posts => {
+        const meta = posts.find(p => p.file === reqFile);
+        if (!meta) { location.href = '/blog/'; return; }
+
+        document.title = meta.title + ' — Wenxin Chen';
+
+        return fetch('/blog/posts/' + encodeURIComponent(meta.file))
+          .then(r => { if (!r.ok) throw new Error(); return r.text(); })
+          .then(md => {
+            document.getElementById('post-container').innerHTML = `
+              <h1 class="blog-post-title">${meta.title}</h1>
+              <p class="blog-post-meta">${fmtDate(meta.date)}</p>
+              <div class="blog-post-content">${marked.parse(md)}</div>`;
+          });
+      })
+      .catch(() => {
+        document.getElementById('post-container').innerHTML =
+          '<p style="color:var(--mid-gray)">Post not found.</p>';
+      });
+  </script>
+</body>
+</html>
