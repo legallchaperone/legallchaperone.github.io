@@ -514,3 +514,224 @@ code {
   flex-shrink: 0;
   opacity: 0.65;
 }
+
+/* =====================================================
+   BLOG — Listing & Post pages
+   ===================================================== */
+
+.blog-wrap {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 3rem 2rem 5rem;
+}
+
+.blog-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 3rem;
+}
+
+.blog-nav-sep {
+  color: var(--light-gray);
+  font-family: var(--font-head);
+  font-size: 0.82rem;
+}
+
+.blog-back {
+  font-family: var(--font-head);
+  font-size: 0.82rem;
+  color: var(--mid-gray);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.blog-back:hover { color: var(--orange); }
+
+/* Index page */
+.blog-index-title {
+  font-family: var(--font-head);
+  font-size: 1.9rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+
+.blog-index-desc {
+  font-size: 0.9rem;
+  color: var(--mid-gray);
+  margin-bottom: 2.5rem;
+  font-family: var(--font-head);
+}
+
+.blog-post-list {
+  list-style: none;
+}
+
+.blog-post-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--light-gray);
+}
+
+.blog-post-item:first-child { border-top: 1px solid var(--light-gray); }
+
+.blog-post-link {
+  font-family: var(--font-head);
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--dark);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.blog-post-link:hover { color: var(--orange); }
+
+.blog-post-date {
+  font-family: var(--font-head);
+  font-size: 0.76rem;
+  color: var(--mid-gray);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.blog-empty {
+  font-size: 0.9rem;
+  color: var(--mid-gray);
+  font-family: var(--font-head);
+}
+
+/* Individual post */
+.blog-post-title {
+  font-size: 1.9rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+
+.blog-post-meta {
+  font-family: var(--font-head);
+  font-size: 0.78rem;
+  color: var(--mid-gray);
+  margin-bottom: 2.5rem;
+}
+
+.blog-post-content {
+  font-size: 0.97rem;
+  line-height: 1.85;
+}
+
+.blog-post-content p          { margin-bottom: 1.2rem; }
+.blog-post-content h2         { font-family: var(--font-head); font-size: 1.2rem; font-weight: 600; margin: 2rem 0 0.8rem; }
+.blog-post-content h3         { font-family: var(--font-head); font-size: 1rem; font-weight: 600; margin: 1.5rem 0 0.6rem; }
+.blog-post-content a          { color: var(--orange); text-underline-offset: 3px; }
+.blog-post-content ul,
+.blog-post-content ol         { padding-left: 1.5rem; margin-bottom: 1.2rem; }
+.blog-post-content li         { margin-bottom: 0.35rem; line-height: 1.75; }
+.blog-post-content blockquote { border-left: 3px solid var(--orange); padding-left: 1rem; color: var(--mid-gray); margin: 1.5rem 0; }
+.blog-post-content pre        { background: var(--light-gray); padding: 1rem 1.25rem; border-radius: 6px; overflow-x: auto; margin-bottom: 1.2rem; }
+.blog-post-content pre code   { background: none; padding: 0; font-size: 0.85em; }
+.blog-post-content img        { max-width: 100%; border-radius: 6px; margin: 1rem 0; }
+
+.blog-footer {
+  margin-top: 4rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--light-gray);
+}
+
+@media (max-width: 640px) {
+  .blog-wrap { padding: 2rem 1.25rem 4rem; }
+  .blog-post-title,
+  .blog-index-title { font-size: 1.5rem; }
+}
+
+/* =====================================================
+   RESPONSIVE — Tablet & Mobile
+   ===================================================== */
+
+/* Tablet (≤ 900px): hide TOC, two-column layout */
+@media (max-width: 900px) {
+  .page {
+    grid-template-columns: 1fr var(--profile-w);
+    grid-template-areas: "main profile";
+    gap: 2.5rem;
+  }
+  .toc {
+    display: none;
+  }
+}
+
+/* Mobile (≤ 640px): single column, profile on top */
+@media (max-width: 640px) {
+  .page {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "profile"
+      "main";
+    padding: 1.75rem 1.25rem;
+    gap: 2rem;
+  }
+  .toc {
+    display: none;
+  }
+
+  /* Profile card becomes a horizontal strip */
+  .profile {
+    position: static;
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+    gap: 1rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--light-gray);
+    flex-wrap: wrap;
+  }
+
+  .profile > .avatar {
+    width: 72px;
+    height: 72px;
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+
+  .profile-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .profile-name {
+    margin-bottom: 0.15rem;
+  }
+
+  .links {
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 0.4rem;
+    margin-top: 0.85rem;
+  }
+
+  .link-item {
+    flex: 0 1 auto;
+  }
+
+  h1 {
+    font-size: 1.7rem;
+  }
+
+  .edu-item,
+  .exp-header,
+  .award-row {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .edu-date,
+  .exp-date,
+  .award-date {
+    white-space: normal;
+  }
+}

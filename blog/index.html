@@ -1,0 +1,38 @@
+---
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog — Wenxin Chen</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div class="blog-wrap">
+    <nav class="blog-nav">
+      <a href="/" class="blog-back">← Wenxin Chen</a>
+    </nav>
+
+    <h1 class="blog-index-title">Blog</h1>
+    <p class="blog-index-desc">Notes on research, math, and things I'm learning.</p>
+
+    {% if site.posts.size > 0 %}
+    <ul class="blog-post-list">
+      {% for post in site.posts %}
+      <li class="blog-post-item">
+        <a href="{{ post.url | relative_url }}" class="blog-post-link">{{ post.title }}</a>
+        <span class="blog-post-date">{{ post.date | date: "%b %-d, %Y" }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="blog-empty">No posts yet — check back soon.</p>
+    {% endif %}
+  </div>
+</body>
+</html>
