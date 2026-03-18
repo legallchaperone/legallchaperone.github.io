@@ -10,8 +10,6 @@
   --light-gray: #e8e6dc;
   --orange:     #d97757;
   --blue:       #6a9bcc;
-  --green:      #788c5d;
-
   --font-head: 'Poppins', Arial, sans-serif;
   --font-body: 'Lora', Georgia, serif;
 
@@ -19,6 +17,10 @@
   --profile-w: 200px;
   --gap:       3.5rem;
 }
+
+/* ── Language toggle visibility ── */
+.lang-en .zh { display: none !important; }
+.lang-zh .en { display: none !important; }
 
 /* ── Reset ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -96,6 +98,8 @@ body {
   color: var(--orange);
   border-left-color: var(--orange);
   font-weight: 500;
+  background: rgba(217, 119, 87, 0.07);
+  border-radius: 0 4px 4px 0;
 }
 
 /* =====================================================
@@ -139,9 +143,8 @@ section > h2 {
   font-weight: 600;
   letter-spacing: 0.01em;
   margin-bottom: 1.5rem;
-  padding-bottom: 0.45rem;
-  border-bottom: 2px solid var(--orange);
-  display: inline-block;
+  padding-left: 0.75rem;
+  border-left: 3px solid var(--orange);
 }
 
 /* Intro paragraphs */
@@ -165,9 +168,8 @@ section > h2 {
   font-size: 1.05rem;
   font-weight: 600;
   margin-bottom: 1rem;
-  padding-bottom: 0.45rem;
-  border-bottom: 2px solid var(--orange);
-  display: inline-block;
+  padding-left: 0.75rem;
+  border-left: 3px solid var(--orange);
 }
 
 .edu-item {
@@ -220,6 +222,13 @@ section > h2 {
   white-space: nowrap;
   flex-shrink: 0;
   align-self: flex-start;
+}
+
+/* ── Badge neutral variant ── */
+.badge-neutral {
+  color: var(--mid-gray);
+  background: rgba(176, 174, 165, 0.10);
+  border-color: rgba(176, 174, 165, 0.30);
 }
 
 /* ── Publications ── */
@@ -386,8 +395,8 @@ code {
   font-weight: 500;
   color: var(--mid-gray);
   background: var(--light-gray);
-  border-radius: 4px;
-  padding: 0.12rem 0.48rem;
+  border-radius: 100px;
+  padding: 0.12rem 0.55rem;
   letter-spacing: 0.02em;
 }
 
@@ -462,7 +471,7 @@ code {
   height: 140px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid var(--light-gray);
+  box-shadow: 0 0 0 3px var(--light), 0 0 0 5px var(--orange), 0 6px 20px rgba(0, 0, 0, 0.10);
   margin-bottom: 0.9rem;
 }
 
@@ -506,6 +515,11 @@ code {
 .link-item:hover {
   border-color: var(--orange);
   color: var(--orange);
+  background: rgba(217, 119, 87, 0.06);
+}
+
+.link-item:hover svg {
+  opacity: 1;
 }
 
 .link-item svg {
@@ -513,6 +527,29 @@ code {
   height: 14px;
   flex-shrink: 0;
   opacity: 0.65;
+}
+
+/* ── Language toggle button ── */
+.lang-toggle {
+  font-family: var(--font-head);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--orange);
+  background: rgba(217, 119, 87, 0.08);
+  border: 1px solid rgba(217, 119, 87, 0.25);
+  border-radius: 6px;
+  padding: 0.3rem 0.75rem;
+  cursor: pointer;
+  margin-top: 0.8rem;
+  transition: background 0.15s ease, border-color 0.15s ease;
+  width: fit-content;
+  align-self: center;
+}
+
+.lang-toggle:hover {
+  background: rgba(217, 119, 87, 0.15);
+  border-color: var(--orange);
 }
 
 /* =====================================================
@@ -662,6 +699,10 @@ code {
   .toc {
     display: none;
   }
+  .profile {
+    padding-left: 1.5rem;
+    border-left: 1px solid var(--light-gray);
+  }
 }
 
 /* Mobile (≤ 640px): single column, profile on top */
@@ -681,6 +722,8 @@ code {
   /* Profile card becomes a horizontal strip */
   .profile {
     position: static;
+    padding-left: 0;
+    border-left: none;
     flex-direction: row;
     align-items: center;
     text-align: left;
