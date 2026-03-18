@@ -40,23 +40,23 @@
             I am an undergraduate at the <strong>SJTU–UM Joint Institute</strong> studying
             Electrical and Computer Engineering (GPA&nbsp;3.78/4.0, Top&nbsp;10%),
             transferring to the <strong>University of Michigan, Ann Arbor</strong> for
-            Computer Science in Fall&nbsp;2026. My research interests lie in the foundations
-            of language models — particularly understanding when and why targeted training
-            strategies (such as instruction tuning, reinforcement learning, and distillation)
-            enable small models to close the gap with much larger ones.
+            Computer Science in Fall&nbsp;2026. I am broadly interested in how learned
+            representations can support <strong>grounded, adaptive behavior</strong> —
+            connecting perception to action through structured internal models of the world.
           </p>
           <p class="intro">
-            This interest grew from my work on <strong>CerebraGloss</strong> (ICLR 2026),
-            where we showed a 3B instruction-tuned model outperforming GPT-4o by 10 points
-            on domain-specific reasoning, and continues through my work on meta-learning
-            under distribution shift (<strong>BrainTune</strong>, under review). I serve as
-            a Teaching Assistant for Honors Mathematics and am building deeper foundations
-            in optimization and statistical learning theory.
+            My recent work probes the limits of what targeted supervision can do for small
+            models: in <strong>CerebraGloss</strong> (ICLR 2026), instruction-tuning on
+            domain-specific neural-signal data let a 3B model outperform GPT-4o by 10 points
+            on clinical EEG reasoning, showing that <strong>task-specific supervision can
+            substitute for scale</strong>. This raises a question I find central to embodied
+            systems: what internal representations does a model need to act reliably under
+            partial observability — and how efficiently can they be acquired?
           </p>
           <p class="intro">
-            I am also broadly interested in <strong>agent reasoning, agent memory, and
-            continual learning</strong> — how autonomous systems can accumulate, organize,
-            and selectively retain knowledge over extended interactions. I am open to
+            I am particularly drawn to <strong>world models and continual learning</strong> —
+            how an agent builds, updates, and leverages a predictive model of its environment
+            to plan over long horizons and generalize across distribution shift. I am open to
             <strong>internship and research assistant opportunities</strong>.
           </p>
         </div>
@@ -311,16 +311,32 @@
     (function () {
       const root = document.documentElement;
       const btn  = document.getElementById('langToggle');
+
+      // Initialise from localStorage (explicit set for both branches)
       const saved = localStorage.getItem('lang');
       if (saved === 'zh') {
         root.className = 'lang-zh';
         root.lang = 'zh';
+      } else {
+        root.className = 'lang-en';
+        root.lang = 'en';
       }
-      btn.addEventListener('click', function () {
+
+      function toggle() {
         const isEn = root.classList.contains('lang-en');
         root.className = isEn ? 'lang-zh' : 'lang-en';
-        root.lang = isEn ? 'zh' : 'en';
+        root.lang      = isEn ? 'zh'      : 'en';
         localStorage.setItem('lang', isEn ? 'zh' : 'en');
+      }
+
+      // Button click
+      btn.addEventListener('click', toggle);
+
+      // Keyboard shortcut: press L (not inside an input/textarea)
+      document.addEventListener('keydown', function (e) {
+        const tag = e.target.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+        if (e.key === 'l' || e.key === 'L') toggle();
       });
     })();
   </script>
