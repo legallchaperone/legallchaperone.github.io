@@ -18,35 +18,17 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: amirpourmand/al-folio:v0.16.3
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
 
-      - name: Install system deps 🛠️
+      - name: Install site gems 💎
         run: |
-          sudo apt-get update
-          sudo apt-get install -y imagemagick libmagickwand-dev
-
-      - name: Setup Ruby 💎
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "3.3"
-
-      - name: Install bundler and dependencies 📦
-        run: |
-          gem install bundler -v "~> 2.5"
-          # Gemfile.lock is locked to bundler 4.0.7 which is incompatible — regenerate
           rm -f Gemfile.lock
           bundle config set --local path 'vendor/bundle'
           bundle install --jobs 4 --retry 3
-
-      - name: Setup Python 🐍
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.13"
-
-      - name: Install Python deps 🐍
-        run: pip3 install --upgrade nbconvert
 
       - name: Build Jekyll site 🔧
         env:
