@@ -16,37 +16,27 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    container:
-      image: amirpourmand/al-folio:v0.16.3
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v4
-
-      - name: Install site gems 💎
-        run: |
-          rm -f Gemfile.lock
-          bundle config set --local path 'vendor/bundle'
-          bundle install --jobs 4 --retry 3
-
-      - name: Build Jekyll site 🔧
-        env:
-          JEKYLL_ENV: production
-        run: bundle exec jekyll build
-
-      - name: Upload artifact 📦
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: _site
-
   deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    needs: build
     steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Stage static site 📁
+        run: |
+          mkdir _staging
+          cp index.html style.css favicon.ico _staging/
+          cp -r assets _staging/assets
+          cp -r blog _staging/blog
+
+      - name: Upload artifact 📦
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _staging
+
       - name: Deploy to GitHub Pages 🚀
         id: deployment
         uses: actions/deploy-pages@v4
