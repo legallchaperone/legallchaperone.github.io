@@ -19,4 +19,12 @@ latest_posts:
   enabled: false
 ---
 
-I am a rising senior transferring to the University of Michigan, Ann Arbor to study Computer Science and Engineering in Fall 2026, currently in my second year at the SJTU-UM Joint Institute. My research interests lie in large language model instruction tuning, efficient training of small language models, and improving reasoning capabilities in language models. I am broadly interested in machine learning and natural language processing.
+I am currently studying at the SJTU-UM Joint Institute, Shanghai Jiao Tong University, majoring in Electrical and Computer Engineering (GPA 3.78/4.0), and will be pursuing a B.S.E. in Computer Science at the University of Michigan, Ann Arbor starting Fall 2026. My core interests include but are not limited to Human Brain and Consciousness, VLM, VLA, World Model, LLM Fine-tuning, and Reinforcement Learning.
+
+I am currently open to internship and research assistant opportunities.
+
+---
+
+我目前就读于上海交通大学密西根学院，主修电子与计算机工程（GPA 3.78/4.0），将于 2026 年秋季赴密歇根大学安娜堡分校攻读计算机科学本科双学位。我的核心兴趣包括但不限于 Human Brain and Consciousness, VLM, VLA, World Model, LLM Fine-tuning, and Reinforcement Learning。
+
+我目前开放实习与研究助理机会。
