@@ -4,18 +4,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - "assets/**"
-      - "_sass/**"
-      - "_scripts/**"
-      - "**.bib"
-      - "**.html"
-      - "**.js"
-      - "**.liquid"
-      - "**/*.md"
-      - "**.yml"
-      - "Gemfile"
-      - "Gemfile.lock"
   workflow_dispatch:
 
 permissions:
@@ -33,33 +21,36 @@ jobs:
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
+
       - name: Setup Ruby 💎
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: "3.3.5"
-          bundler-cache: true
+          ruby-version: "3.3"
+
+      - name: Install bundler and dependencies 📦
+        run: |
+          gem install bundler -v "~> 2.5"
+          # Gemfile.lock is locked to bundler 4.0.7 which is incompatible — regenerate
+          rm -f Gemfile.lock
+          bundle config set --local path 'vendor/bundle'
+          bundle install --jobs 4 --retry 3
+
       - name: Setup Python 🐍
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-          cache: "pip"
-      - name: Update _config.yml ⚙️
-        uses: fjogeleit/yaml-update-action@main
-        with:
-          commitChange: false
-          valueFile: "_config.yml"
-          propertyPath: "giscus.repo"
-          value: ${{ github.repository }}
-      - name: Install and Build 🔧
+
+      - name: Install system deps 🛠️
         run: |
-          sudo apt-get update && sudo apt-get install -y imagemagick
+          sudo apt-get update
+          sudo apt-get install -y imagemagick
           pip3 install --upgrade nbconvert
-          export JEKYLL_ENV=production
-          bundle exec jekyll build
-      - name: Purge unused CSS 🧹
-        run: |
-          npm install -g purgecss
-          purgecss -c purgecss.config.js
+
+      - name: Build Jekyll site 🔧
+        env:
+          JEKYLL_ENV: production
+        run: bundle exec jekyll build
+
       - name: Upload artifact 📦
         uses: actions/upload-pages-artifact@v3
         with:
