@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PhD Big Tech Jobs</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <div>
+          <h1>PhD Big Tech Hiring Intelligence</h1>
+          <p>美国大厂 PhD 应届 · 按岗位浏览各公司要求</p>
+        </div>
+        <div class="meta-row" id="meta-row"></div>
+      </div>
+    </header>
+
+    <div class="tabs-wrap">
+      <nav class="role-tabs" id="role-tabs" aria-label="岗位分类"></nav>
+    </div>
+
+    <main class="main">
+      <section id="role-view">
+        <div id="role-header"></div>
+        <div id="role-roadmap"></div>
+        <div class="grid-label" id="grid-label"></div>
+        <div class="company-grid" id="company-grid"></div>
+      </section>
+
+      <section class="stats-section" id="stats-section">
+        <div class="section-head">
+          <h2>岗位热度概览</h2>
+          <p id="stats-desc"></p>
+        </div>
+        <div id="stats-bars"></div>
+      </section>
+    </main>
+
+    <script src="data/phd-jobs.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
