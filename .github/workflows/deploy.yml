@@ -31,6 +31,7 @@ jobs:
           cp index.html style.css favicon.ico _staging/
           cp -r assets _staging/assets
           cp -r blog _staging/blog
+          cp -r phd _staging/phd
 
       - name: Upload artifact 📦
         uses: actions/upload-pages-artifact@v3
