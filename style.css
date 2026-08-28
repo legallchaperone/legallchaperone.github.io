@@ -59,6 +59,10 @@ body {
   top: 3.5rem;
   align-self: start;
   height: fit-content;
+  /* Grid items default to min-width:auto; without this the horizontal pill
+     strip on mobile forces the grid wider than the device and the browser
+     zooms the whole page out to fit. */
+  min-width: 0;
 }
 
 .toc-label {
