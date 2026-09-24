@@ -415,18 +415,23 @@ section > h2 {
   flex-shrink: 0;
 }
 
-.sub-project {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.55rem;
+#research .exp-item {
+  margin: 0;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--light-gray);
 }
 
-.sub-name {
-  font-family: var(--font-head);
-  font-weight: 600;
-  font-size: 0.88rem;
-  color: var(--dark);
+#research .exp-item:last-child {
+  border-bottom: none;
+}
+
+#research .exp-header {
+  margin-bottom: 0;
+}
+
+#research .exp-role {
+  font-style: normal;
+  margin-top: 0.3rem;
 }
 
 /* ── Bullets ── */
