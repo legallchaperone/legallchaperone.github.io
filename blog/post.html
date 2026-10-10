@@ -10,6 +10,9 @@
   <link rel="icon" href="/favicon.ico" type="image/x-icon" />
   <link rel="stylesheet" href="/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/marked@13/marked.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 </head>
 <body>
   <div class="blog-wrap">
@@ -51,10 +54,30 @@
         return fetch('/blog/posts/' + encodeURIComponent(meta.file))
           .then(r => { if (!r.ok) throw new Error(); return r.text(); })
           .then(md => {
-            document.getElementById('post-container').innerHTML = `
+            // Pull math out before Markdown parsing so marked doesn't touch
+            // underscores/backslashes inside it; put it back HTML-escaped and
+            // let KaTeX render it. $$...$$ = display, \(...\) = inline.
+            const math = [];
+            const protectedMd = md.replace(/\$\$[\s\S]+?\$\$|\\\([\s\S]+?\\\)/g, m => {
+              math.push(m);
+              return '@@MATH' + (math.length - 1) + '@@';
+            });
+            const esc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            const html = marked.parse(protectedMd).replace(/@@MATH(\d+)@@/g, (_, i) => esc(math[i]));
+            const container = document.getElementById('post-container');
+            container.innerHTML = `
               <h1 class="blog-post-title">${meta.title}</h1>
               <p class="blog-post-meta">${fmtDate(meta.date)}</p>
-              <div class="blog-post-content">${marked.parse(md)}</div>`;
+              <div class="blog-post-content">${html}</div>`;
+            if (window.renderMathInElement) {
+              renderMathInElement(container, {
+                delimiters: [
+                  { left: '$$', right: '$$', display: true },
+                  { left: '\\(', right: '\\)', display: false }
+                ],
+                throwOnError: false
+              });
+            }
           });
       })
       .catch(() => {
