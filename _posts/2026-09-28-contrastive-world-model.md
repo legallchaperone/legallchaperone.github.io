@@ -4,6 +4,7 @@ title: "Contrastive World Model"
 date: 2026-09-28
 description: "Paper notes on Contrastive World Models (Li, 2026): drop Dreamer's pixel decoder, keep the RSSM, and learn the state with InfoNCE over future patch features."
 tags: paper-reading
+thumbnail: assets/img/posts/cwm/cwm-fig1-overview.png
 toc:
   beginning: true
 related_posts: false
