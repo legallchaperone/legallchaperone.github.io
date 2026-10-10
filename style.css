@@ -41,12 +41,31 @@ body {
 .page {
   display: grid;
   grid-template-columns: var(--toc-w) 1fr var(--profile-w);
-  grid-template-areas: "toc main profile";
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    "top  top  top"
+    "toc  main profile";
   max-width: 1120px;
   margin: 0 auto;
-  padding: 4rem 2rem;
+  padding: 2.5rem 2rem 4rem;
   gap: var(--gap);
   min-height: 100vh;
+}
+
+/* =====================================================
+   TOP — Links + language toggle
+   ===================================================== */
+
+.topbar {
+  grid-area: top;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.6rem 1rem;
+  padding-bottom: 1.1rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid var(--light-gray);
 }
 
 /* =====================================================
@@ -611,11 +630,10 @@ code {
 }
 
 .links {
-  margin-top: 1.2rem;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   gap: 0.45rem;
-  width: 100%;
 }
 
 .link-item {
@@ -661,10 +679,10 @@ code {
   border-radius: 6px;
   padding: 0.3rem 0.75rem;
   cursor: pointer;
-  margin-top: 0.8rem;
+  margin-left: auto;
   transition: background 0.15s ease, border-color 0.15s ease;
   width: fit-content;
-  align-self: center;
+  flex-shrink: 0;
 }
 
 .lang-toggle:hover {
@@ -820,9 +838,11 @@ code {
 @media (max-width: 900px) {
   .page {
     grid-template-columns: 110px 1fr var(--profile-w);
-    grid-template-areas: "toc main profile";
+    grid-template-areas:
+      "top top  top"
+      "toc main profile";
     gap: 1.75rem;
-    padding: 3rem 1.5rem;
+    padding: 2rem 1.5rem 3rem;
   }
   .toc-label { display: none; }
   .toc-link {
@@ -840,10 +860,11 @@ code {
   .page {
     grid-template-columns: 1fr;
     grid-template-areas:
+      "top"
       "profile"
       "toc"
       "main";
-    padding: 1.75rem 1.25rem;
+    padding: 1.25rem 1.25rem 1.75rem;
     gap: 1.25rem;
   }
   .toc {
@@ -907,12 +928,15 @@ code {
     margin-bottom: 0.15rem;
   }
 
+  .topbar {
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    padding-bottom: 0.9rem;
+    margin-bottom: 0;
+  }
+
   .links {
-    flex-direction: row;
-    flex-wrap: wrap;
-    width: 100%;
     gap: 0.4rem;
-    margin-top: 0.85rem;
   }
 
   .link-item {

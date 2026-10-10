@@ -17,6 +17,31 @@
 
   <div class="page">
 
+    <!-- ── TOP: links + language toggle ── -->
+    <header class="topbar">
+      <nav class="links">
+        <a href="mailto:cwx@umich.edu" class="link-item">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="16" height="12" rx="2"/><path d="M2 7l8 5 8-5"/></svg>
+          cwx@umich.edu
+        </a>
+        <a href="https://github.com/legallchaperone" class="link-item" target="_blank" rel="noopener">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 0C4.477 0 0 4.477 0 10c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.605-3.369-1.342-3.369-1.342-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0110 4.836a9.59 9.59 0 012.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C17.138 18.163 20 14.418 20 10 20 4.477 15.523 0 10 0z" clip-rule="evenodd"/></svg>
+          GitHub
+        </a>
+        <a href="assets/pdf/cv.pdf?v=20260923" class="link-item" target="_blank">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h8l4 4v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2z"/><path d="M12 4v4h4M8 13v-4m0 4l-2-2m2 2l2-2"/></svg>
+          <span class="en">Curriculum Vitae</span><span class="zh">简历</span>
+        </a>
+        <a href="/blog/" class="link-item">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h12v2H4zM4 9h12v2H4zM4 14h7v2H4z"/></svg>
+          <span class="en">Blog</span><span class="zh">博客</span>
+        </a>
+      </nav>
+      <button class="lang-toggle" id="langToggle" aria-label="Switch language">
+        <span class="en">中文</span><span class="zh">EN</span>
+      </button>
+    </header>
+
     <!-- ── LEFT: sticky table of contents ── -->
     <nav class="toc" aria-label="Page sections">
       <p class="toc-label"><span class="en">On this page</span><span class="zh">本页导航</span></p>
@@ -320,33 +345,6 @@
         <p class="profile-sub"><span class="en">B.S.E. CS · B.S.E. ECE (SJTU)</span><span class="zh">计算机科学 · 电子与计算机工程 (SJTU)</span></p>
       </div>
 
-      <!-- Language toggle -->
-      <button class="lang-toggle" id="langToggle" aria-label="Switch language">
-        <span class="en">中文</span><span class="zh">EN</span>
-      </button>
-
-      <nav class="links">
-        <a href="mailto:cwx@umich.edu" class="link-item">
-          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="16" height="12" rx="2"/><path d="M2 7l8 5 8-5"/></svg>
-          cwx@umich.edu
-        </a>
-        <a href="https://github.com/legallchaperone" class="link-item" target="_blank" rel="noopener">
-          <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 0C4.477 0 0 4.477 0 10c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.605-3.369-1.342-3.369-1.342-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0110 4.836a9.59 9.59 0 012.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C17.138 18.163 20 14.418 20 10 20 4.477 15.523 0 10 0z" clip-rule="evenodd"/></svg>
-          GitHub
-        </a>
-        <a href="assets/pdf/cv.pdf?v=20260923" class="link-item" target="_blank">
-          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h8l4 4v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2z"/><path d="M12 4v4h4M8 13v-4m0 4l-2-2m2 2l2-2"/></svg>
-          <span class="en">Curriculum Vitae</span><span class="zh">简历</span>
-        </a>
-        <a href="/blog/" class="link-item">
-          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h12v2H4zM4 9h12v2H4zM4 14h7v2H4z"/></svg>
-          <span class="en">Blog</span><span class="zh">博客</span>
-        </a>
-        <a href="/notes/" class="link-item">
-          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 3h8l3 3v11H5z"/><path d="M13 3v3h3M7 9h7M7 12h7M7 15h5"/></svg>
-          <span class="en">Notes</span><span class="zh">笔记</span>
-        </a>
-      </nav>
     </aside>
 
   </div><!-- /.page -->

@@ -43,7 +43,7 @@
     if (!reqFile) { location.href = '/blog/'; }
 
     // Load manifest first so we only serve files that are explicitly listed
-    fetch('/blog/posts.json')
+    fetch('/blog/posts.json?t=' + Date.now(), { cache: 'no-store' })
       .then(r => r.json())
       .then(posts => {
         const meta = posts.find(p => p.file === reqFile);
