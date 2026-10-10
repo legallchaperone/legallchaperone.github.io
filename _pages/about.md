@@ -2,30 +2,29 @@
 layout: about
 title: about
 permalink: /
-subtitle: Undergraduate · <a href="https://cse.engin.umich.edu">University of Michigan</a> · World models
+subtitle: <a href="https://www.ji.sjtu.edu.cn">SJTU-UM Joint Institute</a> · Transferring to <a href="https://cse.engin.umich.edu">UMich CSE</a>, Fall 2026
 
 profile:
   align: right
-  image: 24_photo.jpg
+  image: prof_pic.jpg
   image_circular: false
-  more_info: >
-    <p>Ann Arbor, MI</p>
-    <p>cwx@umich.edu</p>
 
-selected_papers: true
+selected_papers: false
 social: true
 
 announcements:
   enabled: false
 
 latest_posts:
-  enabled: true
-  scrollable: false
-  limit: 3
+  enabled: false
 ---
 
-I am an undergraduate student at the **University of Michigan, Ann Arbor**, pursuing a B.S.E. in Computer Science from the University of Michigan and a B.S.E. in Electrical and Computer Engineering from Shanghai Jiao Tong University (expected 2028).
+I am currently studying at the SJTU-UM Joint Institute, Shanghai Jiao Tong University, majoring in Electrical and Computer Engineering (GPA 3.81/4.0), and will be pursuing a B.S.E. in Computer Science at the University of Michigan, Ann Arbor starting Fall 2026. My core interests include but are not limited to Human Brain and Consciousness, VLM, VLA, World Model, LLM Fine-tuning, and Reinforcement Learning.
 
-My research interest is in **world models**, especially how to ensure **consistent and stable world generation**. I currently work with [Prof. Qing Qu](https://qingqu.engin.umich.edu/) at the Deep Pixel Lab, and previously at [DENG Lab](https://sjtu-deng-lab.github.io/home/), PIXEL Lab and [BCMI Lab](https://bcmi.sjtu.edu.cn/index.html) at SJTU.
+I am currently open to internship and research assistant opportunities.
 
-I am currently open to **internship and research assistant opportunities**.
+---
+
+我目前就读于上海交通大学密西根学院，主修电子与计算机工程（GPA 3.81/4.0），将于 2026 年秋季赴密歇根大学安娜堡分校攻读计算机科学本科双学位。我的核心兴趣包括但不限于 Human Brain and Consciousness, VLM, VLA, World Model, LLM Fine-tuning, and Reinforcement Learning。
+
+我目前开放实习与研究助理机会。
