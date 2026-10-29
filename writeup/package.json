@@ -1,0 +1,22 @@
+{
+  "name": "writeup",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "new": "node engine/cli.js new",
+    "dev": "node engine/cli.js dev",
+    "build": "node engine/cli.js build",
+    "test": "node --test \"engine/test/*.test.js\"",
+    "test:e2e": "node --test --test-concurrency=1 engine/test/viewer.e2e.js"
+  },
+  "devDependencies": {
+    "@excalidraw/excalidraw": "0.18.1",
+    "esbuild": "^0.28.2",
+    "katex": "0.16.11",
+    "marked": "^13.0.3",
+    "playwright": "^1.64.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "yaml": "^2.9.1"
+  }
+}

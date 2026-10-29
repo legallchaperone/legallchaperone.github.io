@@ -42,7 +42,7 @@
           .sort((a, b) => b.date.localeCompare(a.date))
           .map(p => `
             <li class="blog-post-item">
-              <a href="/blog/post.html?f=${encodeURIComponent(p.file)}" class="blog-post-link">${p.title}</a>
+              <a href="${p.url || '/blog/post.html?f=' + encodeURIComponent(p.file)}" class="blog-post-link">${p.title}</a>
               <span class="blog-post-date">${fmtDate(p.date)}</span>
             </li>`)
           .join('');

@@ -32,6 +32,7 @@ jobs:
           cp -r assets _staging/assets
           cp -r blog _staging/blog
           cp -r phd _staging/phd
+          if [ -d writeup/site ]; then cp -r writeup/site _staging/writeup; fi
 
       - name: Upload artifact 📦
         uses: actions/upload-pages-artifact@v3
