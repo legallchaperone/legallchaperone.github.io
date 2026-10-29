@@ -1,0 +1,537 @@
+/* Writeup viewer — diagram on one side, article on the other.
+   Tokens match /style.css (Anthropic palette · Poppins + Lora). */
+
+:root {
+  --dark: #141413;
+  --light: #faf9f5;
+  --mid-gray: #b0aea5;
+  --light-gray: #e8e6dc;
+  --orange: #d97757;
+  --blue: #6a9bcc;
+  --font-head: "Poppins", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
+  --font-body: "Lora", "Songti SC", "STSong", "SimSun", Georgia, serif;
+
+  --top-h: 52px;
+  --split: 50%;
+  --figure-h: 44svh; /* narrow layout */
+  --dim: rgba(20, 20, 19, 0.1);
+  --ease: cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body.wu {
+  background: var(--light);
+  color: var(--dark);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Top bar ── */
+.wu-top {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: var(--top-h);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0 1.25rem;
+  background: var(--light);
+  border-bottom: 1px solid var(--light-gray);
+}
+.wu-crumbs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+.wu-back {
+  font-family: var(--font-head);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--mid-gray);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.15s ease;
+}
+.wu-back:hover {
+  color: var(--orange);
+}
+.wu-sep {
+  color: var(--light-gray);
+  font-size: 0.8rem;
+}
+
+/* ── Table of contents dropdown ── */
+.wu-toc {
+  position: relative;
+}
+.wu-toc-btn {
+  font: 500 0.8rem/1 var(--font-head);
+  color: var(--dark);
+  background: none;
+  border: 1px solid var(--light-gray);
+  border-radius: 999px;
+  padding: 0.45rem 0.9rem;
+  cursor: pointer;
+}
+.wu-toc-btn:hover,
+.wu-toc-btn[aria-expanded="true"] {
+  border-color: var(--mid-gray);
+}
+.wu-toc-btn span {
+  color: var(--mid-gray);
+  margin-left: 0.15rem;
+}
+.wu-toc-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  width: min(340px, calc(100vw - 2.5rem));
+  max-height: calc(100vh - var(--top-h) - 24px);
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid var(--light-gray);
+  border-radius: 10px;
+  box-shadow: 0 12px 32px rgba(20, 20, 19, 0.12);
+  padding: 0.5rem;
+}
+.wu-toc-menu ol {
+  list-style: none;
+}
+.wu-toc-menu ol ol {
+  margin: 0 0 0.25rem 0.9rem;
+  border-left: 1px solid var(--light-gray);
+}
+.wu-toc-menu a {
+  display: block;
+  font: 400 0.82rem/1.45 var(--font-head);
+  color: var(--dark);
+  text-decoration: none;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+}
+.wu-toc-menu ol ol a {
+  font-size: 0.76rem;
+  color: #5e5d59;
+}
+.wu-toc-menu a:hover {
+  background: var(--light);
+}
+.wu-toc-menu a.is-active {
+  color: var(--orange);
+  font-weight: 500;
+}
+
+/* ── Layout ── */
+.wu-layout {
+  display: grid;
+  grid-template-columns: minmax(0, var(--split)) 1px minmax(0, 1fr);
+  padding-top: var(--top-h);
+}
+.wu-figure {
+  position: sticky;
+  top: var(--top-h);
+  height: calc(100vh - var(--top-h));
+  height: calc(100dvh - var(--top-h));
+  overflow: hidden;
+}
+.wu-split {
+  position: relative;
+  background: var(--light-gray);
+  cursor: col-resize;
+  touch-action: none;
+  z-index: 5;
+}
+.wu-split::before {
+  content: "";
+  position: absolute;
+  inset: 0 -6px;
+}
+.wu-split:hover,
+.wu-split:focus-visible,
+.wu-split.is-dragging {
+  background: var(--orange);
+  outline: none;
+}
+.wu-split::after {
+  content: "";
+  position: sticky;
+  top: 50vh;
+  display: block;
+  width: 5px;
+  height: 36px;
+  margin-left: -2px;
+  border-radius: 3px;
+  background: inherit;
+}
+body.is-resizing {
+  cursor: col-resize;
+  user-select: none;
+}
+
+/* ── Diagram stage ── */
+.wu-stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  touch-action: none;
+  cursor: grab;
+  outline: none;
+  background:
+    radial-gradient(circle, rgba(176, 174, 165, 0.35) 1px, transparent 1.2px) 0 0 / 22px 22px,
+    var(--light);
+}
+.wu-stage.is-panning {
+  cursor: grabbing;
+}
+.wu-world {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 0 0;
+}
+/* Only hint a compositor layer while moving; dropping it afterwards lets the
+   browser re-raster the SVG sharply at the final zoom. */
+.wu-world.is-moving {
+  will-change: transform;
+}
+.wu-drawing,
+.wu-drawing > svg,
+.wu-dim,
+.wu-hot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+}
+.wu-drawing > svg {
+  overflow: visible;
+}
+.wu-lift {
+  position: absolute;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow:
+    0 1px 2px rgba(20, 20, 19, 0.06),
+    0 10px 30px rgba(20, 20, 19, 0.12);
+  outline: 1.5px solid rgba(217, 119, 87, 0.55);
+  outline-offset: 0;
+  transition: opacity 0.25s ease;
+}
+.wu-dim {
+  overflow: visible;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.wu-dim path {
+  fill: var(--dim);
+}
+.wu-dim.is-off,
+.wu-lift.is-off {
+  opacity: 0;
+}
+.wu-hot {
+  overflow: visible;
+}
+.wu-hot rect {
+  fill: transparent;
+  stroke: transparent;
+  stroke-width: 2px;
+  vector-effect: non-scaling-stroke;
+  pointer-events: all;
+  cursor: pointer;
+  transition: stroke 0.15s ease;
+}
+.wu-hot rect:hover {
+  stroke: var(--orange);
+}
+.wu-stage.is-panning .wu-hot rect {
+  cursor: grabbing;
+}
+
+.wu-fab {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  z-index: 3;
+  font: 500 0.78rem/1 var(--font-head);
+  color: var(--dark);
+  background: #fff;
+  border: 1px solid var(--light-gray);
+  border-radius: 999px;
+  padding: 0.6rem 1rem;
+  box-shadow: 0 4px 14px rgba(20, 20, 19, 0.1);
+  cursor: pointer;
+}
+.wu-fab:hover {
+  border-color: var(--orange);
+  color: var(--orange);
+}
+
+/* ── Article ── */
+.wu-text {
+  padding: 3.5rem clamp(1.5rem, 5vw, 4rem) 50vh;
+  min-width: 0;
+  overflow-x: clip;
+}
+.wu-article {
+  max-width: 680px;
+  margin: 0 auto;
+}
+.wu-head {
+  margin-bottom: 2.5rem;
+}
+.wu-title {
+  font-family: var(--font-head);
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.6rem;
+}
+.wu-meta {
+  font-family: var(--font-head);
+  font-size: 0.8rem;
+  color: var(--mid-gray);
+}
+.wu-desc {
+  margin-top: 1rem;
+  font-style: italic;
+  color: #5e5d59;
+}
+
+.wu-sec {
+  margin-top: 4.5rem;
+  scroll-margin-top: calc(var(--top-h) + 1.5rem);
+}
+.wu-sec > .wu-h {
+  font-family: var(--font-head);
+  font-size: 1.35rem;
+  font-weight: 600;
+  line-height: 1.35;
+  margin-bottom: 1.1rem;
+  transition: color 0.2s ease;
+}
+.wu-sec.is-active > .wu-h {
+  color: var(--orange);
+}
+
+.wu-body p {
+  margin-bottom: 1.4rem;
+}
+.wu-body h4 {
+  font-family: var(--font-head);
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 2rem 0 0.6rem;
+}
+.wu-body a {
+  color: var(--orange);
+  text-underline-offset: 3px;
+}
+.wu-body strong {
+  font-weight: 600;
+}
+.wu-body ul,
+.wu-body ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1.4rem;
+}
+.wu-body li {
+  margin-bottom: 0.4rem;
+  line-height: 1.75;
+}
+.wu-body blockquote {
+  border-left: 3px solid var(--orange);
+  padding-left: 1rem;
+  color: #5e5d59;
+  margin: 1.6rem 0;
+}
+.wu-body pre {
+  background: var(--light-gray);
+  padding: 1rem 1.25rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin-bottom: 1.4rem;
+  line-height: 1.6;
+}
+.wu-body code {
+  font-size: 0.85em;
+  background: var(--light-gray);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+.wu-body pre code {
+  background: none;
+  padding: 0;
+}
+.wu-body img {
+  max-width: 100%;
+  border-radius: 6px;
+  margin: 1rem 0;
+}
+.wu-body hr {
+  border: 0;
+  border-top: 1px solid var(--light-gray);
+  margin: 2.5rem 0;
+}
+.wu-body table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  margin: 1.2rem 0 1.6rem;
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+.wu-body th,
+.wu-body td {
+  border-bottom: 1px solid var(--light-gray);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+.wu-body th {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 0.8rem;
+  border-bottom-color: var(--mid-gray);
+}
+/* position: relative keeps KaTeX's hidden MathML copy inside the scroll box;
+   otherwise long formulas widen the whole page on phones. */
+.wu-body .katex-display {
+  position: relative;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.3rem 0;
+  margin: 1.4rem 0;
+}
+.wu-body .katex {
+  font-size: 1.02em;
+}
+.wu-math-error {
+  color: #c0392b;
+}
+.wu-body > :last-child {
+  margin-bottom: 0;
+}
+
+/* ── Sub-component notes (collapsed by default) ── */
+.wu-subs {
+  margin-top: 1.8rem;
+  display: grid;
+  gap: 0.7rem;
+}
+.wu-sub {
+  border: 1px solid var(--light-gray);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.55);
+  scroll-margin-top: calc(var(--top-h) + 1.5rem);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.wu-sub > summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1rem;
+}
+.wu-sub > summary::-webkit-details-marker {
+  display: none;
+}
+.wu-sub > summary::before {
+  content: "";
+  flex: none;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-right: 1.5px solid var(--mid-gray);
+  border-bottom: 1.5px solid var(--mid-gray);
+  transform: rotate(-45deg);
+  transition: transform 0.2s ease;
+}
+.wu-sub[open] > summary::before {
+  transform: rotate(45deg);
+}
+.wu-sub .wu-h {
+  font-family: var(--font-head);
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.wu-sub > .wu-body {
+  padding: 0.2rem 1.25rem 1.1rem;
+  font-size: 0.95em;
+}
+.wu-sub:hover {
+  border-color: var(--mid-gray);
+}
+.wu-sub.is-active {
+  border-color: var(--orange);
+  box-shadow: 0 6px 20px rgba(217, 119, 87, 0.12);
+}
+.wu-sub.is-active .wu-h {
+  color: var(--orange);
+}
+
+/* ── Narrow screens: diagram on top ── */
+@media (max-width: 820px) {
+  :root {
+    --top-h: 48px;
+  }
+  .wu-top {
+    padding: 0 1rem;
+  }
+  .wu-layout {
+    display: block;
+  }
+  .wu-figure {
+    top: var(--top-h);
+    height: var(--figure-h);
+    z-index: 10;
+    border-bottom: 1px solid var(--light-gray);
+    box-shadow: 0 6px 16px rgba(20, 20, 19, 0.05);
+  }
+  .wu-split {
+    display: none;
+  }
+  .wu-text {
+    padding: 2rem 1rem 60vh;
+  }
+  .wu-title {
+    font-size: 1.5rem;
+  }
+  .wu-sec {
+    margin-top: 3.5rem;
+  }
+  .wu-sec,
+  .wu-sub {
+    scroll-margin-top: calc(var(--top-h) + var(--figure-h) + 1rem);
+  }
+  .wu-fab {
+    right: 10px;
+    bottom: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
