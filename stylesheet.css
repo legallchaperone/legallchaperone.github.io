@@ -210,8 +210,47 @@ ul.cv li {
 
 ul.cv .date {
   flex-shrink: 0;
-  color: #777;
+  color: #6b6b6b;
   font-variant-numeric: tabular-nums;
+}
+
+/* Header: one left edge for name, bio and links */
+.name {
+  padding-top: 0;
+  margin-bottom: 12px;
+  letter-spacing: -0.01em;
+}
+
+.links {
+  margin-top: 1em;
+}
+
+.photo-cell {
+  text-align: right;
+}
+
+.photo {
+  width: 200px;
+  height: 200px;
+  max-width: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Papers line up with the section headings (16px in) */
+table.papers {
+  width: calc(100% - 32px);
+  margin: 0 16px;
+}
+
+.credit {
+  text-align: right;
+  font-size: 13px;
+  color: #6b6b6b;
+}
+
+.credit a {
+  font-size: 13px;
 }
 
 /* Phones: stack photo above intro and thumbnails above paper text */
@@ -240,12 +279,18 @@ ul.cv .date {
   }
 
   .photo-cell {
-    padding: 16px 0 0 !important;
-    text-align: center;
+    padding: 24px 16px 0 !important;
+    text-align: left;
   }
 
-  .photo-cell img {
-    width: 160px !important;
+  .photo {
+    width: 128px;
+    height: 128px;
+  }
+
+  table.papers {
+    width: 100%;
+    margin: 0;
   }
 
   .intro-cell {

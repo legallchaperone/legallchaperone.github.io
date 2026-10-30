@@ -28,7 +28,7 @@ jobs:
       - name: Stage static site 📁
         run: |
           mkdir _staging
-          cp index.html style.css favicon.ico _staging/
+          cp index.html style.css stylesheet.css favicon.ico _staging/
           cp -r assets _staging/assets
           cp -r blog _staging/blog
           cp -r phd _staging/phd
