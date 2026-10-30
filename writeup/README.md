@@ -1,10 +1,10 @@
-# 怎么写一篇
+# Writing a writeup
 
-每篇文章只做两件事：写 `article.md`，画 `diagram.excalidraw`。剩下的（导出 SVG、对齐镜头、渲染公式、更新 Blog 列表）都自动完成。
+Each article is two files: you write `article.md` and draw `diagram.excalidraw`. Everything else (exporting the SVG, pointing the camera, rendering math, updating the Blog list) is automatic.
 
-下面所有命令都在 `writeup/` 目录里运行。
+Run every command below from the `writeup/` folder.
 
-## 0. 第一次用（只做一次）
+## 0. First time only
 
 ```bash
 npm install
@@ -14,116 +14,120 @@ npm install
 npx playwright install chromium
 ```
 
-第二条下载一个无界面浏览器（约 100 MB），构建时用它把图导出成 SVG。
+The second command downloads a headless browser (about 100 MB) that the build uses to export the diagram to SVG.
 
-VS Code 里装扩展 **Excalidraw**（作者 pomdtr）。装好以后，`.excalidraw` 文件双击就会在画板里打开。
+In VS Code, install the **Excalidraw** extension (by pomdtr). After that, double-clicking a `.excalidraw` file opens it on a canvas.
 
-## 1. 新建：`npm run new <slug>`
+## 1. Create: `npm run new <slug>`
 
 ```bash
 npm run new my-topic
 ```
 
-`slug` 就是网址的最后一段，只能用小写字母、数字和连字符。这条命令会生成：
+The `slug` is the last part of the URL and may only use lowercase letters, digits and hyphens. The command creates:
 
 ```
 posts/my-topic/
-  article.md           ← 你写
-  diagram.excalidraw   ← 你画
+  article.md           ← you write this
+  diagram.excalidraw   ← you draw this
 ```
 
-两个文件里都有能直接跑通的示例，照着改就行。新文章默认是草稿（`draft: true`），不会被发布。
+Both files contain a working example to edit. New articles start as drafts (`draft: true`) and are not published.
 
-发布后的地址是 `cwx.world/writeup/my-topic/`。
+The published address is `cwx.world/writeup/my-topic/`.
 
-## 2. 写：`article.md`
+## 2. Write: `article.md`
 
-开头是 front matter：
+It starts with front matter:
 
 ```markdown
 ---
-title: 文章标题
+title: Article title
 date: 2026-10-29
-description: 一句话简介，会显示在 Blog 列表里
+description: One sentence, shown in the Blog list
 draft: true
 ---
 ```
 
-`title` 和 `date` 必填；`description` 可选；`draft: true` 表示草稿，写完删掉这一行（或改成 `false`）才会发布。
+`title` and `date` are required; `description` is optional; `draft: true` marks a draft. Delete that line (or set it to `false`) to publish.
 
-正文：
+The body:
 
-- **第一个 `##` 之前**是导语，读到这里时图显示全貌。
-- **主章节**：`## 标题 {#id}`。id 只能用小写字母、数字和连字符，例如 `{#encoder}`、`{#data-flow}`。
-- **子组件笔记**：`### 标题 {#父id/子id}`，写在所属主章节下面，例如 `{#encoder/attention}`。在页面上默认折叠，读者点开才展开。
-- **公式**：行内 `\(E = mc^2\)`，块级 `$$ ... $$`，和 `blog/` 的写法一样。
-- **图片**：把图片放在 `article.md` 旁边，用 `![说明](figure.png)` 引用，会一起发布。
-- 其余都是普通 Markdown：粗体、列表、引用、代码块、链接、表格。代码块里的 `##` 不算标题。
-- 想在正文里链到另一节，写 `[看这里](#encoder)`。
+- **Everything before the first `##`** is the intro. While the reader is there, the diagram shows everything.
+- **Sections**: `## Title {#id}`. Ids use lowercase letters, digits and hyphens, e.g. `{#encoder}`, `{#data-flow}`.
+- **Component notes**: `### Title {#parent/child}`, written under their section, e.g. `{#encoder/attention}`. They start collapsed; the end of each section lists them as buttons that open the note and move the camera.
+- **Math**: inline `\(E = mc^2\)`, display `$$ ... $$`, the same as in `blog/`.
+- **Images**: put the image next to `article.md` and use `![caption](figure.png)`; it is published with the article.
+- Everything else is plain Markdown: bold, lists, quotes, code blocks, links, tables. A `##` inside a code block is not a heading.
+- To link to another section, write `[see here](#encoder)`. Hovering the link outlines that region on the diagram.
 
-## 3. 画：`diagram.excalidraw`
+## 3. Draw: `diagram.excalidraw`
 
-在 VS Code 里打开 `posts/my-topic/diagram.excalidraw`，像在 excalidraw.com 上一样画。
+Open `posts/my-topic/diagram.excalidraw` in VS Code and draw as you would on excalidraw.com.
 
-**每个章节用一个 Frame 框住它在图上对应的区域，Frame 的名字就是章节 id：**
+**Give each section a Frame around its area of the diagram, and name the Frame after the section id:**
 
-1. 按 `F`（或工具栏里的 Frame 工具），拖出一个框，把这一节要讲的内容框进去。
-2. 双击 Frame 左上角的名字，改成章节 id，例如 `encoder`。
-3. 子组件的 Frame 名写成 `父id/子id`，例如 `encoder/attention`，可以画在父 Frame 里面。
+1. Press `F` (or use the Frame tool) and drag a box around what the section covers.
+2. Double-click the Frame's name in its top-left corner and change it to the section id, e.g. `encoder`.
+3. A component's Frame is named `parent/child`, e.g. `encoder/attention`, and can sit inside the parent Frame.
 
-几点说明：
+Notes:
 
-- 发布的页面上不显示 Frame 的边框和名字，只用来告诉镜头往哪儿看。
-- 属于某个 Frame 的元素超出框的部分会被裁掉（Excalidraw 本身就是这样）。跨章节的箭头画在所有 Frame 外面就不会被裁掉。
-- 没有名字的 Frame 会被忽略，可以当普通分组用。
-- 某一节在图上没有 Frame 也可以：主章节读到时显示全图，子组件读到时停在父章节的 Frame 上。构建时会给一条警告提醒你。
+- Frame borders and names are not shown on the published page; they only tell the camera where to look.
+- Anything that belongs to a Frame is clipped at the Frame's edge (that is how Excalidraw works). Draw arrows that cross sections outside all Frames so they are not clipped.
+- Frames without a name are ignored, so you can use them as plain groups.
+- A section does not need a Frame. A section without one shows the whole diagram; a component without one stays on its parent's Frame. The build prints a warning as a reminder.
 
-保存（`⌘S`）后，预览页面会自动更新。
+After you save (`⌘S`), the preview updates.
 
-## 4. 预览：`npm run dev <slug>`
+## 4. Preview: `npm run dev <slug>`
 
 ```bash
 npm run dev my-topic
 ```
 
-然后在浏览器打开它打印出来的地址（默认 `http://127.0.0.1:4600/writeup/my-topic/`）。草稿也能预览。
+Then open the address it prints (by default `http://127.0.0.1:4600/writeup/my-topic/`). Drafts can be previewed too.
 
-- **自动更新**：保存 `article.md` 或 `diagram.excalidraw`，页面马上更新，不用刷新。只改了文字时，滚动位置和镜头都不动。
-- **出错时**：页面顶部出现红色错误条，写明哪个文件、第几行、什么问题。修好后自动消失。黄色条是警告，可以点 ✕ 关掉。
-- **在页面里直接改字**：鼠标移到章节标题上，右边会出现「编辑」按钮。点开后左边是这一节的 Markdown，右边实时显示渲染结果（包括公式）。按 `⌘S` 保存，只写回这一节，文件其余部分一字不动。
-  - 如果编辑期间你又在别的编辑器里改了 `article.md`，编辑框会提示冲突，保存会被拒绝，免得覆盖那边的修改。点「载入最新内容」重新开始。
-- **改图**：在 VS Code 的 Excalidraw 扩展里改 `diagram.excalidraw`，保存后页面上的图会自动换掉，镜头停在当前章节。
+- **Live updates**: saving `article.md` or `diagram.excalidraw` updates the page without a reload. If only the text changed, the scroll position and camera stay put.
+- **Errors**: a red bar at the top says which file, which line and what is wrong. It disappears once fixed. A yellow bar is a warning; close it with ✕.
+- **Edit in the page**: hover a section heading and an **Edit** button appears on the right. It opens that section's Markdown on the left and a live preview (including math) on the right. `⌘S` saves just that section back to `article.md` and leaves the rest of the file untouched.
+  - If `article.md` was changed in another editor while you were editing, the editor shows a conflict and refuses to save, so those changes are not overwritten. Click **Load latest** to start again.
+- **Change the diagram**: edit `diagram.excalidraw` in VS Code's Excalidraw extension; after you save, the page swaps in the new diagram and the camera stays on the current section.
 
-看图时的快捷键（读者也能用）：`←` `→` 切换主章节，`+` `−` 缩放，`F` 对准当前章节，`Esc` 关目录或回到跟随。拖拽图可以平移，滚轮或双指可以缩放；回到文章继续滚动，镜头自动恢复跟随。
+Diagram controls (readers have them too):
 
-`Ctrl+C` 退出预览。
+- Scroll or two-finger swipe over the diagram to pan; pinch, or hold `⌘`/`Ctrl` while scrolling, to zoom; double-click to zoom in (`Shift` + double-click to zoom out); drag to pan.
+- `←` `→` move between sections, `+` `−` zoom, `F` returns to the current section, `Esc` closes the contents or returns to following.
+- Scrolling the article again hands the camera back to the article.
 
-## 5. 构建：`npm run build`
+`Ctrl+C` stops the preview.
 
-写完后，先把 front matter 里的 `draft: true` 删掉，然后：
+## 5. Build: `npm run build`
+
+When you are done, delete `draft: true` from the front matter, then:
 
 ```bash
 npm run build
 ```
 
-它会：
+It:
 
-- 构建所有非草稿文章到 `site/<slug>/`；
-- 把每篇的标题、日期、简介写进 `blog/posts.json`，Blog 列表里会出现一条链到 `/writeup/<slug>/` 的条目；
-- 文章改回草稿或被删掉时，自动删掉对应的 `site/<slug>/` 和 Blog 条目。
+- builds every non-draft article into `site/<slug>/`;
+- writes each article's title, date and description into `blog/posts.json`, so the Blog list gets an entry linking to `/writeup/<slug>/`;
+- removes `site/<slug>/` and the Blog entry when an article goes back to draft or is deleted.
 
-只要有任何错误，构建就停下，什么都不写。常见错误：
+Any error stops the build and nothing is written. Common errors:
 
-| 报错                                | 怎么改                                             |
-| ----------------------------------- | -------------------------------------------------- |
-| `## 标题缺少 {#id}`                 | 在标题末尾加 `{#id}`                               |
-| `id "…" 格式不对`                   | 只用小写字母、数字、连字符；子组件写成 `父id/子id` |
-| `章节 id "…" 重复`                  | 换一个 id（报错里写了第一次出现在第几行）          |
-| `Frame "…" 找不到对应章节`          | 图上 Frame 名写错了，或文章里还没有这一节          |
-| `Frame 名 "…" 在图里出现了不止一次` | 每个 id 只能有一个 Frame                           |
-| `公式错误`                          | 按提示改 KaTeX 写法                                |
+| Error                                   | Fix                                                                      |
+| --------------------------------------- | ------------------------------------------------------------------------ |
+| `## heading is missing {#id}`           | Add `{#id}` at the end of the heading                                    |
+| `Section id "…" is not valid`           | Use lowercase letters, digits and hyphens; components are `parent/child` |
+| `Section id "…" is used more than once` | Pick another id (the error says where the first one is)                  |
+| `Frame "…" has no matching section`     | The Frame name is misspelled, or the section does not exist yet          |
+| `Frame name "…" is used more than once` | Each id can have only one Frame                                          |
+| `Math error`                            | Fix the KaTeX as the message says                                        |
 
-## 6. 发布：push
+## 6. Publish: push
 
 ```bash
 git add writeup/posts/my-topic writeup/site/my-topic blog/posts.json
@@ -137,4 +141,4 @@ git commit -m "feat: Add writeup my-topic"
 git push
 ```
 
-push 到 `main` 后，GitHub Actions 会自动部署，几分钟后就能在 `cwx.world/writeup/my-topic/` 看到。
+After the push to `main`, GitHub Actions deploys the site, and a few minutes later it is live at `cwx.world/writeup/my-topic/`.

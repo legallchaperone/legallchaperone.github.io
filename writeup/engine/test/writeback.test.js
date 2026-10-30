@@ -122,7 +122,7 @@ test("CRLF files keep CRLF line endings", () => {
 });
 
 test("unknown or duplicate ids are refused", () => {
-  assert.throws(() => replaceSection(ARTICLE, "missing", "## X {#missing}\n"), /找不到章节/);
+  assert.throws(() => replaceSection(ARTICLE, "missing", "## X {#missing}\n"), /not found/);
   const dup = ARTICLE + "\n\n## Again {#second}\n";
-  assert.throws(() => replaceSection(dup, "second", "## Second {#second}\n"), /重复/);
+  assert.throws(() => replaceSection(dup, "second", "## Second {#second}\n"), /used more than once/);
 });

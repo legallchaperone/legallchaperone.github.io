@@ -234,25 +234,34 @@ test("desktop: manual pan detaches the camera, reading resumes it; keys work", a
   await page.mouse.move(st.left + st.w * 0.6, st.top + st.h * 0.5, { steps: 6 });
   await page.mouse.up();
   let s = await state(page);
-  assert.equal(s.fab, "回到当前章节", "dragging detaches the camera");
+  assert.equal(s.fab, "Resume reading", "dragging detaches the camera");
   assert.equal(s.active, "dynamics", "dragging does not change the section");
 
   await page.mouse.move(st.left + st.w / 2, st.top + st.h / 2);
-  await page.mouse.wheel(0, -300);
+  const before = await page.$eval(".wu-world", (w) => w.style.transform);
+  await page.mouse.wheel(0, 200);
   await page.waitForTimeout(100);
-  assert.ok((await state(page)).k > s.k, "wheel zooms in");
+  let t = await state(page);
+  assert.equal(t.k, s.k, "plain wheel does not zoom");
+  assert.notEqual(await page.$eval(".wu-world", (w) => w.style.transform), before, "plain wheel pans");
+  await page.keyboard.down("Control");
+  await page.mouse.wheel(0, -200);
+  await page.keyboard.up("Control");
+  await page.waitForTimeout(100);
+  assert.ok((await state(page)).k > t.k, "ctrl + wheel (and trackpad pinch) zooms in");
 
   await page.mouse.move(st.left + st.w + 200, st.top + 300); // over the article
   await page.mouse.wheel(0, 120);
   await settle(page);
   s = await state(page);
-  assert.equal(s.fab, "看全图", "scrolling the article resumes following");
+  assert.equal(s.fab, "Whole diagram", "scrolling the article resumes following");
   assertFramed(s, "resumed");
 
-  await page.click(".wu-fab"); // 看全图
+  await page.click(".wu-fab"); // Whole diagram
   await settle(page);
   s = await state(page);
-  assert.equal(s.fab, "回到当前章节");
+  assert.equal(s.fab, "Resume reading");
+  assert.ok(await page.$eval(".wu-dim", (d) => d.classList.contains("is-off")), "the whole diagram is not faded");
   await page.keyboard.press("f");
   await settle(page);
   s = await state(page);
@@ -267,10 +276,55 @@ test("desktop: manual pan detaches the camera, reading resumes it; keys work", a
 
   await page.keyboard.press("+");
   await page.waitForTimeout(50);
-  assert.equal((await state(page)).fab, "回到当前章节", "+ zooms and detaches");
+  assert.equal((await state(page)).fab, "Resume reading", "+ zooms and detaches");
   await page.keyboard.press("Escape");
   await settle(page);
   assertFramed(await state(page), "Esc resumes following");
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});
+
+test("desktop: component chips preview and open their frame; links preview too", async () => {
+  const { page, ctx, errors } = await open("desktop", "#encoder");
+  const avail = await page.$$eval(".wu-hot rect.is-available", (r) => r.map((x) => x.dataset.id).sort());
+  assert.deepEqual(avail, ["encoder/patchify", "encoder/posterior"], "the current section's components are marked");
+  assert.equal(await page.textContent(".wu-where"), await page.$eval("#encoder > .wu-h", (h) => h.textContent.trim()));
+
+  const chip = '.wu-chip[data-target="encoder/posterior"]';
+  await page.hover(chip);
+  assert.ok(
+    await page.$eval('.wu-hot rect[data-id="encoder/posterior"]', (r) => r.classList.contains("is-preview")),
+    "hovering a chip outlines its frame"
+  );
+  await page.mouse.move(5, 300);
+  assert.equal(await page.$$eval(".wu-hot .is-preview", (r) => r.length), 0, "leaving the chip clears the outline");
+
+  await page.click(chip);
+  await settle(page);
+  const s = await state(page);
+  assert.equal(s.active, "encoder/posterior");
+  assert.ok(s.open.includes("encoder/posterior"), "clicking a chip opens the note");
+  assertFramed(s, "chip click");
+
+  // Hovering a frame on the diagram lights up its chip.
+  const r = await page.$eval('.wu-hot rect[data-id="encoder/patchify"]', (el) => {
+    // the middle of the part of the frame that is on stage
+    const b = el.getBoundingClientRect();
+    const st = document.querySelector(".wu-stage").getBoundingClientRect();
+    const [l, rt] = [Math.max(b.left, st.left), Math.min(b.right, st.right)];
+    const [t, bt] = [Math.max(b.top, st.top), Math.min(b.bottom, st.bottom)];
+    return { x: (l + rt) / 2, y: (t + bt) / 2 };
+  });
+  await page.mouse.move(r.x, r.y);
+  assert.ok(
+    await page.$eval('.wu-chip[data-target="encoder/patchify"]', (c) => c.classList.contains("is-linked")),
+    "hovering a frame lights its chip"
+  );
+
+  // Expand all from the contents menu.
+  await page.click(".wu-toc-btn");
+  await page.check(".wu-expand input");
+  assert.equal(await page.$$eval(".wu-sub:not([open])", (d) => d.length), 0, "expand all opens every note");
   assert.deepEqual(errors, []);
   await ctx.close();
 });

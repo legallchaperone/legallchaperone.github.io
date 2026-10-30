@@ -82,7 +82,7 @@ function renderMath(math, errors) {
       return katex.renderToString(tex, { displayMode: display, throwOnError: true, strict: "ignore", output: "htmlAndMathml" });
     } catch (e) {
       errors.push({
-        message: `公式错误：${e.message.replace(/^KaTeX parse error: /, "")}  ←  ${display ? "$$" : "\\("}${tex.trim()}${display ? "$$" : "\\)"}`,
+        message: `Math error: ${e.message.replace(/^KaTeX parse error: /, "")}  ←  ${display ? "$$" : "\\("}${tex.trim()}${display ? "$$" : "\\)"}`,
       });
       return `<code class="wu-math-error" title="${escapeHtml(e.message)}">${escapeHtml(tex)}</code>`;
     }

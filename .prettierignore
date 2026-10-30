@@ -13,3 +13,5 @@ _scripts/*
 _data/citations.yml
 # Hand-written blog posts with inline LaTeX; prettier mangles the math
 blog/posts/*.md
+writeup/engine/templates/article.md
+writeup/posts/**/*.md

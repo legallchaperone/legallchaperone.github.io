@@ -48,9 +48,13 @@ export function renderPage({ article, diagram, frameMap, devScript = "" }) {
       <span class="wu-sep">/</span>
       <a href="/blog/" class="wu-back">Blog</a>
     </nav>
+    <span class="wu-where" aria-live="polite"></span>
     <div class="wu-toc">
-      <button type="button" class="wu-toc-btn" aria-expanded="false" aria-controls="wu-toc-menu">目录 <span aria-hidden="true">▾</span></button>
-      <nav class="wu-toc-menu" id="wu-toc-menu" hidden>${tocHtml(article)}</nav>
+      <button type="button" class="wu-toc-btn" aria-expanded="false" aria-controls="wu-toc-menu">Contents <span aria-hidden="true">▾</span></button>
+      <div class="wu-toc-menu" id="wu-toc-menu" hidden>
+        <label class="wu-expand"><input type="checkbox" /> Expand all component notes</label>
+        <nav class="wu-toc-list" aria-label="Contents">${tocHtml(article)}</nav>
+      </div>
     </div>
   </header>
 
@@ -64,15 +68,16 @@ export function renderPage({ article, diagram, frameMap, devScript = "" }) {
           <svg class="wu-hot"></svg>
         </div>
       </div>
-      <button type="button" class="wu-fab">看全图</button>
+      <button type="button" class="wu-fab">Whole diagram</button>
     </div>
-    <div class="wu-split" role="separator" aria-orientation="vertical" aria-label="调整左右宽度" tabindex="0"></div>
+    <div class="wu-split" role="separator" aria-orientation="vertical" aria-label="Resize the diagram and the text" tabindex="0"></div>
     <main class="wu-text">
       <article class="wu-article">
 ${articleHtml(article)}
       </article>
     </main>
   </div>
+  <footer class="wu-footer">Inspired by <a href="https://www.kuant.space" target="_blank" rel="noopener">Kuan Yi Wang</a></footer>
 
   <script type="application/json" id="wu-data">${jsonForScript(data)}</script>
   <script type="module" src="viewer.js"></script>${devScript}

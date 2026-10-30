@@ -33,7 +33,7 @@ const MIME = {
 
 export async function dev(slug, { port = 4600 } = {}) {
   const dir = path.join(POSTS, slug);
-  if (!existsSync(dir)) throw new Error(`posts/${slug}/ 不存在。先运行 npm run new ${slug}`);
+  if (!existsSync(dir)) throw new Error(`posts/${slug}/ does not exist. Run npm run new ${slug} first`);
   const articlePath = path.join(dir, ARTICLE);
   const diagramPath = path.join(dir, DIAGRAM);
   const rel = (f) => `posts/${slug}/${f}`;
@@ -100,9 +100,9 @@ export async function dev(slug, { port = 4600 } = {}) {
       }
     }
 
-    const errors = [...(articleText === null ? [{ file: rel(ARTICLE), message: "文件不存在" }] : state.articleErrors)];
+    const errors = [...(articleText === null ? [{ file: rel(ARTICLE), message: "file not found" }] : state.articleErrors)];
     const warnings = [];
-    if (diagramText === null) errors.push({ file: rel(DIAGRAM), message: "文件不存在" });
+    if (diagramText === null) errors.push({ file: rel(DIAGRAM), message: "file not found" });
     else if (state.diagramError) errors.push({ file: rel(DIAGRAM), message: state.diagramError });
     if (state.article && state.diagram) {
       const check = checkFrames(state.article.sections, state.diagram.frames);
@@ -228,7 +228,7 @@ export async function dev(slug, { port = 4600 } = {}) {
     const chunks = [];
     for await (const c of req) {
       size += c.length;
-      if (size > 2_000_000) throw new Error("请求太大");
+      if (size > 2_000_000) throw new Error("request too large");
       chunks.push(c);
     }
     return JSON.parse(Buffer.concat(chunks).toString("utf8"));
@@ -237,7 +237,7 @@ export async function dev(slug, { port = 4600 } = {}) {
   async function getSection(res, id) {
     const text = await readFile(articlePath, "utf8");
     const s = parseArticle(text).sections.filter((x) => x.id === id);
-    if (s.length !== 1) return json(res, 404, { error: s.length ? `章节 id "${id}" 重复` : `找不到章节 "${id}"` });
+    if (s.length !== 1) return json(res, 404, { error: s.length ? `Section id "${id}" is used more than once` : `Section "${id}" not found` });
     json(res, 200, { source: sectionSource(text, s[0]), hash: hash(text) });
   }
 
@@ -259,13 +259,13 @@ export async function dev(slug, { port = 4600 } = {}) {
 
   async function postSave(req, res) {
     const { id, source, hash: baseHash } = await body(req);
-    if (typeof id !== "string" || typeof source !== "string") return json(res, 400, { error: "参数不对" });
+    if (typeof id !== "string" || typeof source !== "string") return json(res, 400, { error: "bad request" });
     const current = await readFile(articlePath, "utf8");
     if (hash(current) !== baseHash) {
-      return json(res, 409, { error: "article.md 在你打开编辑框之后被改过了，为了不覆盖那些修改，这次没有保存。" });
+      return json(res, 409, { error: "article.md changed after you opened the editor. Nothing was saved, so those changes are not overwritten." });
     }
     const first = /^(#{2,3})[ \t]+.*?\{#([^}]*)\}[ \t]*$/m.exec(source.replace(/^\s+/, "").split(/\r?\n/)[0]);
-    if (!first) return json(res, 400, { error: "第一行必须是带 {#id} 的 ## 或 ### 标题" });
+    if (!first) return json(res, 400, { error: "The first line must be a ## or ### heading with an {#id}" });
     let next;
     try {
       next = replaceSection(current, id, source);
@@ -306,7 +306,7 @@ export async function dev(slug, { port = 4600 } = {}) {
       if (e.code !== "EADDRINUSE" || i > 20) throw e;
     }
   }
-  console.log(`\n  预览：${origin}${base}\n  保存 article.md 或 diagram.excalidraw 会自动更新页面。Ctrl+C 退出。\n`);
+  console.log(`\n  Preview: ${origin}${base}\n  Saving article.md or diagram.excalidraw updates the page. Ctrl+C to quit.\n`);
 
   const stop = async () => {
     server.close();

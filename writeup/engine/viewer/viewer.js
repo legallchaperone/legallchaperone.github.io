@@ -9,7 +9,7 @@ const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 const lerp = (a, b, t) => a + (b - a) * t;
-const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+const ease = (t) => 1 - Math.pow(1 - t, 4);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 
 const topbar = $(".wu-top");
@@ -27,6 +27,9 @@ const split = $(".wu-split");
 const article = $(".wu-article");
 const tocBtn = $(".wu-toc-btn");
 const tocMenu = $(".wu-toc-menu");
+const tocList = $(".wu-toc-list");
+const expandAll = $(".wu-expand input");
+const where = $(".wu-where");
 
 const reduced = matchMedia("(prefers-reduced-motion: reduce)");
 const narrow = matchMedia("(max-width: 820px)");
@@ -45,6 +48,7 @@ let tween = null;
 let raf = 0;
 let settleTimer = 0;
 let following = true;
+let overview = false; // "Whole diagram": no section is singled out
 let active; // undefined until first update; null = intro / no section
 let items = [];
 let navTarget; // set while a programmatic scroll is in flight
@@ -93,7 +97,7 @@ function flyTo(target, instant = false) {
     apply(target);
     return;
   }
-  tween = { from: cam, to: target, t0: performance.now(), dur: 650 };
+  tween = { from: cam, to: target, t0: performance.now(), dur: 420 };
   if (!raf) raf = requestAnimationFrame(step);
 }
 
@@ -130,8 +134,15 @@ function detach() {
 
 function resume(instant = false) {
   following = true;
+  setOverview(false);
   flyTo(cameraForActive(), instant);
   updateFab();
+}
+
+function setOverview(on) {
+  if (overview === on) return;
+  overview = on;
+  highlight(on ? null : rectFor(active));
 }
 
 function zoomAt(px, py, factor) {
@@ -143,7 +154,7 @@ function zoomAt(px, py, factor) {
 }
 
 function updateFab() {
-  fab.textContent = following ? "看全图" : "回到当前章节";
+  fab.textContent = following ? "Whole diagram" : "Resume reading";
   fab.hidden = following && !rectFor(active);
 }
 
@@ -164,6 +175,24 @@ function highlight(r) {
   const W = data.width;
   const H = data.height;
   dimPath.setAttribute("d", `M${-M} ${-M}H${W + M}V${H + M}H${-M}Z${roundRectPath(r, 10)}`);
+}
+
+/** Outline one frame on the diagram and light up the links that name it. */
+function preview(id) {
+  for (const el of $$(".is-preview", hot)) el.classList.remove("is-preview");
+  for (const el of $$(".is-linked", article)) el.classList.remove("is-linked");
+  if (!id) return;
+  hot.querySelector(`rect[data-id="${CSS.escape(id)}"]`)?.classList.add("is-preview");
+  for (const el of $$(`.wu-chip[data-target="${CSS.escape(id)}"]`, article)) el.classList.add("is-linked");
+}
+
+/** Faintly outline what can be clicked next: the sections in the intro, else the current section's components. */
+function markAvailable() {
+  const main = active ? sectionById(active)?.parent || active : null;
+  for (const rect of hot.children) {
+    const parent = sectionById(rect.dataset.id)?.parent;
+    rect.classList.toggle("is-available", main ? parent === main : !parent);
+  }
 }
 
 function setupDiagram() {
@@ -189,6 +218,7 @@ function setupDiagram() {
       return `<rect data-id="${esc(id)}" x="${f.x}" y="${f.y}" width="${f.w}" height="${f.h}" rx="8"><title>${esc(title)}</title></rect>`;
     })
     .join("");
+  markAvailable();
 }
 
 // ── Article tracking ──────────────────────────────────────────────────
@@ -226,17 +256,25 @@ function setActive(id, instant = false) {
   if (id === active) return;
   active = id;
   for (const el of $$(".is-active", article)) el.classList.remove("is-active");
-  for (const el of $$(".is-active", tocMenu)) el.classList.remove("is-active");
+  for (const el of $$(".is-active", tocList)) el.classList.remove("is-active");
   if (id) {
     const el = document.getElementById(id);
     el?.classList.add("is-active");
     const parent = sectionById(id)?.parent;
     if (parent) document.getElementById(parent)?.classList.add("is-active");
-    tocMenu.querySelector(`a[data-id="${CSS.escape(id)}"]`)?.classList.add("is-active");
+    tocList.querySelector(`a[data-id="${CSS.escape(id)}"]`)?.classList.add("is-active");
   }
-  highlight(rectFor(id));
+  highlight(overview ? null : rectFor(id));
+  markAvailable();
+  updateWhere();
   if (following) flyTo(cameraForActive(), instant);
   updateFab();
+}
+
+/** The current section's title in the top bar. */
+function updateWhere() {
+  const main = active ? sectionById(active)?.parent || active : null;
+  where.textContent = main ? document.getElementById(main)?.querySelector(":scope > .wu-h")?.textContent.trim() || "" : "";
 }
 
 function hashId() {
@@ -274,6 +312,7 @@ function navigate(id, { push = true, instant = false } = {}) {
     history.pushState(null, "", id ? `#${id}` : location.pathname + location.search);
   }
   following = true;
+  setOverview(false);
   navTarget = id;
   setActive(id, instant);
   updateFab();
@@ -385,6 +424,14 @@ stage.addEventListener("pointermove", (e) => {
   }
 });
 
+hot.addEventListener("pointerover", (e) => {
+  if (e.pointerType === "touch" || pointers.size) return;
+  preview(e.target.closest("rect[data-id]")?.dataset.id);
+});
+hot.addEventListener("pointerout", (e) => {
+  if (!e.relatedTarget?.closest?.(".wu-hot rect")) preview(null);
+});
+
 function endPointer(e) {
   if (!pointers.delete(e.pointerId)) return;
   pinch = pointers.size === 2 ? pinchState() : null;
@@ -401,17 +448,34 @@ stage.addEventListener(
   (e) => {
     e.preventDefault();
     const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? stageH : 1;
-    // ctrlKey is set for trackpad pinches, which report small deltas.
-    const factor = Math.exp(-e.deltaY * unit * (e.ctrlKey ? 0.012 : 0.0022));
-    const r = stage.getBoundingClientRect();
-    zoomAt(e.clientX - r.left, e.clientY - r.top, factor);
+    if (e.ctrlKey || e.metaKey) {
+      // ctrlKey is also set for trackpad pinches.
+      const r = stage.getBoundingClientRect();
+      zoomAt(e.clientX - r.left, e.clientY - r.top, Math.exp(-e.deltaY * unit * 0.01));
+    } else {
+      // Plain wheel and two-finger swipes pan, like Excalidraw.
+      detach();
+      apply({ ...cam, x: cam.x - e.deltaX * unit, y: cam.y - e.deltaY * unit });
+      moving();
+    }
   },
   { passive: false }
 );
 
+stage.addEventListener("dblclick", (e) => {
+  if (e.target.closest("rect[data-id]")) return; // a click on a frame already navigated
+  const r = stage.getBoundingClientRect();
+  const px = e.clientX - r.left;
+  const py = e.clientY - r.top;
+  const k = clamp(cam.k * (e.shiftKey ? 1 / 1.6 : 1.6), minScale(), ZOOM_MAX);
+  detach();
+  flyTo({ k, x: px - (px - cam.x) * (k / cam.k), y: py - (py - cam.y) * (k / cam.k) });
+});
+
 fab.addEventListener("click", () => {
   if (following) {
     detach();
+    setOverview(true);
     flyTo(fit(fullRect()));
   } else {
     resume();
@@ -422,7 +486,38 @@ fab.addEventListener("click", () => {
 function setMenu(open) {
   tocMenu.hidden = !open;
   tocBtn.setAttribute("aria-expanded", String(open));
+  const cur = open && tocList.querySelector(".is-active");
+  if (cur) tocMenu.scrollTop += cur.getBoundingClientRect().top - tocMenu.getBoundingClientRect().top - 48;
 }
+
+function syncExpandAll() {
+  const subs = $$(".wu-sub", article);
+  expandAll.closest("label").hidden = !subs.length;
+  expandAll.checked = subs.length > 0 && subs.every((d) => d.open);
+}
+expandAll.addEventListener("change", () => {
+  for (const d of $$(".wu-sub", article)) d.open = expandAll.checked;
+  measure();
+  update();
+});
+// <details> toggle events don't bubble; listen in the capture phase.
+article.addEventListener("toggle", syncExpandAll, true);
+
+// Links in the text that point at a section outline its frame while hovered.
+const sectionLink = (el) => {
+  const a = el?.closest?.('a[href^="#"]');
+  if (!a) return null;
+  const id = a.dataset.target || decodeURIComponent(a.getAttribute("href").slice(1));
+  return data.frames[id] ? id : null;
+};
+article.addEventListener("pointerover", (e) => {
+  if (e.pointerType !== "touch") preview(sectionLink(e.target));
+});
+article.addEventListener("pointerout", (e) => {
+  if (sectionLink(e.target) && sectionLink(e.target) !== sectionLink(e.relatedTarget)) preview(null);
+});
+article.addEventListener("focusin", (e) => preview(sectionLink(e.target)));
+article.addEventListener("focusout", () => preview(null));
 tocBtn.addEventListener("click", () => setMenu(tocMenu.hidden));
 document.addEventListener("click", (e) => {
   if (!tocMenu.hidden && !e.target.closest(".wu-toc")) setMenu(false);
@@ -510,6 +605,7 @@ split.addEventListener("keydown", (e) => {
 
 history.scrollRestoration = "manual";
 setupDiagram();
+syncExpandAll();
 measure();
 const initial = hashId();
 if (initial && document.getElementById(initial)) navigate(initial, { push: false, instant: true });
@@ -533,6 +629,7 @@ export const viewer = {
   refresh() {
     measure();
     update();
+    updateWhere();
   },
   /** Swap the whole article (sections added, removed or renamed). */
   replaceArticle(html, toc, sections) {
@@ -540,7 +637,7 @@ export const viewer = {
     const anchorId = active;
     const anchorTop = anchorId ? document.getElementById(anchorId)?.getBoundingClientRect().top : null;
     article.innerHTML = html;
-    tocMenu.innerHTML = toc;
+    tocList.innerHTML = toc;
     data = { ...data, sections };
     for (const id of open) {
       const d = document.getElementById(id);
@@ -554,6 +651,7 @@ export const viewer = {
     setupDiagram();
     active = undefined;
     navTarget = undefined;
+    syncExpandAll();
     update(true);
   },
   /** Swap the SVG and frame boxes; the camera stays on the current section. */
@@ -561,7 +659,7 @@ export const viewer = {
     drawing.innerHTML = svg;
     data = { ...data, frames, width, height };
     setupDiagram();
-    highlight(rectFor(active));
+    highlight(overview ? null : rectFor(active));
     updateFab();
     if (following) flyTo(cameraForActive(), true);
   },

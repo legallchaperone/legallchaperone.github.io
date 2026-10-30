@@ -41,15 +41,15 @@ export function splitFrontMatter(text) {
   const bom = text.startsWith("﻿") ? 1 : 0;
   const m = /^---[ \t]*\r?\n([\s\S]*?)^---[ \t]*(?:\r?\n|$)/m.exec(text.slice(bom));
   if (!m || m.index !== 0) {
-    errors.push({ line: 1, message: "缺少开头的 YAML front matter（--- 包起来的 title / date）" });
+    errors.push({ line: 1, message: "Missing the YAML front matter at the top (title / date between --- lines)" });
     return { data: {}, bodyStart: bom, errors };
   }
   let data = {};
   try {
     data = YAML.parse(m[1]) ?? {};
-    if (typeof data !== "object" || Array.isArray(data)) throw new Error("front matter 必须是键值对");
+    if (typeof data !== "object" || Array.isArray(data)) throw new Error("front matter must be key: value pairs");
   } catch (e) {
-    errors.push({ line: 2, message: `front matter 不是合法的 YAML：${e.message.split("\n")[0]}` });
+    errors.push({ line: 2, message: `front matter is not valid YAML: ${e.message.split("\n")[0]}` });
     data = {};
   }
   return { data, bodyStart: bom + m[0].length, errors };
@@ -62,9 +62,9 @@ function checkMeta(data, errors) {
     description: data.description == null ? "" : String(data.description),
     draft: data.draft === true,
   };
-  if (!meta.title) errors.push({ line: 1, message: "front matter 缺少 title" });
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(meta.date)) errors.push({ line: 1, message: `front matter 的 date 必须是 YYYY-MM-DD（现在是 "${meta.date}"）` });
-  if (data.draft != null && typeof data.draft !== "boolean") errors.push({ line: 1, message: "front matter 的 draft 只能是 true 或 false" });
+  if (!meta.title) errors.push({ line: 1, message: "front matter is missing title" });
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(meta.date)) errors.push({ line: 1, message: `front matter date must be YYYY-MM-DD (got "${meta.date}")` });
+  if (data.draft != null && typeof data.draft !== "boolean") errors.push({ line: 1, message: "front matter draft must be true or false" });
   return meta;
 }
 
@@ -139,27 +139,27 @@ export function parseArticle(text) {
     const m = ID_SUFFIX.exec(h.rest);
     const tag = "#".repeat(h.level);
     if (!m) {
-      errors.push({ line, message: `${tag} 标题缺少 {#id}：「${h.line.text.trim()}」` });
+      errors.push({ line, message: `${tag} heading is missing {#id}: "${h.line.text.trim()}"` });
       continue;
     }
     const id = (m[1] ?? m[2]).trim();
     const title = h.rest.slice(0, m.index).trim();
     if (h.level === 2) {
       if (!MAIN_ID.test(id)) {
-        errors.push({ line, message: `主章节 id "${id}" 格式不对：只能用小写字母、数字和连字符，例如 {#data-flow}` });
+        errors.push({ line, message: `Section id "${id}" is not valid: use lowercase letters, digits and hyphens, e.g. {#data-flow}` });
       }
       parent = id;
     } else {
       if (!SUB_ID.test(id)) {
-        errors.push({ line, message: `子组件 id "${id}" 格式不对：应为 {#父id/子id}，例如 {#${parent ?? "encoder"}/attention}` });
+        errors.push({ line, message: `Component id "${id}" is not valid: write it as {#parent/child}, e.g. {#${parent ?? "encoder"}/attention}` });
       } else if (parent === null) {
-        errors.push({ line, message: `### {#${id}} 出现在第一个 ## 主章节之前` });
+        errors.push({ line, message: `### {#${id}} comes before the first ## section` });
       } else if (id.split("/")[0] !== parent) {
-        errors.push({ line, message: `### {#${id}} 的父 id 应该是所在主章节 "${parent}"` });
+        errors.push({ line, message: `### {#${id}} should use its section "${parent}" as the parent id` });
       }
     }
     if (seen.has(id)) {
-      errors.push({ line, message: `章节 id "${id}" 重复（第一次出现在第 ${seen.get(id)} 行）` });
+      errors.push({ line, message: `Section id "${id}" is used more than once (first on line ${seen.get(id)})` });
     } else {
       seen.set(id, line);
     }
@@ -194,7 +194,9 @@ export function replaceSection(text, id, newSource) {
   const { sections } = parseArticle(text);
   const matches = sections.filter((s) => s.id === id);
   if (matches.length !== 1) {
-    throw new Error(matches.length ? `章节 id "${id}" 重复，无法确定写回位置` : `找不到章节 "${id}"`);
+    throw new Error(
+      matches.length ? `Section id "${id}" is used more than once, so there is no single place to write back` : `Section "${id}" not found`
+    );
   }
   const s = matches[0];
   const old = text.slice(s.start, s.end);

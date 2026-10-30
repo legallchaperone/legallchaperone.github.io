@@ -36,11 +36,11 @@ test("front matter: draft defaults to false, description to empty", () => {
 });
 
 test("front matter: missing, invalid YAML, missing title, bad date, non-boolean draft", () => {
-  assert.match(messages(parseArticle("## A {#a}\n")), /缺少开头的 YAML front matter/);
-  assert.match(messages(parseArticle(fm("", "title: [unclosed\ndate: 2026-01-01"))), /不是合法的 YAML/);
-  assert.match(messages(parseArticle(fm("", "date: 2026-01-01"))), /缺少 title/);
+  assert.match(messages(parseArticle("## A {#a}\n")), /Missing the YAML front matter/);
+  assert.match(messages(parseArticle(fm("", "title: [unclosed\ndate: 2026-01-01"))), /is not valid YAML/);
+  assert.match(messages(parseArticle(fm("", "date: 2026-01-01"))), /is missing title/);
   assert.match(messages(parseArticle(fm("", "title: T\ndate: 29/10/2026"))), /YYYY-MM-DD/);
-  assert.match(messages(parseArticle(fm("", "title: T\ndate: 2026-01-01\ndraft: yes please"))), /draft 只能是 true 或 false/);
+  assert.match(messages(parseArticle(fm("", "title: T\ndate: 2026-01-01\ndraft: yes please"))), /draft must be true or false/);
 });
 
 // ── Sections ──────────────────────────────────────────────────────────
@@ -73,15 +73,15 @@ test("sections: # and #### headings are ordinary content", () => {
 
 test("sections: id errors are reported with line numbers", () => {
   const cases = [
-    ["## No id\n", /## 标题缺少 \{#id\}/],
-    ["## Upper {#Encoder}\n", /主章节 id "Encoder" 格式不对/],
-    ["## Slash {#a/b}\n", /主章节 id "a\/b" 格式不对/],
-    ["## Space {#a b}\n", /主章节 id "a b" 格式不对/],
-    ["## A {#a}\n### Flat {#detail}\n", /子组件 id "detail" 格式不对/],
-    ["### Orphan {#a/b}\n", /出现在第一个 ## 主章节之前/],
-    ["## A {#a}\n### Wrong {#b/c}\n", /父 id 应该是所在主章节 "a"/],
-    ["## A {#a}\ntext\n## Again {#a}\n", /章节 id "a" 重复（第一次出现在第 5 行）/],
-    ["## A {#a}\n### S {#a/s}\n### S2 {#a/s}\n", /章节 id "a\/s" 重复/],
+    ["## No id\n", /## heading is missing \{#id\}/],
+    ["## Upper {#Encoder}\n", /Section id "Encoder" is not valid/],
+    ["## Slash {#a/b}\n", /Section id "a\/b" is not valid/],
+    ["## Space {#a b}\n", /Section id "a b" is not valid/],
+    ["## A {#a}\n### Flat {#detail}\n", /Component id "detail" is not valid/],
+    ["### Orphan {#a/b}\n", /comes before the first ## section/],
+    ["## A {#a}\n### Wrong {#b/c}\n", /should use its section "a" as the parent id/],
+    ["## A {#a}\ntext\n## Again {#a}\n", /Section id "a" is used more than once \(first on line 5\)/],
+    ["## A {#a}\n### S {#a/s}\n### S2 {#a/s}\n", /Section id "a\/s" is used more than once/],
   ];
   for (const [body, re] of cases) {
     const r = parseArticle(fm(body));
@@ -143,7 +143,7 @@ test("broken formulas are errors with the section's line", () => {
   const r = renderArticle(fm("## A {#a}\n\nok \\(\\frac{1}{\\)\n"));
   assert.equal(r.errors.length, 1);
   assert.equal(r.errors[0].line, 5);
-  assert.match(r.errors[0].message, /\{#a\}.*公式错误/);
+  assert.match(r.errors[0].message, /\{#a\}.*Math error/);
 });
 
 test("renderArticle: heading HTML, plain titles, intro", () => {
@@ -179,9 +179,9 @@ test("frames: every section matched → no issues", () => {
 test("frames: name without a section, bad name, duplicate name → errors", () => {
   const r = checkFrames(sections, [frame("a"), frame("a/s"), frame("a/t"), frame("b"), frame("c"), frame("A b"), frame("b", 50)]);
   const msg = r.errors.map((e) => e.message).join("\n");
-  assert.match(msg, /Frame "c" 找不到对应章节/);
-  assert.match(msg, /Frame 名 "A b" 格式不对/);
-  assert.match(msg, /Frame 名 "b" 在图里出现了不止一次/);
+  assert.match(msg, /Frame "c" has no matching section/);
+  assert.match(msg, /Frame name "A b" is not a valid section id/);
+  assert.match(msg, /Frame name "b" is used more than once/);
   assert.equal(r.errors.length, 3);
   assert.equal(r.frameMap.b.x, 0, "the first frame with a name wins");
 });
@@ -191,8 +191,8 @@ test("frames: section without a frame → warning (sub falls back to parent)", (
   assert.deepEqual(r.errors, []);
   const w = Object.fromEntries(r.warnings.map((x) => [x.message.match(/\{#([^}]+)\}/)[1], x]));
   assert.deepEqual(Object.keys(w), ["a/t", "b"]);
-  assert.match(w["a/t"].message, /停在父章节 "a"/);
-  assert.match(w.b.message, /显示全图/);
+  assert.match(w["a/t"].message, /stay on the parent section "a"/);
+  assert.match(w.b.message, /show the whole diagram/);
   assert.equal(w.b.line, sections.find((s) => s.id === "b").line);
 });
 
@@ -259,17 +259,17 @@ test("posts.json: refuses a file that is not a JSON array", async () => {
   const dir = await mkdtemp(path.join(tmpdir(), "writeup-"));
   const file = path.join(dir, "posts.json");
   await writeFile(file, "{}");
-  await assert.rejects(updatePostsJsonFile(file, []), /应该是一个数组/);
+  await assert.rejects(updatePostsJsonFile(file, []), /should be an array/);
   await writeFile(file, "[");
-  await assert.rejects(updatePostsJsonFile(file, []), /不是合法的 JSON/);
+  await assert.rejects(updatePostsJsonFile(file, []), /is not valid JSON/);
 });
 
 // ── Diagram export (headless Chromium) ────────────────────────────────
 
 test("diagram: unreadable files give clear errors", async () => {
-  await assert.rejects(compileDiagram("{"), /不是合法的 JSON/);
-  await assert.rejects(compileDiagram("{}"), /没有 elements 数组/);
-  await assert.rejects(compileDiagram('{"elements":[{"type":"rectangle","isDeleted":true}]}'), /图是空的/);
+  await assert.rejects(compileDiagram("{"), /is not valid JSON/);
+  await assert.rejects(compileDiagram("{}"), /has no elements array/);
+  await assert.rejects(compileDiagram('{"elements":[{"type":"rectangle","isDeleted":true}]}'), /the diagram is empty/);
 });
 
 test("diagram: frame boxes land in SVG coordinates, frames hidden, fonts embedded", async () => {

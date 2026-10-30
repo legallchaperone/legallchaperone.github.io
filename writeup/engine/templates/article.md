@@ -1,26 +1,26 @@
 ---
-title: 新文章标题
+title: New article title
 date: {{date}}
-description: 一句话说明这篇讲什么（会显示在 Blog 列表里）。
+description: One sentence on what this piece covers (shown in the Blog list).
 draft: true
 ---
 
-开头的导语写在第一个 `##` 之前。读到这里时，左边显示全图。
+The intro goes before the first `##`. While the reader is here, the diagram shows everything.
 
-## 第一部分 {#part-one}
+## Part one {#part-one}
 
-主章节用 `## 标题 {#id}`。图上用一个名字叫 `part-one` 的 Frame 框住对应区域，读到这里镜头就会移过去。
+A section is `## Title {#id}`. On the diagram, draw a Frame named `part-one` around the matching area; when the reader gets here the camera moves to it.
 
-行内公式 \(E = mc^2\)，块级公式：
+Inline math \(E = mc^2\), display math:
 
 $$
 \mathcal{L}(\theta) = \mathbb{E}_{x}\big[\log p_\theta(x)\big]
 $$
 
-### 细节 {#part-one/detail}
+### Detail {#part-one/detail}
 
-子组件笔记用 `### 标题 {#父id/子id}`，默认折叠在主章节下面。图上对应的 Frame 名是 `part-one/detail`，可以画在 `part-one` 里面。
+A component note is `### Title {#parent/child}` and starts collapsed under its section. Its Frame is named `part-one/detail` and can sit inside `part-one`.
 
-## 第二部分 {#part-two}
+## Part two {#part-two}
 
-写完把 `draft: true` 删掉（或改成 `false`），再运行 `npm run build`。
+When you are done, delete `draft: true` (or set it to `false`) and run `npm run build`.

@@ -30,10 +30,10 @@ export async function compileDiagram(text) {
   try {
     scene = JSON.parse(text);
   } catch (e) {
-    throw new Error(`不是合法的 JSON（${e.message}）`);
+    throw new Error(`is not valid JSON (${e.message})`);
   }
-  if (!Array.isArray(scene?.elements)) throw new Error("没有 elements 数组，不像是 Excalidraw 文件");
-  if (!scene.elements.some((el) => !el.isDeleted)) throw new Error("图是空的");
+  if (!Array.isArray(scene?.elements)) throw new Error("has no elements array, so it is not an Excalidraw file");
+  if (!scene.elements.some((el) => !el.isDeleted)) throw new Error("the diagram is empty");
   return exportScene(scene);
 }
 
@@ -49,7 +49,7 @@ export async function compilePost(slug) {
 
   let article = null;
   const articleText = await readFile(path.join(dir, ARTICLE), "utf8").catch(() => null);
-  if (articleText === null) errors.push({ file: rel(ARTICLE), message: "文件不存在" });
+  if (articleText === null) errors.push({ file: rel(ARTICLE), message: "file not found" });
   else {
     article = renderArticle(articleText);
     for (const e of article.errors) errors.push({ file: rel(ARTICLE), ...e });
@@ -57,7 +57,7 @@ export async function compilePost(slug) {
 
   let diagram = null;
   const diagramText = await readFile(path.join(dir, DIAGRAM), "utf8").catch(() => null);
-  if (diagramText === null) errors.push({ file: rel(DIAGRAM), message: "文件不存在" });
+  if (diagramText === null) errors.push({ file: rel(DIAGRAM), message: "file not found" });
   else {
     try {
       diagram = await compileDiagram(diagramText);
@@ -121,7 +121,7 @@ export async function buildAll({ log = console.log } = {}) {
   const warnings = [];
   for (const slug of slugs) {
     if (!SLUG.test(slug)) {
-      errors.push({ file: `posts/${slug}`, message: "目录名（slug）只能用小写字母、数字和连字符" });
+      errors.push({ file: `posts/${slug}`, message: "the folder name (slug) may only use lowercase letters, digits and hyphens" });
       continue;
     }
     // Read the draft flag first so drafts never pay for a diagram export.
@@ -139,7 +139,7 @@ export async function buildAll({ log = console.log } = {}) {
   for (const w of warnings) log(formatIssue(w, "warning"));
   for (const e of errors) log(formatIssue(e, "error"));
   if (errors.length) {
-    log(`\n构建失败：${errors.length} 个错误，什么都没有写入。`);
+    log(`\nBuild failed with ${errors.length} error${errors.length === 1 ? "" : "s"}; nothing was written.`);
     return false;
   }
 

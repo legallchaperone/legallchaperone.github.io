@@ -44,9 +44,9 @@ export async function updatePostsJsonFile(file, writeups) {
   try {
     entries = JSON.parse(text);
   } catch (e) {
-    throw new Error(`${file} 不是合法的 JSON：${e.message}`);
+    throw new Error(`${file} is not valid JSON: ${e.message}`);
   }
-  if (!Array.isArray(entries)) throw new Error(`${file} 应该是一个数组`);
+  if (!Array.isArray(entries)) throw new Error(`${file} should be an array`);
   const next = JSON.stringify(syncPostsJson(entries, writeups), null, 2) + "\n";
   if (next === text) return false;
   await writeFile(file, next);

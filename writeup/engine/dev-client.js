@@ -14,37 +14,37 @@ style.textContent = `
 .wu-dev-bar li { font: 0.76rem/1.55 ui-monospace, SFMono-Regular, Menlo, monospace; white-space: pre-wrap; }
 .wu-dev-bar button { float: right; font: inherit; background: none; border: 0; color: inherit; cursor: pointer; opacity: .7; }
 .wu-sec { position: relative; }
-.wu-edit-btn { font: 500 0.68rem/1 var(--font-head, sans-serif); color: var(--mid-gray); background: #fff; border: 1px solid var(--light-gray);
+.wu-edit-btn { font: 500 0.68rem/1 var(--font-head, sans-serif); color: var(--muted); background: var(--surface); border: 1px solid var(--rule);
   border-radius: 999px; padding: 0.3rem 0.6rem; cursor: pointer; opacity: 0; transition: opacity .15s ease; }
 .wu-sec > .wu-edit-btn { position: absolute; right: 0; top: 0.3rem; }
 .wu-sub > summary .wu-edit-btn { margin-left: auto; }
 .wu-sec:hover > .wu-edit-btn, .wu-sub > summary:hover .wu-edit-btn, .wu-edit-btn:focus-visible { opacity: 1; }
-.wu-edit-btn:hover { color: var(--orange); border-color: var(--orange); }
+.wu-edit-btn:hover { color: var(--accent); border-color: var(--accent); }
 .is-editing > .wu-body { display: none; }
 .wu-text { container-type: inline-size; }
-.wu-ed { width: 100cqw; margin: 0.5rem 0 1.5rem calc(50% - 50cqw); background: #fff; border: 1px solid var(--orange);
+.wu-ed { width: 100cqw; margin: 0.5rem 0 1.5rem calc(50% - 50cqw); background: var(--surface); border: 1px solid var(--accent);
   border-radius: 10px; box-shadow: 0 10px 30px rgba(20,20,19,.1); font-size: 16px; }
-.wu-ed-bar { display: flex; align-items: center; gap: 0.6rem; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--light-gray);
+.wu-ed-bar { display: flex; align-items: center; gap: 0.6rem; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--rule);
   font: 500 0.75rem/1.4 var(--font-head, sans-serif); }
-.wu-ed-bar code { font-size: 0.72rem; color: var(--orange); }
-.wu-ed-status { color: var(--mid-gray); margin-right: auto; }
+.wu-ed-bar code { font-size: 0.72rem; color: var(--accent); }
+.wu-ed-status { color: var(--muted); margin-right: auto; }
 .wu-ed-status.is-bad { color: #b33a1a; }
-.wu-ed-bar button, .wu-ed-conflict button { font: inherit; border: 1px solid var(--light-gray); background: var(--light); border-radius: 6px;
+.wu-ed-bar button, .wu-ed-conflict button { font: inherit; border: 1px solid var(--rule); background: var(--bg); border-radius: 6px;
   padding: 0.3rem 0.65rem; cursor: pointer; }
-.wu-ed-bar button[data-act=save] { background: var(--dark); color: var(--light); border-color: var(--dark); }
+.wu-ed-bar button[data-act=save] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
 .wu-ed-conflict { padding: 0.6rem 0.75rem; background: #fbe9e5; color: #8a2b14; font: 0.78rem/1.5 var(--font-head, sans-serif);
   display: flex; gap: 0.75rem; align-items: center; }
 .wu-ed-conflict[hidden] { display: none; }
 .wu-ed-panes { display: grid; grid-template-columns: 1fr; }
 .wu-ed textarea { width: 100%; min-height: 18rem; height: 45vh; resize: vertical; border: 0; outline: none; padding: 0.9rem 1rem;
-  font: 13px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--dark); background: #fdfcf9; tab-size: 2; }
-.wu-ed-preview { padding: 0.9rem 1.25rem; overflow: auto; max-height: 45vh; border-top: 1px solid var(--light-gray); }
+  font: 13px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--fg); background: var(--bg); tab-size: 2; }
+.wu-ed-preview { padding: 0.9rem 1.25rem; overflow: auto; max-height: 45vh; border-top: 1px solid var(--rule); }
 .wu-ed-preview .wu-h { font-family: var(--font-head); font-weight: 600; font-size: 1.15rem; margin-bottom: 0.8rem; }
 .wu-ed-errors { color: #b33a1a; font: 0.75rem/1.5 ui-monospace, monospace; padding: 0 1.25rem 0.75rem; white-space: pre-wrap; }
 @container (min-width: 760px) {
   .wu-ed-panes { grid-template-columns: 1fr 1fr; }
   .wu-ed textarea { height: 60vh; }
-  .wu-ed-preview { max-height: none; height: 60vh; border-top: 0; border-left: 1px solid var(--light-gray); }
+  .wu-ed-preview { max-height: none; height: 60vh; border-top: 0; border-left: 1px solid var(--rule); }
 }`;
 document.head.append(style);
 
@@ -63,13 +63,13 @@ function showStatus({ errors = [], warnings = [] }) {
   const key = JSON.stringify(warnings);
   if (errors.length) {
     bar.className = "wu-dev-bar is-error";
-    bar.innerHTML = `构建出错（${errors.length}）——能渲染的部分已经更新，修好后这条会自动消失。<ul>${errors
+    bar.innerHTML = `Build error${errors.length === 1 ? "" : "s"} (${errors.length}). Everything that renders has been updated; this bar goes away once it is fixed.<ul>${errors
       .map((e) => `<li>${escapeHtml(fmt(e))}</li>`)
       .join("")}</ul>`;
     bar.hidden = false;
   } else if (warnings.length && warningsDismissed !== key) {
     bar.className = "wu-dev-bar is-warn";
-    bar.innerHTML = `<button type="button" aria-label="关闭">✕</button>${warnings.length} 个警告<ul>${warnings
+    bar.innerHTML = `<button type="button" aria-label="Dismiss">✕</button>${warnings.length} warning${warnings.length === 1 ? "" : "s"}<ul>${warnings
       .map((w) => `<li>${escapeHtml(fmt(w))}</li>`)
       .join("")}</ul>`;
     bar.querySelector("button").onclick = () => {
@@ -113,6 +113,10 @@ on("sections", ({ changes }) => {
     if (c.heading != null) {
       const h = el.querySelector(":scope > .wu-h, :scope > summary > .wu-h");
       if (h) h.innerHTML = c.heading;
+      // Component chips and contents links repeat the heading.
+      for (const a of document.querySelectorAll(`.wu-chip[data-target="${CSS.escape(c.id)}"], .wu-toc-list a[data-id="${CSS.escape(c.id)}"]`)) {
+        a.innerHTML = c.heading;
+      }
     }
     const b = el.querySelector(":scope > .wu-body") || (el.matches(".wu-body") ? el : null);
     if (b) b.innerHTML = c.body;
@@ -126,7 +130,7 @@ on("article", ({ html, toc, sections }) => {
   for (const ed of [...editors.values()]) {
     if (!attach(ed)) {
       editors.delete(ed.id);
-      alert(`章节 {#${ed.id}} 已经不在文章里了，它的编辑框已关闭。`);
+      alert(`Section {#${ed.id}} is no longer in the article, so its editor was closed.`);
     }
   }
   viewer?.refresh();
@@ -146,7 +150,7 @@ function decorate() {
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "wu-edit-btn";
-    btn.textContent = "编辑";
+    btn.textContent = "Edit";
     h.after(btn);
   }
 }
@@ -193,9 +197,9 @@ async function openEditor(id) {
   root.className = "wu-ed";
   root.innerHTML = `
     <div class="wu-ed-bar"><code></code><span class="wu-ed-status"></span>
-      <button type="button" data-act="save">保存 ⌘S</button><button type="button" data-act="close">关闭</button></div>
-    <div class="wu-ed-conflict" hidden><span>article.md 在编辑期间被外部修改过。保存会被拒绝，避免覆盖那些修改。</span>
-      <button type="button" data-act="reload">载入最新内容（丢弃这里的修改）</button></div>
+      <button type="button" data-act="save">Save ⌘S</button><button type="button" data-act="close">Close</button></div>
+    <div class="wu-ed-conflict" hidden><span>article.md was changed elsewhere while you were editing. Saving is blocked so those changes are not overwritten.</span>
+      <button type="button" data-act="reload">Load latest (discard edits here)</button></div>
     <div class="wu-ed-panes"><textarea spellcheck="false"></textarea><div><div class="wu-ed-preview wu-body"></div><div class="wu-ed-errors"></div></div></div>`;
   const ed = {
     id,
@@ -221,7 +225,7 @@ async function openEditor(id) {
   ed.textarea.addEventListener("input", () => {
     clearTimeout(t);
     t = setTimeout(() => renderPreview(ed), 120);
-    setStatus(ed, ed.textarea.value === ed.saved ? "" : "未保存");
+    setStatus(ed, ed.textarea.value === ed.saved ? "" : "Unsaved");
   });
   root.addEventListener("keydown", (e) => {
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "s") {
@@ -258,7 +262,7 @@ async function renderPreview(ed) {
 async function save(ed) {
   if (ed.saving) return;
   ed.saving = true;
-  setStatus(ed, "保存中…");
+  setStatus(ed, "Saving…");
   try {
     const r = await fetch("/__dev/save", {
       method: "POST",
@@ -268,11 +272,11 @@ async function save(ed) {
     const j = await r.json();
     if (r.status === 409) {
       ed.conflictEl.hidden = false;
-      setStatus(ed, "未保存：有冲突", true);
+      setStatus(ed, "Not saved: conflict", true);
       return;
     }
     if (!r.ok) {
-      setStatus(ed, `未保存：${j.error}`, true);
+      setStatus(ed, `Not saved: ${j.error}`, true);
       return;
     }
     ed.hash = j.hash;
@@ -283,9 +287,9 @@ async function save(ed) {
       ed.label.textContent = `{#${j.id}}`;
       editors.set(j.id, ed);
     }
-    setStatus(ed, "已保存");
+    setStatus(ed, "Saved");
   } catch (e) {
-    setStatus(ed, `未保存：${e.message}`, true);
+    setStatus(ed, `Not saved: ${e.message}`, true);
   } finally {
     ed.saving = false;
     checkConflict(ed);
@@ -301,12 +305,12 @@ function checkConflicts() {
 }
 
 async function reload(ed) {
-  if (ed.textarea.value !== ed.saved && !confirm("丢弃这里未保存的修改，载入 article.md 里最新的这一节？")) return;
+  if (ed.textarea.value !== ed.saved && !confirm("Discard your unsaved edits and load the latest version of this section from article.md?")) return;
   try {
     const src = await fetchSection(ed.id);
     ed.hash = src.hash;
     ed.saved = ed.textarea.value = src.source;
-    setStatus(ed, "已载入最新内容");
+    setStatus(ed, "Loaded latest");
     renderPreview(ed);
     checkConflict(ed);
   } catch (e) {
@@ -315,7 +319,7 @@ async function reload(ed) {
 }
 
 function close(ed) {
-  if (ed.textarea.value !== ed.saved && !confirm("关闭编辑框？未保存的修改会丢失。")) return;
+  if (ed.textarea.value !== ed.saved && !confirm("Close the editor? Unsaved edits will be lost.")) return;
   ed.root.remove();
   document.getElementById(ed.id)?.classList.remove("is-editing");
   editors.delete(ed.id);

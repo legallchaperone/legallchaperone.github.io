@@ -11,12 +11,12 @@ export function renderArticle(text) {
   const parsed = parseArticle(text);
   const errors = [...parsed.errors];
   const intro = renderMarkdown(text.slice(parsed.intro.start, parsed.intro.end));
-  intro.errors.forEach((e) => errors.push({ line: null, message: `（开头导语）${e.message}` }));
+  intro.errors.forEach((e) => errors.push({ line: null, message: `(intro) ${e.message}` }));
 
   const sections = parsed.sections.map((s) => {
     const heading = renderInline(s.title);
     const body = renderMarkdown(text.slice(s.bodyStart, s.end));
-    for (const e of [...heading.errors, ...body.errors]) errors.push({ line: s.line, message: `（{#${s.id}}）${e.message}` });
+    for (const e of [...heading.errors, ...body.errors]) errors.push({ line: s.line, message: `({#${s.id}}) ${e.message}` });
     return {
       id: s.id,
       level: s.level,
@@ -46,23 +46,24 @@ export function checkFrames(sections, frames) {
     const name = (f.name ?? "").trim();
     if (!name) continue; // unnamed frames are just decoration
     if (frameMap[name]) {
-      errors.push({ message: `Frame 名 "${name}" 在图里出现了不止一次` });
+      errors.push({ message: `Frame name "${name}" is used more than once in the diagram` });
       continue;
     }
     if (!MAIN_ID.test(name) && !SUB_ID.test(name)) {
-      errors.push({ message: `Frame 名 "${name}" 格式不对：应为章节 id（如 encoder 或 encoder/attention）` });
+      errors.push({ message: `Frame name "${name}" is not a valid section id (e.g. encoder or encoder/attention)` });
       continue;
     }
     if (!ids.has(name)) {
-      errors.push({ message: `Frame "${name}" 找不到对应章节：article.md 里没有 {#${name}}` });
+      errors.push({ message: `Frame "${name}" has no matching section: article.md has no {#${name}}` });
       continue;
     }
     frameMap[name] = { x: round(f.x), y: round(f.y), w: round(f.w), h: round(f.h) };
   }
   for (const s of sections) {
     if (!frameMap[s.id]) {
-      const fallback = s.parent && frameMap[s.parent] ? `镜头会停在父章节 "${s.parent}"` : "镜头会显示全图";
-      warnings.push({ line: s.line, message: `章节 {#${s.id}} 在图上没有同名 Frame，${fallback}` });
+      const fallback =
+        s.parent && frameMap[s.parent] ? `the camera will stay on the parent section "${s.parent}"` : "the camera will show the whole diagram";
+      warnings.push({ line: s.line, message: `Section {#${s.id}} has no Frame with the same name; ${fallback}` });
     }
   }
   return { errors, warnings, frameMap };
@@ -97,15 +98,18 @@ export function articleHtml(article) {
   <h2 class="wu-h">${s.headingHtml}</h2>
   <div class="wu-body">${s.bodyHtml}</div>${
     subs.length
-      ? `\n  <div class="wu-subs">${subs
-          .map(
-            (c) => `
+      ? `\n  <nav class="wu-chips" aria-label="Components">${subs
+          .map((c) => `<a class="wu-chip" href="#${escapeHtml(c.id)}" data-target="${escapeHtml(c.id)}">${c.headingHtml}</a>`)
+          .join("")}</nav>
+  <div class="wu-subs">${subs
+    .map(
+      (c) => `
     <details class="wu-sub" id="${escapeHtml(c.id)}" data-id="${escapeHtml(c.id)}">
       <summary><h3 class="wu-h">${c.headingHtml}</h3></summary>
       <div class="wu-body">${c.bodyHtml}</div>
     </details>`
-          )
-          .join("")}
+    )
+    .join("")}
   </div>`
       : ""
   }

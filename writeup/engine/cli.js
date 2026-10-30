@@ -12,8 +12,8 @@ const TEMPLATES = path.join(path.dirname(fileURLToPath(import.meta.url)), "templ
 const [cmd, slug] = process.argv.slice(2);
 
 function needSlug() {
-  if (!slug) fail(`用法：npm run ${cmd} <slug>`);
-  if (!SLUG.test(slug)) fail(`slug "${slug}" 只能用小写字母、数字和连字符，例如 my-first-writeup`);
+  if (!slug) fail(`Usage: npm run ${cmd} <slug>`);
+  if (!SLUG.test(slug)) fail(`slug "${slug}" may only use lowercase letters, digits and hyphens, e.g. my-first-writeup`);
 }
 
 function fail(msg) {
@@ -24,13 +24,13 @@ function fail(msg) {
 async function newPost() {
   needSlug();
   const dir = path.join(POSTS, slug);
-  if (existsSync(dir)) fail(`posts/${slug}/ 已经存在`);
+  if (existsSync(dir)) fail(`posts/${slug}/ already exists`);
   await mkdir(dir, { recursive: true });
   const today = new Date().toLocaleDateString("sv-SE"); // YYYY-MM-DD, local time
   const article = (await readFile(path.join(TEMPLATES, ARTICLE), "utf8")).replace("{{date}}", today);
   await writeFile(path.join(dir, ARTICLE), article);
   await writeFile(path.join(dir, DIAGRAM), await readFile(path.join(TEMPLATES, DIAGRAM)));
-  console.log(`✓ 已创建 posts/${slug}/${ARTICLE} 和 posts/${slug}/${DIAGRAM}（draft: true）\n  下一步：npm run dev ${slug}`);
+  console.log(`✓ Created posts/${slug}/${ARTICLE} and posts/${slug}/${DIAGRAM} (draft: true)\n  Next: npm run dev ${slug}`);
 }
 
 try {
@@ -43,7 +43,7 @@ try {
     const ok = await buildAll();
     await closeExporter();
     process.exit(ok ? 0 : 1);
-  } else fail("用法：npm run new <slug> | npm run dev <slug> | npm run build");
+  } else fail("Usage: npm run new <slug> | npm run dev <slug> | npm run build");
 } catch (e) {
   await closeExporter();
   fail(e.message);
