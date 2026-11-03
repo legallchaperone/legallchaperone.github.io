@@ -40,6 +40,7 @@ style.textContent = `
   font: 13px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--fg); background: var(--bg); tab-size: 2; }
 .wu-ed-preview { padding: 0.9rem 1.25rem; overflow: auto; max-height: 45vh; border-top: 1px solid var(--rule); }
 .wu-ed-preview .wu-h { font-family: var(--font-head); font-weight: 600; font-size: 1.15rem; margin-bottom: 0.8rem; }
+.wu-ed-card { font: 500 0.75rem/1.5 var(--font-head, sans-serif); color: var(--muted); border-left: 2px solid var(--accent); padding-left: 0.6rem; margin-top: 1rem; }
 .wu-ed-errors { color: #b33a1a; font: 0.75rem/1.5 ui-monospace, monospace; padding: 0 1.25rem 0.75rem; white-space: pre-wrap; }
 @container (min-width: 760px) {
   .wu-ed-panes { grid-template-columns: 1fr 1fr; }
@@ -135,6 +136,7 @@ on("article", ({ html, toc, sections }) => {
   }
   viewer?.refresh();
 });
+on("cards", ({ html }) => viewer?.replaceCards(html));
 on("diagram", ({ svg, frames, width, height }) => {
   viewer?.replaceDiagram(svg ?? document.querySelector(".wu-drawing").innerHTML, { frames, width, height });
 });

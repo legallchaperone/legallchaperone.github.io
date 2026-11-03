@@ -7,6 +7,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { renderArticle, checkFrames } from "./article.js";
+import { loadCards } from "./cards.js";
 import { renderPage } from "./page.js";
 import { exportScene } from "./export.js";
 import { updatePostsJsonFile } from "./posts.js";
@@ -55,6 +56,14 @@ export async function compilePost(slug) {
     for (const e of article.errors) errors.push({ file: rel(ARTICLE), ...e });
   }
 
+  let cards = [];
+  if (article) {
+    const loaded = await loadCards(article, dir);
+    cards = loaded.cards;
+    for (const e of loaded.errors) errors.push({ file: rel(ARTICLE), ...e });
+    for (const w of loaded.warnings) warnings.push({ file: rel(ARTICLE), ...w });
+  }
+
   let diagram = null;
   const diagramText = await readFile(path.join(dir, DIAGRAM), "utf8").catch(() => null);
   if (diagramText === null) errors.push({ file: rel(DIAGRAM), message: "file not found" });
@@ -73,7 +82,7 @@ export async function compilePost(slug) {
     for (const e of check.errors) errors.push({ file: rel(DIAGRAM), ...e });
     for (const w of check.warnings) warnings.push({ file: rel(ARTICLE), ...w });
   }
-  return { slug, dir, article, diagram, frameMap, errors, warnings };
+  return { slug, dir, article, diagram, frameMap, cards, errors, warnings };
 }
 
 /** Write a compiled post to site/<slug>/ (replacing what was there). */

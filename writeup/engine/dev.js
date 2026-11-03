@@ -12,6 +12,7 @@ import { renderPage, viewerData } from "./page.js";
 import { parseArticle, sectionSource, replaceSection } from "./parse.js";
 import { renderMarkdown, renderInline, escapeHtml } from "./render.js";
 import { compileDiagram, formatIssue, hash, POSTS, VIEWER, ARTICLE, DIAGRAM, ROOT } from "./build.js";
+import { loadCards, cardsHtml, extractCards } from "./cards.js";
 import { closeExporter } from "./export.js";
 
 const DEV_CLIENT = path.join(path.dirname(VIEWER), "dev-client.js");
@@ -49,6 +50,9 @@ export async function dev(slug, { port = 4600 } = {}) {
     diagramError: null,
     frameMap: {},
     frameKey: "",
+    cards: [],
+    cardsKey: "",
+    cardIssues: { errors: [], warnings: [] },
     errors: [],
     warnings: [],
   };
@@ -100,8 +104,25 @@ export async function dev(slug, { port = 4600 } = {}) {
       }
     }
 
+    // Code cards read other files, so reload them on every rebuild.
+    if (state.article) {
+      const loaded = await loadCards(state.article, dir);
+      state.cards = loaded.cards;
+      state.cardIssues = loaded;
+      for (const f of loaded.files) watchOutside(f);
+      const html = cardsHtml(loaded.cards);
+      if (html !== state.cardsKey) {
+        events.push(["cards", { html, count: loaded.cards.length }]);
+        state.cardsKey = html;
+      }
+    }
+
     const errors = [...(articleText === null ? [{ file: rel(ARTICLE), message: "file not found" }] : state.articleErrors)];
     const warnings = [];
+    if (articleText !== null) {
+      for (const e of state.cardIssues.errors) errors.push({ file: rel(ARTICLE), ...e });
+      for (const w of state.cardIssues.warnings) warnings.push({ file: rel(ARTICLE), ...w });
+    }
     if (diagramText === null) errors.push({ file: rel(DIAGRAM), message: "file not found" });
     else if (state.diagramError) errors.push({ file: rel(DIAGRAM), message: state.diagramError });
     if (state.article && state.diagram) {
@@ -159,7 +180,7 @@ export async function dev(slug, { port = 4600 } = {}) {
       return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${escapeHtml(slug)} — dev</title>
 <link rel="stylesheet" href="${base}viewer.css"></head><body class="wu" data-shell>${devScript}</body></html>`;
     }
-    return renderPage({ article: state.article, diagram: state.diagram, frameMap: state.frameMap, devScript });
+    return renderPage({ article: state.article, diagram: state.diagram, frameMap: state.frameMap, cards: state.cards, devScript });
   }
 
   // ── HTTP ──────────────────────────────────────────────────────────
@@ -251,9 +272,14 @@ export async function dev(slug, { port = 4600 } = {}) {
       errors.push(...h.errors);
       html += `<h${m[1].length} class="wu-h">${h.html}</h${m[1].length}>`;
     }
-    const b = renderMarkdown(m ? markdown.slice(m[0].length) : markdown);
+    const { md, specs } = extractCards(m ? markdown.slice(m[0].length) : markdown);
+    const b = renderMarkdown(md);
     errors.push(...b.errors);
     html += `<div class="wu-body">${b.html}</div>`;
+    for (const c of specs) {
+      const what = [c.attrs.title ?? c.attrs.file ?? c.lang ?? "code", c.attrs.lines && `lines ${c.attrs.lines}`].filter(Boolean).join(" · ");
+      html += `<p class="wu-ed-card">Code card under the diagram: ${escapeHtml(what)}</p>`;
+    }
     json(res, 200, { html, errors: errors.map((e) => e.message) });
   }
 
@@ -280,11 +306,26 @@ export async function dev(slug, { port = 4600 } = {}) {
   // ── Watch ─────────────────────────────────────────────────────────
 
   let timer = 0;
-  watch(dir, (ev, name) => {
-    if (name && name !== ARTICLE && name !== DIAGRAM) return;
+  const later = () => {
     clearTimeout(timer);
     timer = setTimeout(schedule, 60);
+  };
+  // Everything in the post folder (code cards read other files there too).
+  watch(dir, { recursive: true }, (ev, name) => {
+    if (name && path.basename(name).startsWith(".")) return;
+    later();
   });
+  // Code files outside the post folder are watched one by one.
+  const outside = new Set();
+  function watchOutside(f) {
+    if (outside.has(f) || !path.relative(dir, f).startsWith("..")) return;
+    outside.add(f);
+    try {
+      watch(f, later);
+    } catch {
+      outside.delete(f); // not there yet; the card shows the error
+    }
+  }
   // Editing the viewer itself: just reload open pages.
   watch(VIEWER, () => {
     clearTimeout(timer);
@@ -306,7 +347,7 @@ export async function dev(slug, { port = 4600 } = {}) {
       if (e.code !== "EADDRINUSE" || i > 20) throw e;
     }
   }
-  console.log(`\n  Preview: ${origin}${base}\n  Saving article.md or diagram.excalidraw updates the page. Ctrl+C to quit.\n`);
+  console.log(`\n  Preview: ${origin}${base}\n  Saving article.md, diagram.excalidraw or a code file updates the page. Ctrl+C to quit.\n`);
 
   const stop = async () => {
     server.close();

@@ -30,6 +30,9 @@ const tocMenu = $(".wu-toc-menu");
 const tocList = $(".wu-toc-list");
 const expandAll = $(".wu-expand input");
 const where = $(".wu-where");
+const cardsBox = $(".wu-cards");
+const cardStack = $(".wu-cards-stack");
+const grip = $(".wu-cards-grip");
 
 const reduced = matchMedia("(prefers-reduced-motion: reduce)");
 const narrow = matchMedia("(max-width: 820px)");
@@ -221,6 +224,80 @@ function setupDiagram() {
   markAvailable();
 }
 
+// ── Code cards ────────────────────────────────────────────────────────
+//
+// One card per section that has code. The current section's card is in
+// front; the ones before it stack up behind, the ones after wait off-stage.
+
+const STACK_DEPTH = 3;
+let cards = [];
+let cardById = new Map();
+let shownCard; // undefined until first shown; null = none yet
+
+/** The card for a section: its own, else its parent's, else the last earlier section's, else the intro's. */
+function cardFor(id) {
+  if (!cards.length) return null;
+  if (id) {
+    if (cardById.has(id)) return cardById.get(id);
+    const s = sectionById(id);
+    if (s?.parent && cardById.has(s.parent)) return cardById.get(s.parent);
+    const mains = data.sections.filter((x) => !x.parent).map((x) => x.id);
+    for (let i = mains.indexOf(s?.parent || id) - 1; i >= 0; i--) {
+      if (cardById.has(mains[i])) return cardById.get(mains[i]);
+    }
+  }
+  return cardById.get("") ?? null;
+}
+
+function refreshMore(card) {
+  const body = card.querySelector(".wu-card-body");
+  card.classList.toggle("has-more", body.scrollTop + body.clientHeight < body.scrollHeight - 6);
+}
+
+function showCard(card) {
+  if (card === shownCard) return;
+  shownCard = card;
+  const at = card ? cards.indexOf(card) : -1;
+  cards.forEach((el, i) => {
+    const depth = at < 0 ? -1 : at - i;
+    el.classList.toggle("is-focus", depth === 0);
+    el.classList.toggle("is-behind", depth > 0);
+    el.classList.toggle("is-out", depth < 0);
+    el.classList.toggle("is-buried", depth > STACK_DEPTH);
+    el.style.setProperty("--depth", clamp(depth, 0, STACK_DEPTH + 1));
+    el.inert = depth !== 0;
+    el.setAttribute("aria-hidden", String(depth !== 0));
+  });
+  cardsBox.classList.toggle("is-empty", !card);
+  if (!card) return;
+  // Open on the first highlighted line, a little below the top.
+  const body = card.querySelector(".wu-card-body");
+  const focus = body.querySelector(".ln.is-focus");
+  body.scrollTop = focus ? Math.max(0, focus.offsetTop - body.clientHeight * 0.2) : 0;
+  refreshMore(card);
+}
+
+new ResizeObserver(() => shownCard && refreshMore(shownCard)).observe(cardsBox);
+
+function setupCards() {
+  cards = $$(".wu-card", cardStack);
+  cardById = new Map(cards.map((c) => [c.dataset.for, c]));
+  document.body.classList.toggle("has-cards", cards.length > 0);
+  for (const card of cards) {
+    const body = card.querySelector(".wu-card-body");
+    const more = document.createElement("button");
+    more.type = "button";
+    more.className = "wu-card-more";
+    more.setAttribute("aria-label", "Scroll the code down");
+    more.innerHTML = 'More <span aria-hidden="true">↓</span>';
+    more.addEventListener("click", () => body.scrollBy({ top: body.clientHeight * 0.7, behavior: reduced.matches ? "instant" : "smooth" }));
+    card.append(more);
+    body.addEventListener("scroll", () => refreshMore(card), { passive: true });
+  }
+  shownCard = undefined;
+  showCard(cardFor(active));
+}
+
 // ── Article tracking ──────────────────────────────────────────────────
 
 const docTop = (el) => el.getBoundingClientRect().top + scrollY;
@@ -267,6 +344,7 @@ function setActive(id, instant = false) {
   highlight(overview ? null : rectFor(id));
   markAvailable();
   updateWhere();
+  showCard(cardFor(id));
   if (following) flyTo(cameraForActive(), instant);
   updateFab();
 }
@@ -601,10 +679,54 @@ split.addEventListener("keydown", (e) => {
   saveSplit();
 });
 
+// Draggable edge between the diagram and the code cards.
+function setCardsHeight(pct) {
+  figure.style.setProperty("--cards-h", `${clamp(pct, 20, 80)}%`);
+}
+const cardsPct = () => (cardsBox.offsetHeight / figure.clientHeight) * 100;
+try {
+  const saved = parseFloat(localStorage.getItem("writeup-cards"));
+  if (saved) setCardsHeight(saved);
+} catch {}
+const saveCards = () => {
+  try {
+    localStorage.setItem("writeup-cards", parseFloat(figure.style.getPropertyValue("--cards-h")) || "");
+  } catch {}
+};
+grip.addEventListener("pointerdown", (e) => {
+  grip.setPointerCapture(e.pointerId);
+  grip.classList.add("is-dragging");
+  document.body.classList.add("is-resizing-rows");
+});
+grip.addEventListener("pointermove", (e) => {
+  if (!grip.hasPointerCapture(e.pointerId)) return;
+  const r = figure.getBoundingClientRect();
+  setCardsHeight(((r.bottom - e.clientY) / r.height) * 100);
+});
+grip.addEventListener("pointerup", (e) => {
+  grip.releasePointerCapture(e.pointerId);
+  grip.classList.remove("is-dragging");
+  document.body.classList.remove("is-resizing-rows");
+  saveCards();
+});
+grip.addEventListener("dblclick", () => {
+  figure.style.removeProperty("--cards-h");
+  try {
+    localStorage.removeItem("writeup-cards");
+  } catch {}
+});
+grip.addEventListener("keydown", (e) => {
+  if (e.key !== "ArrowUp" && e.key !== "ArrowDown") return;
+  e.preventDefault();
+  setCardsHeight(cardsPct() + (e.key === "ArrowUp" ? 3 : -3));
+  saveCards();
+});
+
 // ── Start ─────────────────────────────────────────────────────────────
 
 history.scrollRestoration = "manual";
 setupDiagram();
+setupCards();
 syncExpandAll();
 measure();
 const initial = hashId();
@@ -655,6 +777,11 @@ export const viewer = {
     update(true);
   },
   /** Swap the SVG and frame boxes; the camera stays on the current section. */
+  /** Swap the code cards. */
+  replaceCards(html) {
+    cardStack.innerHTML = html;
+    setupCards();
+  },
   replaceDiagram(svg, { frames, width, height }) {
     drawing.innerHTML = svg;
     data = { ...data, frames, width, height };

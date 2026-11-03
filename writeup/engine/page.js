@@ -3,9 +3,11 @@
 
 import { articleHtml, tocHtml, sectionsData } from "./article.js";
 import { escapeHtml } from "./render.js";
+import { cardsHtml } from "./cards.js";
 
 export const KATEX_CSS = "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css";
-const FONTS = "https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap";
+const FONTS =
+  "https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;700&display=swap";
 
 export const jsonForScript = (v) => JSON.stringify(v).replace(/</g, "\\u003c");
 
@@ -22,9 +24,10 @@ export function viewerData(article, diagram, frameMap) {
  * @param article from renderArticle
  * @param diagram {svg, width, height} or null
  * @param frameMap from checkFrames
+ * @param cards from loadCards (code cards under the diagram)
  * @param devScript optional extra module script (dev server only)
  */
-export function renderPage({ article, diagram, frameMap, devScript = "" }) {
+export function renderPage({ article, diagram, frameMap, cards = [], devScript = "" }) {
   const { meta } = article;
   const data = viewerData(article, diagram, frameMap);
   return `<!DOCTYPE html>
@@ -41,7 +44,7 @@ export function renderPage({ article, diagram, frameMap, devScript = "" }) {
   <link rel="icon" href="/favicon.ico" type="image/x-icon" />
   <link rel="stylesheet" href="viewer.css" />
 </head>
-<body class="wu">
+<body class="wu${cards.length ? " has-cards" : ""}">
   <header class="wu-top">
     <nav class="wu-crumbs">
       <a href="/" class="wu-back">← Wenxin Chen</a>
@@ -69,6 +72,11 @@ export function renderPage({ article, diagram, frameMap, devScript = "" }) {
         </div>
       </div>
       <button type="button" class="wu-fab">Whole diagram</button>
+      <div class="wu-cards" aria-label="Code">
+        <div class="wu-cards-grip" role="separator" aria-orientation="horizontal" aria-label="Resize the diagram and the code" tabindex="0"></div>
+        <p class="wu-cards-empty">The code for each section shows up here as you read.</p>
+        <div class="wu-cards-stack">${cardsHtml(cards)}</div>
+      </div>
     </div>
     <div class="wu-split" role="separator" aria-orientation="vertical" aria-label="Resize the diagram and the text" tabindex="0"></div>
     <main class="wu-text">

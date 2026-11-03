@@ -155,6 +155,8 @@ for (const kind of Object.keys(VIEWPORTS)) {
       if (id === "dynamics") await page.screenshot({ path: path.join(SHOTS, `${kind}-2-follow-dynamics.png`) });
     }
     // An expanded sub-component note takes over the camera while it is being read.
+    // Bring the note into the text area first, as a reader would on a phone.
+    await scrollToSection(page, "dynamics/transition");
     await page.click(`[id="dynamics/transition"] > summary`);
     await scrollToSection(page, "dynamics/transition");
     const s = await state(page);
@@ -328,6 +330,45 @@ test("desktop: component chips preview and open their frame; links preview too",
   assert.deepEqual(errors, []);
   await ctx.close();
 });
+
+for (const kind of ["desktop", "mobile"]) {
+  test(`${kind}: code cards follow the reading position`, async () => {
+    const { page, ctx, errors } = await open(kind);
+    const cards = () =>
+      page.evaluate(() => {
+        const focus = document.querySelector(".wu-card.is-focus");
+        const body = focus?.querySelector(".wu-card-body");
+        const line = body?.querySelector(".ln.is-focus");
+        const b = body?.getBoundingClientRect();
+        const l = line?.getBoundingClientRect();
+        return {
+          focus: focus?.dataset.for ?? null,
+          behind: [...document.querySelectorAll(".wu-card.is-behind:not(.is-buried)")].map((c) => c.dataset.for),
+          focusLineVisible: !line || (l.top >= b.top - 1 && l.bottom <= b.bottom + 1),
+          bodyH: b?.height ?? 0,
+        };
+      });
+    let c = await cards();
+    assert.equal(c.focus, "", "the intro shows the intro card");
+    assert.ok(c.bodyH > 60, `the card has room for code (${c.bodyH}px)`);
+
+    for (const id of ["encoder", "dynamics", "decoder", "objective"]) {
+      await scrollToSection(page, id);
+      c = await cards();
+      assert.equal(c.focus, id, `card for ${id}`);
+      assert.ok(c.focusLineVisible, `${id}: the first highlighted line is in view`);
+    }
+    assert.equal(c.behind.at(-1), "decoder", `the previous card is right behind (${c.behind})`);
+    assert.equal(c.behind.length, 3, "three earlier cards peek out");
+
+    // A component with its own card shows it; one without falls back to its section's.
+    await page.goto(base + "#encoder/patchify");
+    await settle(page);
+    assert.equal((await cards()).focus, "encoder/patchify");
+    assert.deepEqual(errors, []);
+    await ctx.close();
+  });
+}
 
 test("desktop: dragging the divider resizes both panes", async () => {
   const { page, ctx } = await open("desktop", "#decoder");

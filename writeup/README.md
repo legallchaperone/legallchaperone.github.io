@@ -61,6 +61,27 @@ The body:
 - Everything else is plain Markdown: bold, lists, quotes, code blocks, links, tables. A `##` inside a code block is not a heading.
 - To link to another section, write `[see here](#encoder)`. Hovering the link outlines that region on the diagram.
 
+### Code under the diagram
+
+A section can show code in a card below the diagram. Put a fenced block with `file=` anywhere in the section; it leaves the text and becomes that section's card:
+
+````markdown
+## Encoder {#encoder}
+
+```python file=model.py lines=11-30 focus=26-30
+
+```
+````
+
+- `file=` is relative to the post folder (keep the code next to `article.md` so it is committed with the article). The card shows the file's real line numbers.
+- `lines=` picks what to show, e.g. `lines=11-12,20-24`; skipped lines fold into a `⋯` row. Leave it out to show the whole file.
+- `focus=` highlights lines, and the card opens scrolled to the first of them.
+- No file? Write the code in the block and add the word `panel`: ` ```python panel title=train.py start=40 `. `title=` names the card, `start=` numbers the first line (no `start=` and no `lines=` means no line numbers, which suits a file tree: ` ```text panel title=my-project/ `).
+- One card per section. A section without one keeps showing the card before it; a component note without one shows its section's card. A card before the first `##` belongs to the intro.
+- Highlighting is done at build time for any language Shiki knows; the language comes from the block (` ```python `) or the file extension.
+- While reading, earlier cards stack up behind the current one. Drag the line between the diagram and the code to share the space differently (double-click it to reset).
+- `npm run dev` also reloads when you save the code file.
+
 ## 3. Draw: `diagram.excalidraw`
 
 Open `posts/my-topic/diagram.excalidraw` in VS Code and draw as you would on excalidraw.com.

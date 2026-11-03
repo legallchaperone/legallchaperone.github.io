@@ -2,20 +2,35 @@
 
 import { parseArticle, MAIN_ID, SUB_ID } from "./parse.js";
 import { renderMarkdown, renderInline, plainTitle, escapeHtml } from "./render.js";
+import { extractCards } from "./cards.js";
 
 /**
- * @returns {{meta, introHtml: string, sections: {id, level, parent, title,
- *   titleText, line, headingHtml, bodyHtml}[], errors: {line, message}[]}}
+ * @returns {{meta, introHtml: string, introCard: object|null, sections: {id, level, parent, title,
+ *   titleText, line, headingHtml, bodyHtml, card}[], errors: {line, message}[]}}
+ * `card` is the section's code-card fence ({line, lang, attrs, body}) or null; see cards.js.
  */
 export function renderArticle(text) {
   const parsed = parseArticle(text);
   const errors = [...parsed.errors];
-  const intro = renderMarkdown(text.slice(parsed.intro.start, parsed.intro.end));
+  const lineAt = (offset) => text.slice(0, offset).split("\n").length;
+  // Code-card fences leave the text; a section may have one.
+  const cut = (start, end) => {
+    const { md, specs } = extractCards(text.slice(start, end));
+    const cards = specs.map((c) => ({ ...c, line: lineAt(start + c.offset) }));
+    for (const extra of cards.slice(1)) {
+      errors.push({ line: extra.line, message: `only one code card per section (the first is on line ${cards[0].line})` });
+    }
+    return { md, card: cards[0] ?? null };
+  };
+
+  const introCut = cut(parsed.intro.start, parsed.intro.end);
+  const intro = renderMarkdown(introCut.md);
   intro.errors.forEach((e) => errors.push({ line: null, message: `(intro) ${e.message}` }));
 
   const sections = parsed.sections.map((s) => {
     const heading = renderInline(s.title);
-    const body = renderMarkdown(text.slice(s.bodyStart, s.end));
+    const { md, card } = cut(s.bodyStart, s.end);
+    const body = renderMarkdown(md);
     for (const e of [...heading.errors, ...body.errors]) errors.push({ line: s.line, message: `({#${s.id}}) ${e.message}` });
     return {
       id: s.id,
@@ -26,9 +41,10 @@ export function renderArticle(text) {
       line: s.line,
       headingHtml: heading.html,
       bodyHtml: body.html,
+      card,
     };
   });
-  return { meta: parsed.meta, introHtml: intro.html, sections, errors };
+  return { meta: parsed.meta, introHtml: intro.html, introCard: introCut.card, sections, errors };
 }
 
 /**

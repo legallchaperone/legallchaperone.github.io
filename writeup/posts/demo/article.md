@@ -5,11 +5,26 @@ description: A four-step generative world model that shows how the diagram and t
 draft: true
 ---
 
-This is the demo article for the diagram writeup engine. The whole diagram is on the left and the text is on the right; as you scroll, the camera moves to the part of the diagram the current section is about.
+```text panel title=demo/
+demo/
+├── article.md          # the text you are reading
+├── diagram.excalidraw  # the drawing above
+└── world_model.py      # the code these cards show
+
+# one training step, for a clip of frames:
+#   o_t → Encoder → z_t ─┐
+#   a_t ─────────────────┴→ Dynamics → z_t+1 → Decoder → ô_t+1
+#   loss = reconstruction + β · KL(posterior ‖ prior)
+```
+
+This is the demo article for the diagram writeup engine. The diagram and the code are on the left and the text is on the right; as you scroll, the camera moves to the part of the diagram the current section is about, and the code below it shows the lines that do it.
 
 A world model answers one question: **given what we see now, \(o_t\), and the action we take, \(a_t\), what will we see next?** We split the answer into four steps.
 
 ## Encoder: compress the image into a latent {#encoder}
+
+```python file=world_model.py lines=11-30 focus=26-30
+```
 
 The observation \(o_t\) is a \(64 \times 64\) image. Predicting the future directly in pixel space is expensive and unstable, so an encoder first compresses it into a low-dimensional latent \(z_t\).
 
@@ -23,6 +38,9 @@ That lets us later align it with the dynamics model's prediction through a KL te
 
 ### Patchify {#encoder/patchify}
 
+```python file=world_model.py lines=11-12,20-24 focus=22-24
+```
+
 The image is cut into \(3 \times 3\) patches; each patch is flattened and passed through a linear layer, giving a sequence of tokens:
 
 ```python
@@ -35,6 +53,9 @@ With patches, the network only has to handle 9 tokens instead of 4096 pixels.
 
 ### Posterior {#encoder/posterior}
 
+```python file=world_model.py lines=26-30,33-36 focus=29,35-36
+```
+
 The posterior network reads the tokens and outputs a mean and a log-variance. Sampling uses the reparameterization trick so gradients can flow through the randomness:
 
 $$
@@ -42,6 +63,9 @@ z_t = \mu + \sigma \odot \epsilon, \qquad \epsilon \sim \mathcal{N}(0, I)
 $$
 
 ## Dynamics: one step forward in latent space {#dynamics}
+
+```python file=world_model.py lines=39-54 focus=51-54
+```
 
 Given \(z_t\), the dynamics model predicts the next latent state from the action \(a_t\):
 
@@ -53,6 +77,9 @@ This step happens entirely in latent space, so the model can cheaply "imagine" m
 
 ### Transition {#dynamics/transition}
 
+```python file=world_model.py lines=39-54 focus=44-49,52
+```
+
 \(f_\theta\) is a small MLP (or GRU). The action is embedded as a vector and concatenated with \(z_t\):
 
 - Input: \([z_t;\ \mathrm{embed}(a_t)]\)
@@ -60,15 +87,24 @@ This step happens entirely in latent space, so the model can cheaply "imagine" m
 
 ### Prior {#dynamics/prior}
 
+```python file=world_model.py lines=78-88 focus=83-84,87
+```
+
 During training the same \(z_{t+1}\) comes from two places: the posterior, encoded from the real next frame \(o_{t+1}\), and the prior imagined by the dynamics model, \(p_\theta(z_{t+1} \mid z_t, a_t)\). The KL between the two is the regularizer in step four.
 
 ## Decoder: turn the latent back into an image {#decoder}
+
+```python file=world_model.py lines=57-75 focus=74-75
+```
 
 The decoder \(g_\phi\) maps \(z_{t+1}\) back to an image \(\hat o_{t+1}\). It is only needed for training; planning can happen entirely in latent space.
 
 > The decoder decides whether the "imagination" is readable by people, but not necessarily how good the plans are.
 
 ## Training objective {#objective}
+
+```python file=world_model.py lines=78-88 focus=86-88
+```
 
 Putting the steps together gives a sequential evidence lower bound (ELBO):
 
