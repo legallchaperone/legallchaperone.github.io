@@ -15,6 +15,8 @@ import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { renderMarkdown, escapeHtml } from "../writeup/engine/render.js";
+import { assembleArticle, checkRecord } from "./article.mjs";
+import { L } from "./charts.mjs";
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -24,22 +26,28 @@ export const SITE = {
   email: "cwx@umich.edu",
   mark: "/assets/img/favicon.png?v=20260822",
   avatar: "/assets/img/25_photo_crop.jpg?v=20261030",
+  citeKey: "chen",
+  citeAuthor: "Chen, Wenxin",
   cv: "/assets/pdf/cv.pdf?v=20260923",
 };
 
 const COLLECTIONS = {
-  blog: { dir: "blog", manifest: "blog/posts.json", sources: "blog/posts", label: "Blog", all: "All posts" },
+  // The section is called Notes and lives at /notes/ (owner, 2026-11-25: these are notes, not blog posts yet).
+  // Its sources stay in blog/ because the writeup engine and the old viewer (blog/post.html) read them there.
+  blog: { dir: "notes", manifest: "blog/posts.json", sources: "blog/posts", label: "Notes", labelZh: "笔记", all: "All notes", allZh: "全部笔记" },
   experiments: {
     dir: "experiments",
     manifest: "experiments/experiments.json",
     sources: "experiments/src",
     label: "Experiments",
+    labelZh: "实验",
     all: "All experiments",
+    allZh: "全部实验",
   },
 };
 
 /** Pages written by hand whose gen: regions this script fills. */
-const HAND_PAGES = ["index.html", "blog/index.html", "experiments/index.html"];
+const HAND_PAGES = ["index.html", "notes/index.html", "experiments/index.html"];
 const GENERATOR = "tools/build.mjs";
 
 const read = (rel) => readFile(path.join(ROOT, rel), "utf8");
@@ -61,6 +69,30 @@ function fmtRange(start, end) {
   const sameYear = start.slice(0, 4) === end.slice(0, 4);
   return `${fmtDate(start, { year: !sameYear })} – ${fmtDate(end)}`;
 }
+
+function fmtDateZh(iso, { year = true } = {}) {
+  const [, y, m, d] = ISO_DATE.exec(iso);
+  return `${year ? `${y} 年 ` : ""}${Number(m)} 月 ${Number(d)} 日`;
+}
+function fmtRangeZh(start, end) {
+  if (!end) return fmtDateZh(start);
+  if (end === "now") return `${fmtDateZh(start)}至今`;
+  return `${fmtDateZh(start)} – ${fmtDateZh(end, { year: start.slice(0, 4) !== end.slice(0, 4) })}`;
+}
+
+// ---------- two languages ----------
+// A post or experiment is bilingual when its Markdown file has a Chinese twin next to it (name.md and name.zh.md).
+// Its manifest entry then carries title_zh and description_zh. Everything else stays English.
+
+const isBi = (e) => Boolean(e.zhFile);
+/** A manifest field in the entry's languages, escaped. */
+const text = (e, field) => (isBi(e) && e[`${field}_zh`] ? L({ en: e[field], zh: e[`${field}_zh`] }) : escapeHtml(e[field]));
+const dateText = (e) => {
+  const en = e.kind === "experiments" ? fmtRange(e.date, e.end) : fmtDate(e.date);
+  return isBi(e) ? L({ en, zh: e.kind === "experiments" ? fmtRangeZh(e.date, e.end) : fmtDateZh(e.date) }) : en;
+};
+/** Set the page language before the first paint, from the reader's last choice. */
+const LANG_SCRIPT = `<script>try{document.documentElement.dataset.lang=localStorage.getItem("lang")==="zh"?"zh":"en"}catch(e){}</script>`;
 
 // ---------- manifests ----------
 
@@ -107,13 +139,15 @@ async function loadCollection(key, { drafts }) {
       seen.set(entry.slug, e.title);
       entry.href = `/${c.dir}/${entry.slug}/`;
       entry.out = `${c.dir}/${entry.slug}/index.html`;
+      const zh = e.file.replace(/\.md$/, ".zh.md");
+      if (existsSync(path.join(ROOT, c.sources, zh))) entry.zhFile = zh;
     } else {
       entry.href = e.url;
     }
     entries.push(entry);
   });
-  // newest first; entries with the same date keep their manifest order
-  return entries.sort((a, b) => b.date.localeCompare(a.date) || a.order - b.order);
+  // newest first, the template card last; entries with the same date keep their manifest order
+  return entries.sort((a, b) => Boolean(a.template) - Boolean(b.template) || b.date.localeCompare(a.date) || a.order - b.order);
 }
 
 // ---------- article body ----------
@@ -125,12 +159,6 @@ const unescapeHtml = (s) =>
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
     .replace(/&amp;/g, "&");
-
-const stripTags = (html) =>
-  html
-    .replace(/<annotation[\s\S]*?<\/annotation>/g, "")
-    .replace(/<[^>]+>/g, "")
-    .trim();
 
 // Code colours: the four token colours of the site, as a small TextMate theme for Shiki.
 const CODE_THEME = {
@@ -164,43 +192,10 @@ async function highlightCode(html) {
   return html;
 }
 
-/**
- * Give every h2 and h3 an id and collect the contents list.
- * A heading may carry its own id, and data-toc="Short label" to say what the contents list should call it.
- */
-function withHeadings(html) {
-  const used = new Set();
-  const toc = [];
-  const out = html.replace(/<h([23])([^>]*)>([\s\S]*?)<\/h\1>/g, (_, level, attrs, inner) => {
-    let id = /\bid="([^"]+)"/.exec(attrs)?.[1];
-    if (!id) {
-      const base =
-        stripTags(inner)
-          .toLowerCase()
-          .replace(/&[a-z#0-9]+;/g, " ")
-          .replace(/[^a-z0-9]+/g, "-")
-          .replace(/^-+|-+$/g, "") || "section";
-      id = base;
-      for (let n = 2; used.has(id); n++) id = `${base}-${n}`;
-      attrs += ` id="${id}"`;
-    }
-    used.add(id);
-    const label = /\bdata-toc="([^"]*)"/.exec(attrs)?.[1] ?? inner.replace(/<\/?a\b[^>]*>/g, "").trim();
-    if (level === "2") toc.push({ id, label, children: [] });
-    else if (toc.length) toc[toc.length - 1].children.push({ id, label });
-    const anchor = level === "2" ? ` <a class="hanchor" href="#${id}" aria-label="Link to this section">#</a>` : "";
-    return `<h${level}${attrs}>${inner}${anchor}</h${level}>`;
-  });
-  return { html: out, toc };
-}
-
-async function renderBody(entry, ctx) {
-  const c = COLLECTIONS[entry.kind];
-  const src = `${c.sources}/${entry.file}`;
+async function renderFile(src, ctx) {
   const { html: raw, errors } = renderMarkdown(await read(src));
   if (errors.length) throw new Error(`${src}: ${errors.map((e) => e.message).join("\n  ")}`);
-
-  let html = raw
+  const html = raw
     // links written for the old viewer (/blog/post.html?f=file.md) go to the new pages
     .replace(/href="\/blog\/post\.html\?f=([^"#]+)(#[^"]*)?"/g, (m, file, hash = "") => {
       const target = ctx.byFile.get(decodeURIComponent(file));
@@ -208,8 +203,45 @@ async function renderBody(entry, ctx) {
     })
     .replace(/<table>/g, '<div class="table-wrap"><table>')
     .replace(/<\/table>/g, "</table></div>");
-  html = await highlightCode(html);
-  return withHeadings(html);
+  return highlightCode(html);
+}
+
+async function readJson(rel, fallback) {
+  if (!existsSync(path.join(ROOT, rel))) return fallback;
+  try {
+    return JSON.parse(await read(rel));
+  } catch (e) {
+    throw new Error(`${rel} is not valid JSON: ${e.message}`);
+  }
+}
+
+function citationFor(entry) {
+  const year = entry.date.slice(0, 4);
+  const isExp = entry.kind === "experiments";
+  return `@misc{${SITE.citeKey}${year}${entry.slug.replace(/-/g, "")},
+  title        = {${entry.title}},
+  author       = {${SITE.citeAuthor}},
+  year         = {${year}},
+  howpublished = {${isExp ? "Experiment page" : "Note"}},
+  url          = {${SITE.url}${entry.href}}
+}`;
+}
+
+async function renderBody(entry, ctx) {
+  const c = COLLECTIONS[entry.kind];
+  const names = { en: `${c.sources}/${entry.file}`, zh: entry.zhFile && `${c.sources}/${entry.zhFile}` };
+  const en = await renderFile(names.en, ctx);
+  const zh = entry.zhFile ? await renderFile(names.zh, ctx) : null;
+  let exp = null;
+  if (entry.kind === "experiments") {
+    // the page's data, generated by the experiment's own scripts and never typed by hand
+    names.record = `experiments/data/${entry.slug}.record.json`;
+    names.figs = `experiments/data/${entry.slug}.figs.json`;
+    exp = { record: await readJson(names.record, { rows: [] }), figs: await readJson(names.figs, {}) };
+    checkRecord(exp.record, names.record);
+  }
+  const citation = exp || entry.cite ? citationFor(entry) : null;
+  return assembleArticle({ en, zh, names, exp, citation });
 }
 
 // ---------- shared parts ----------
@@ -220,7 +252,7 @@ const ICON_DOC =
 function headerHtml(active, ctx) {
   const items = [
     ["home", "/", "Home"],
-    ["blog", "/blog/", "Blog"],
+    ["notes", "/notes/", "Notes"],
     ...(ctx.experiments.length ? [["experiments", "/experiments/", "Experiments"]] : []),
   ];
   const links = items.map(([key, href, label]) => `<a href="${href}"${key === active ? ' class="active" aria-current="page"' : ""}>${label}</a>`);
@@ -251,21 +283,21 @@ function footerHtml() {
 // ---------- lists ----------
 
 const metaHtml = (e) => {
-  const date = e.kind === "experiments" ? fmtRange(e.date, e.end) : fmtDate(e.date);
   const tag = e.template ? "Template" : e.tag;
-  return `<div class="post-meta"><span>${date}</span>${tag ? `<span class="tag">${escapeHtml(tag)}</span>` : ""}</div>`;
+  return `<div class="post-meta"><span>${dateText(e)}</span>${tag ? `<span class="tag">${escapeHtml(tag)}</span>` : ""}</div>`;
 };
 const linkAttrs = (href) => (/^https?:/.test(href) ? ` href="${escapeHtml(href)}" target="_blank" rel="noopener"` : ` href="${escapeHtml(href)}"`);
 const thumbHtml = (e) =>
   `<a class="tile-thumb" href="${e.href}" tabindex="-1" aria-hidden="true">${e.thumb ? `<img src="${escapeHtml(e.thumb)}" alt="" loading="lazy" decoding="async" />` : ""}</a>`;
+const descHtml = (e, indent) => (e.description ? `\n${indent}<p class="post-desc">${text(e, "description")}</p>` : "");
 
 /** Home: the latest posts, two to a row. */
 function homePostsHtml(posts) {
-  if (!posts.length) return `<p class="list-empty">No posts yet.</p>`;
+  if (!posts.length) return `<p class="list-empty">No notes yet.</p>`;
   const cards = posts.slice(0, 6).map(
     (p) => `  <article class="post-card">
     ${metaHtml(p)}
-    <h3 class="post-title"><a href="${p.href}">${escapeHtml(p.title)}</a></h3>${p.description ? `\n    <p class="post-desc">${escapeHtml(p.description)}</p>` : ""}
+    <h3 class="post-title"><a href="${p.href}">${text(p, "title")}</a></h3>${descHtml(p, "    ")}
   </article>`
   );
   return `<div class="post-grid">\n${cards.join("\n")}\n</div>`;
@@ -278,7 +310,7 @@ function homeExperimentsHtml(exps) {
     (e) => `      <article class="tile${e.template ? " is-template" : ""}">
         ${thumbHtml(e)}
         ${metaHtml(e).replace("post-meta", "tile-meta")}
-        <h3 class="tile-title"><a href="${e.href}">${escapeHtml(e.title)}</a></h3>
+        <h3 class="tile-title"><a href="${e.href}">${text(e, "title")}</a></h3>
       </article>`
   );
   return `<section class="journal" id="experiments">
@@ -294,21 +326,21 @@ ${tiles.join("\n")}
 </section>`;
 }
 
-/** Blog index: one row per post, with Read and any extra links. */
+/** Notes index: one row per note, with Read and any extra links. */
 function postListHtml(posts) {
-  if (!posts.length) return `<p class="list-empty">No posts yet.</p>`;
+  if (!posts.length) return `<p class="list-empty">No notes yet.</p>`;
   const rows = posts.map((p) => {
     const links = [{ label: "Read", url: p.href }, ...(p.links || [])];
     return `  <article class="post-row">
     ${metaHtml(p)}
-    <h3 class="post-title"><a href="${p.href}">${escapeHtml(p.title)}</a></h3>${p.description ? `\n    <p class="post-desc">${escapeHtml(p.description)}</p>` : ""}
+    <h3 class="post-title"><a href="${p.href}">${text(p, "title")}</a></h3>${descHtml(p, "    ")}
     <div class="post-links">${links.map((l) => `<a${linkAttrs(l.url)}>${escapeHtml(l.label)}</a>`).join("")}</div>
   </article>`;
   });
   return `<div class="post-list">\n${rows.join("\n")}\n</div>`;
 }
 
-/** Experiments index: thumbnail left, dates and title right. */
+/** Experiments index: a card is its picture, dates and title, with no text under them. */
 function experimentListHtml(exps) {
   if (!exps.length) return `<p class="list-empty">Nothing published yet.</p>`;
   const rows = exps.map(
@@ -316,7 +348,7 @@ function experimentListHtml(exps) {
     ${thumbHtml(e)}
     <div class="post-body">
       ${metaHtml(e)}
-      <h3 class="post-title"><a href="${e.href}">${escapeHtml(e.title)}</a></h3>${e.description ? `\n      <p class="post-desc">${escapeHtml(e.description)}</p>` : ""}
+      <h3 class="post-title"><a href="${e.href}">${text(e, "title")}</a></h3>
     </div>
   </article>`
   );
@@ -342,15 +374,22 @@ function tocHtml(toc, { sub }) {
 
 async function articlePage(entry, ctx) {
   const c = COLLECTIONS[entry.kind];
-  const { html, toc } = await renderBody(entry, ctx);
+  const { html, toc, bilingual } = await renderBody(entry, ctx);
   const isExp = entry.kind === "experiments";
-  const hasToc = toc.length >= 3;
+  const hasToc = isExp || toc.length >= 3;
   const nav = hasToc ? tocHtml(toc, { sub: isExp }) : { bar: "", rail: "" };
+  const tr = (en, zh) => (bilingual ? L({ en, zh }) : en);
   const title = escapeHtml(entry.title);
   const desc = entry.description ? escapeHtml(entry.description) : "";
-  const date = isExp ? fmtRange(entry.date, entry.end) : fmtDate(entry.date);
   const tag = entry.template ? "Template" : entry.tag;
   const canonical = `${SITE.url}${entry.href}`;
+  // An experiment gets its standfirst only once it has finished: the one-sentence result, also used as the description.
+  const standfirst = isExp && desc && entry.end && entry.end !== "now" ? `\n<p class="ar-standfirst">${text(entry, "description")}</p>` : "";
+  const toggle = bilingual
+    ? `<div class="ar-lang" role="group" aria-label="Language"><button type="button" data-lang="en" aria-pressed="true">EN</button><button type="button" data-lang="zh" aria-pressed="false">中文</button></div>`
+    : "";
+  const sources = [entry.file, entry.zhFile].filter(Boolean).map((f) => `${c.sources}/${f}`);
+  if (isExp) sources.push(`experiments/data/${entry.slug}.*.json`);
 
   return `<!doctype html>
 <html lang="en">
@@ -364,34 +403,36 @@ async function articlePage(entry, ctx) {
 <meta property="og:type" content="article" />
 <meta property="og:title" content="${title}" />${desc ? `\n<meta property="og:description" content="${desc}" />` : ""}
 <meta property="og:url" content="${canonical}" />
+<link rel="alternate" type="application/rss+xml" title="${SITE.name} — Notes" href="/feed.xml" />
 <link rel="icon" href="/favicon.ico?v=20260822" sizes="any" />
 <link rel="icon" href="/assets/img/favicon.png?v=20260822" type="image/png" />
 <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png" />
 <link rel="preload" href="/assets/fonts/hanken-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />${html.includes('class="katex') ? `\n<link rel="stylesheet" href="/assets/katex/katex.min.css?v=${ctx.katexVersion}" />` : ""}
 <link rel="stylesheet" href="/assets/site.css" />
+${LANG_SCRIPT}
 </head>
-<!-- Generated by ${GENERATOR} from ${c.sources}/${entry.file}. Edit that file, then run \`npm run build\`. -->
-<body data-active="${entry.kind}"${hasToc ? " data-sidenav" : ""}>
+<!-- Generated by ${GENERATOR} from ${sources.join(", ")}. Edit those, then run \`npm run build\`. -->
+<body data-active="${c.dir}"${hasToc ? " data-sidenav" : ""}>
 <a class="skip-link" href="#main">Skip to content</a>
-${headerHtml(entry.kind, ctx)}
+${headerHtml(c.dir, ctx)}
 <main>
 <div class="ar-page">
 <div class="ar-head" id="main" tabindex="-1">
-<div class="ar-crumb"><b><a href="/${c.dir}/">${c.label}</a></b><span>›</span><span>${title}</span></div>
-<div class="ar-eyebrow"><span>${date}</span>${tag ? `<span class="tag">${escapeHtml(tag)}</span>` : ""}</div>
-<h1>${title}</h1>${isExp && desc ? `\n<p class="ar-standfirst">${desc}</p>` : ""}
-<div class="ar-authors"><span class="av"><img src="${SITE.avatar}" alt="" width="36" height="36" /></span><span>By ${SITE.name}</span></div>
+<div class="ar-crumb"><b><a href="/${c.dir}/">${tr(c.label, c.labelZh)}</a></b><span>›</span><span>${text(entry, "title")}</span></div>
+<div class="ar-eyebrow"><span>${dateText(entry)}</span>${tag ? `<span class="tag">${escapeHtml(tag)}</span>` : ""}${toggle}</div>
+<h1>${text(entry, "title")}</h1>${standfirst}
+<div class="ar-authors"><span class="av"><img src="${SITE.avatar}" alt="" width="36" height="36" /></span><span>${tr(`By ${SITE.name}`, `作者 ${SITE.name}`)}</span></div>
 </div>
 ${nav.bar}
 <div class="ar-main">
 ${nav.rail}
 ${html}
-<div class="article-foot"><a href="/${c.dir}/">${c.all}</a><a href="#main">Back to top</a></div>
+<div class="article-foot"><a href="/${c.dir}/">${tr(c.all, c.allZh)}</a><a href="#main">${tr("Back to top", "回到顶部")}</a></div>
 </div>
 </div>
 </main>
 ${footerHtml()}
-<script src="/assets/site.js" defer></script>
+<script src="/assets/site.js" defer></script>${html.includes('class="viz-data"') ? '\n<script type="module" src="/assets/charts.mjs"></script>' : ""}
 </body>
 </html>
 `;
@@ -410,14 +451,67 @@ function fillRegions(page, regions, rel) {
   });
 }
 
+/** Give the site's own stylesheet and scripts a version from their content, so a change is never served stale. */
+const STAMPED = ["site.css", "site.js", "charts.mjs"];
 const stampAssets = (html, versions) =>
-  html.replace(/(\/assets\/site\.(css|js))(?:\?v=[0-9a-f]+)?(?=")/g, (_, file, ext) => `${file}?v=${versions[ext]}`);
+  html.replace(/\/assets\/(site\.css|site\.js|charts\.mjs)(?:\?v=[0-9a-f]+)?(?=")/g, (_, name) => `/assets/${name}?v=${versions[name]}`);
 
 async function fileHash(rel) {
   return createHash("sha1")
     .update(await readFile(path.join(ROOT, rel)))
     .digest("hex")
     .slice(0, 8);
+}
+
+// ---------- feed and sitemap ----------
+
+const absolute = (href) => (href.startsWith("/") ? SITE.url + href : href);
+const xml = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+/** RSS for the notes. Dates come from the posts, never from the clock, so an unchanged site builds to the same file. */
+function feedXml(blog) {
+  const stamp = (iso) => new Date(`${iso}T12:00:00Z`).toUTCString();
+  const items = blog.slice(0, 30).map(
+    (p) => `    <item>
+      <title>${xml(p.title)}</title>
+      <link>${xml(absolute(p.href))}</link>
+      <guid>${xml(absolute(p.href))}</guid>
+      <pubDate>${stamp(p.date)}</pubDate>${p.description ? `\n      <description>${xml(p.description)}</description>` : ""}
+    </item>`
+  );
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>${SITE.name} — Notes</title>
+    <link>${SITE.url}/notes/</link>
+    <atom:link href="${SITE.url}/feed.xml" rel="self" type="application/rss+xml"/>
+    <description>Notes on research, math, and things I'm learning.</description>
+    <language>en-us</language>${blog.length ? `\n    <lastBuildDate>${stamp(blog[0].date)}</lastBuildDate>` : ""}
+${items.join("\n")}
+  </channel>
+</rss>
+`;
+}
+
+function sitemapXml(blog, experiments) {
+  const newest = (list) =>
+    list
+      .map((e) => e.date)
+      .sort()
+      .pop();
+  const urls = [
+    ["/", newest([...blog, ...experiments])],
+    ["/notes/", newest(blog)],
+    ...blog.filter((p) => p.href.startsWith("/")).map((p) => [p.href, p.date]),
+    ...(experiments.length
+      ? [["/experiments/", newest(experiments)], ...experiments.map((e) => [e.href, e.end && e.end !== "now" ? e.end : e.date])]
+      : []),
+  ];
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls.map(([href, date]) => `  <url><loc>${xml(SITE.url + href)}</loc>${date ? `<lastmod>${date}</lastmod>` : ""}</url>`).join("\n")}
+</urlset>
+`;
 }
 
 // ---------- entry point ----------
@@ -431,7 +525,8 @@ export async function buildSite({ drafts = false } = {}) {
   const experiments = await loadCollection("experiments", { drafts });
   const katexVersion = JSON.parse(await read("writeup/node_modules/katex/package.json")).version;
   const ctx = { blog, experiments, katexVersion, byFile: new Map(blog.filter((p) => p.file).map((p) => [p.file, p])) };
-  const versions = { css: await fileHash("assets/site.css"), js: await fileHash("assets/site.js") };
+  const versions = {};
+  for (const name of STAMPED) versions[name] = await fileHash(`assets/${name}`);
 
   const outputs = new Map();
   for (const entry of [...blog, ...experiments]) {
@@ -452,6 +547,9 @@ export async function buildSite({ drafts = false } = {}) {
     };
     outputs.set(rel, stampAssets(fillRegions(page, regions, rel), versions));
   }
+
+  outputs.set("feed.xml", feedXml(blog));
+  outputs.set("sitemap.xml", sitemapXml(blog, experiments));
 
   // generated article folders on disk that no manifest entry produces any more
   const stale = [];

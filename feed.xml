@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Wenxin Chen — Notes</title>
+    <link>https://cwx.world/notes/</link>
+    <atom:link href="https://cwx.world/feed.xml" rel="self" type="application/rss+xml"/>
+    <description>Notes on research, math, and things I'm learning.</description>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 15 Nov 2026 12:00:00 GMT</lastBuildDate>
+    <item>
+      <title>Generative Models 3: Distillation</title>
+      <link>https://cwx.world/notes/distillation/</link>
+      <guid>https://cwx.world/notes/distillation/</guid>
+      <pubDate>Sun, 15 Nov 2026 12:00:00 GMT</pubDate>
+      <description>Notes on distilling diffusion models into few-step generators: flow-map-level objectives along the PF-ODE, then distribution-level methods (VSD and the DMD family) and their bilevel training.</description>
+    </item>
+    <item>
+      <title>Generative Models 2: Optimal Transport</title>
+      <link>https://cwx.world/notes/optimal-transport/</link>
+      <guid>https://cwx.world/notes/optimal-transport/</guid>
+      <pubDate>Sat, 14 Nov 2026 12:00:00 GMT</pubDate>
+      <description>Notes on optimal transport for generative modeling, from stable matching and Sinkhorn through Kantorovich duality to Wasserstein distances, WGAN, FID and barycenters.</description>
+    </item>
+    <item>
+      <title>Generative Models 1: Push-forward, Divergences &amp; GANs</title>
+      <link>https://cwx.world/notes/gans/</link>
+      <guid>https://cwx.world/notes/gans/</guid>
+      <pubDate>Sat, 14 Nov 2026 12:00:00 GMT</pubDate>
+      <description>Notes on generative models as push-forward maps: maximum likelihood as KL minimization, variational forms of divergences, and the GANs that follow from them.</description>
+    </item>
+    <item>
+      <title>Contrastive World Model</title>
+      <link>https://cwx.world/notes/contrastive-world-model/</link>
+      <guid>https://cwx.world/notes/contrastive-world-model/</guid>
+      <pubDate>Mon, 28 Sep 2026 12:00:00 GMT</pubDate>
+      <description>Group-meeting notes on the Contrastive World Model (Bonnie Li, 2026): keep the RSSM, drop the pixel decoder, and learn from mutual information with features of future observations.</description>
+    </item>
+  </channel>
+</rss>

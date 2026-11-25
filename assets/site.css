@@ -191,6 +191,12 @@ video {
 #main:focus {
   outline: none;
 }
+/* Two languages: bilingual text carries lang="en" and lang="zh" side by side, and only the chosen one shows.
+   English is the default, so the page reads correctly before any script runs. */
+html:not([data-lang="zh"]) [lang="zh"],
+html[data-lang="zh"] [lang="en"] {
+  display: none !important;
+}
 .nowrap {
   white-space: nowrap;
 }
@@ -1198,6 +1204,28 @@ mark.hl {
   margin-bottom: 20px;
   font-variant-numeric: tabular-nums;
 }
+.ar-lang {
+  margin-left: auto;
+  display: inline-flex;
+  border-radius: 50px;
+  background: var(--paper-3);
+  padding: 2px;
+}
+.ar-lang button {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border: 0;
+  border-radius: 50px;
+  background: transparent;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+.ar-lang button[aria-pressed="true"] {
+  background: var(--mint);
+  color: var(--mint-ink);
+}
 .ar-head h1 {
   font-weight: 600;
   font-size: clamp(34px, 4.6vw, 46px);
@@ -1355,6 +1383,13 @@ mark.hl {
 .ar-main > :first-child:not(.ar-side-rail),
 .ar-main > .ar-side-rail + * {
   margin-top: 40px;
+}
+/* a block of text in one language ends flush, so both languages leave the same space below */
+.ar-main div[lang] {
+  margin-bottom: 20px;
+}
+.ar-main div[lang] > :last-child {
+  margin-bottom: 0;
 }
 .ar-main p {
   font-size: 17px;
@@ -1844,6 +1879,270 @@ mark.hl {
 .ar-main details[open] > summary {
   margin-left: -14px;
   padding-left: 14px;
+}
+/* Charts drawn at build time (tools/charts.mjs). */
+.ar-main figure.viz {
+  position: relative;
+  margin: 36px 0;
+}
+.viz h4 {
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  margin: 0 0 14px;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.viz .legend {
+  display: flex;
+  gap: 6px 16px;
+  flex-wrap: wrap;
+  align-items: center;
+  font-size: 14px;
+  color: var(--ink);
+  margin: 0 0 10px;
+}
+.viz .legend .li {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.viz .legend .sw {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--c);
+}
+.viz .legend .lk {
+  width: 16px;
+  height: 0;
+  border-top: 2px dashed var(--c);
+}
+/* on a phone the chart keeps a readable size and scrolls sideways */
+.viz-scroll {
+  overflow-x: auto;
+}
+.viz svg {
+  width: 100%;
+  min-width: 540px;
+  height: auto;
+  overflow: visible;
+  font-family: var(--font-sans);
+}
+.viz svg text.tk {
+  font-size: 12px;
+  fill: var(--ink-3);
+}
+.viz svg text.ax {
+  font-size: 13px;
+  font-weight: 500;
+  fill: var(--ink);
+}
+.viz svg text.vl {
+  font-size: 12.5px;
+  font-weight: 600;
+  fill: var(--ink);
+}
+.viz svg text.st {
+  font-size: 14px;
+  font-weight: 600;
+  fill: var(--ink-3);
+}
+/* the mark under the pointer and its label (assets/charts.mjs) */
+.viz svg .mk {
+  transition: opacity 0.12s;
+}
+.viz svg circle.mk.on {
+  r: 5.5px;
+}
+.viz svg rect.mk.on {
+  opacity: 0.82;
+}
+.viz-tip {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 7px 10px;
+  font-size: 13px;
+  line-height: 1.4;
+  white-space: nowrap;
+  box-shadow: var(--shadow);
+  font-variant-numeric: tabular-nums;
+}
+.viz-tip[hidden] {
+  display: none;
+}
+.viz-tip b {
+  font-weight: 600;
+}
+.viz-tip .tn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.viz-tip .tn i {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+.viz-tip .ta {
+  color: var(--ink-3);
+}
+.viz figcaption {
+  padding-top: 12px;
+  margin-top: 0;
+}
+.viz figcaption b {
+  font-weight: 600;
+  color: var(--ink);
+}
+.ar-main figure.viz details {
+  margin: 8px 0 0;
+}
+
+/* The runs behind a question, and the experiment record: folded lines that open to a table of runs. */
+.ar-main details.eo-runs,
+.ar-main details.eo-rq {
+  margin: 0;
+  padding: 0;
+  border-left: 0;
+  border-bottom: 1px solid var(--rule-2);
+}
+.ar-main details.eo-runs {
+  margin: 26px 0 0;
+  border-top: 1px solid var(--rule-2);
+}
+.eo-record > details.eo-rq:first-child {
+  border-top: 1px solid var(--rule-2);
+}
+.ar-main .eo-runs > summary,
+.ar-main .eo-rq > summary {
+  margin: 0;
+  padding: 11px 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  font-size: 14px;
+}
+.ar-main .eo-rq > summary {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr) auto;
+  font-size: 15px;
+}
+.ar-main .eo-runs > summary::before,
+.ar-main .eo-rq > summary::before {
+  content: none;
+}
+.eo-runs > summary > span {
+  font-weight: 600;
+  color: var(--accent);
+}
+.eo-runs > summary > span::before,
+.eo-rq > summary .tt::before {
+  content: "";
+  display: inline-block;
+  border-left: 5px solid currentColor;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  margin-right: 9px;
+  vertical-align: 1px;
+  transition: transform 0.15s;
+}
+.eo-rq > summary .tt::before {
+  border-left-color: var(--ink-3);
+}
+.eo-runs[open] > summary > span::before,
+.eo-rq[open] > summary .tt::before {
+  transform: rotate(90deg);
+}
+.eo-rq > summary .no {
+  color: var(--ink-3);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.eo-rq > summary .tt {
+  font-weight: 600;
+  color: var(--ink);
+}
+.eo-runs > summary small,
+.eo-rq > summary small {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+.eo-tw {
+  overflow-x: auto;
+  padding-bottom: 12px;
+}
+.ar-main table.eo-t {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.ar-main .eo-t th {
+  text-align: left;
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--ink-3);
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--rule);
+  white-space: nowrap;
+}
+.ar-main .eo-t td {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--rule-2);
+  vertical-align: baseline;
+}
+.ar-main .eo-t th:first-child,
+.ar-main .eo-t td.v {
+  padding-left: 2px;
+}
+.eo-t td.v small {
+  color: var(--ink-3);
+  font-size: 11.5px;
+  margin-left: 6px;
+}
+.eo-t .n {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.eo-t .w {
+  white-space: nowrap;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+.eo-t .l {
+  white-space: nowrap;
+}
+.ar-main p.eo-cost {
+  display: grid;
+  gap: 2px;
+  margin: 22px 0 0;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.eo-map li.test .no,
+.eo-map li.test .aa {
+  color: var(--accent);
+}
+.eo-d.test {
+  background: var(--paper);
+  border: 1.5px solid var(--accent);
+}
+.ar-side .eo-d {
+  margin-right: 6px;
 }
 /* run status dots, used in run tables and in the side rail */
 .eo-d {

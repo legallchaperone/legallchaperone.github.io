@@ -2,14 +2,19 @@
 
 ## The live site (read this first)
 
-The site at cwx.world is a hand-built static site, not the al-folio Jekyll theme. The Jekyll files in this repository (`_config.yml`, `_layouts/`, `_includes/`, `_sass/`, Docker) are leftovers and are not deployed; `.github/workflows/deploy.yml` copies `index.html`, `assets/`, `blog/`, `experiments/`, `phd/` and `writeup/site/` as they are.
+The site at cwx.world is a hand-built static site, not the al-folio Jekyll theme. The Jekyll files in this repository (`_config.yml`, `_layouts/`, `_includes/`, `_sass/`, Docker) are leftovers and are not deployed; `.github/workflows/deploy.yml` copies `index.html`, `assets/`, `blog/`, `notes/`, `experiments/`, `phd/` and `writeup/site/` as they are.
 
 - **Design**: one stylesheet, `assets/site.css` (tokens at the top), and `assets/site.js`. Reuse the existing components instead of adding page-specific CSS.
 - **Home page**: `index.html`, edited by hand. Regions between `<!-- gen:name -->` and `<!-- /gen:name -->` are rewritten by the build; change those in `tools/site.mjs`.
-- **Blog posts and experiments**: Markdown plus a JSON manifest, built into static pages by `npm run build` and previewed with `npm run dev`. The full guide, including the components a post can use, is [blog/HOW-TO-POST.md](blog/HOW-TO-POST.md).
+- **Notes** (the writing section, served at `/notes/`; owner, 2026-11-25: call them notes, not blog posts) **and experiments**: Markdown plus a JSON manifest, built into static pages by `npm run build` and previewed with `npm run dev`. The full guide, including the components a post can use, is [blog/HOW-TO-POST.md](blog/HOW-TO-POST.md).
 - **Generated files are committed.** After changing a post, a manifest, `tools/` or the shared top bar/footer, run `npm run build`; `npm run build -- --check` fails if anything is stale.
+- **The deploy rebuilds too** (owner, 2026-11-25). So a push that changes only an experiment's data files (`experiments/data/<slug>.*.json`, pushed from the machine the experiment runs on) needs no local build, and its committed page may lag until someone next runs `npm run build`. Each data file has one writer, its experiment's generator: never edit one by hand, and do not regenerate it from a second machine.
 - **Diagram-linked writeups** are a separate engine: [writeup/README.md](writeup/README.md).
-- The site text is English only.
+- **Experiment pages follow [experiments/SPEC.md](experiments/SPEC.md).** Read it before touching one. Their charts, question map and run record are generated from `experiments/data/*.json`; never type those by hand. Charts are drawn by `assets/charts.mjs`, which the build and the page share (owner, 2026-11-25: draw the charts in the page).
+- **Prose**: load the `writing-style` skill (`.claude/skills/writing-style/`) before writing or editing a post or an experiment page.
+- **Languages**: new posts and experiment pages are bilingual, English plus a `.zh.md` twin (owner, 2026-11-25). Page chrome, the home page, docs and the writeup engine stay English only. Existing English-only posts are not translated unless asked.
+- **Owner decisions are recorded where they apply.** When the owner rules on how something should be, note it beside the code or text it governs as `(owner, YYYY-MM-DD: what was decided)`, and in the relevant spec. Follow recorded decisions without reopening them; mark your own judgement calls `(agent, YYYY-MM-DD)`.
+- **Publishing research code is never automatic.** A public push needs the owner's approval each time; see the spec.
 
 The rest of this file describes the old al-folio setup.
 

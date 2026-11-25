@@ -25,13 +25,32 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
 
+      # The pages are rebuilt here, so a push that only changes a post, a manifest or an experiment's
+      # data files (experiments/data/*.json, pushed from the machine the experiment runs on) is enough.
+      - name: Set up Node 🧰
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: writeup/package-lock.json
+
+      - name: Build pages 🔨
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1" # the page build needs no browser
+        run: |
+          npm ci --prefix writeup
+          node tools/build.mjs
+
       - name: Stage static site 📁
         run: |
           mkdir _staging
-          cp index.html style.css stylesheet.css favicon.ico _staging/
+          cp index.html style.css stylesheet.css favicon.ico feed.xml sitemap.xml _staging/
           cp -r assets _staging/assets
           cp -r blog _staging/blog
+          cp -r notes _staging/notes
           cp -r experiments _staging/experiments
+          # only built pages ship: Markdown sources, run data, generator scripts and the spec stay in the repository
+          rm -rf _staging/experiments/src _staging/experiments/data _staging/experiments/gen _staging/experiments/experiments.json _staging/experiments/SPEC.md
           cp -r phd _staging/phd
           if [ -d writeup/site ]; then cp -r writeup/site _staging/writeup; fi
 

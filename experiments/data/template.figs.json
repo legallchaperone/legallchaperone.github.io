@@ -1,0 +1,76 @@
+{
+  "final": {
+    "kind": "bar",
+    "title": { "en": "Final loss of each variant", "zh": "各方案的最终损失" },
+    "caption": {
+      "en": "Variant A ends higher than variant B at the same number of steps. Sample data.",
+      "zh": "相同步数下，方案 A 的最终损失高于方案 B。示例数据。"
+    },
+    "more": {
+      "en": "Whatever the two-line caption leaves out goes here: seed counts, the spread between seeds, and caveats that change no conclusion.",
+      "zh": "两行图注放不下的内容写在这里：种子数、种子间的波动，以及不改变结论的说明。"
+    },
+    "x": {
+      "categories": [
+        { "en": "Variant A", "zh": "方案 A" },
+        { "en": "Variant B", "zh": "方案 B" }
+      ]
+    },
+    "y": { "label": { "en": "Validation loss", "zh": "验证损失" } },
+    "series": [
+      {
+        "name": "",
+        "color": "s1",
+        "points": [
+          [0, 0.081],
+          [1, 0.026]
+        ]
+      }
+    ]
+  },
+  "curve": {
+    "kind": "line",
+    "title": { "en": "Validation loss during training", "zh": "训练过程中的验证损失" },
+    "caption": { "en": "The gap opens in the second half of training. Sample data.", "zh": "差距出现在训练的后半段。示例数据。" },
+    "x": { "label": { "en": "Training steps", "zh": "训练步数" } },
+    "y": { "label": { "en": "Validation loss", "zh": "验证损失" } },
+    "series": [
+      {
+        "name": { "en": "Variant A", "zh": "方案 A" },
+        "color": "s1",
+        "points": [
+          [0, 0.31],
+          [4000, 0.17],
+          [8000, 0.12],
+          [12000, 0.098],
+          [16000, 0.087],
+          [20000, 0.081]
+        ]
+      },
+      {
+        "name": { "en": "Variant B", "zh": "方案 B" },
+        "color": "ref",
+        "points": [
+          [0, 0.31],
+          [4000, 0.16],
+          [8000, 0.09],
+          [12000, 0.052],
+          [16000, 0.034],
+          [20000, 0.026]
+        ]
+      }
+    ]
+  },
+  "sizes": {
+    "kind": "line",
+    "status": "Running",
+    "title": { "en": "Gap between the variants at each model size", "zh": "各模型大小下两种方案的差距" },
+    "caption": {
+      "en": "Will show whether the gap grows with model size. A figure is on the page with its axes and status before its runs finish.",
+      "zh": "将显示差距是否随模型变大而增大。在 run 结束之前，图就带着坐标轴和状态出现在页面上。"
+    },
+    "x": { "label": { "en": "Parameters", "zh": "参数量" }, "scale": "log", "min": 100000000, "max": 1000000000 },
+    "y": { "label": { "en": "Loss gap", "zh": "损失差距" }, "min": 0, "max": 0.1 },
+    "series": [{ "name": { "en": "A minus B", "zh": "A 减 B" }, "color": "s1", "points": [] }]
+  }
+}

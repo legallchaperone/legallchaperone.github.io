@@ -1,7 +1,9 @@
 {
   "scripts": {
     "build": "node tools/build.mjs",
-    "dev": "node tools/dev.mjs"
+    "dev": "node --watch tools/dev.mjs",
+    "test": "node --test \"tools/test/*.test.mjs\"",
+    "exp": "for f in experiments/gen/*.py; do python3 \"$f\" || exit 1; done && node tools/build.mjs"
   },
   "devDependencies": {
     "@shopify/prettier-plugin-liquid": "^1.10.0",

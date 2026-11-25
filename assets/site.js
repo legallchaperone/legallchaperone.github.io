@@ -50,6 +50,25 @@
     });
   });
 
+  // ---- Language: EN / 中文 on bilingual pages; the choice is remembered and applies to lists on other pages too ----
+  const root = document.documentElement;
+  const setLang = (lang) => {
+    root.dataset.lang = lang;
+    root.lang = lang === "zh" ? "zh-CN" : "en";
+    $$(".ar-lang button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
+  };
+  setLang(root.dataset.lang === "zh" ? "zh" : "en");
+  $$(".ar-lang button").forEach((b) =>
+    b.addEventListener("click", () => {
+      setLang(b.dataset.lang);
+      try {
+        localStorage.setItem("lang", b.dataset.lang);
+      } catch {
+        /* private mode: the choice lasts for this page only */
+      }
+    })
+  );
+
   // ---- Article pages ----
   const main = $(".ar-main");
   if (!main) return;

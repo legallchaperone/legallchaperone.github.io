@@ -22,11 +22,5 @@
     "date": "2026-09-28",
     "description": "Group-meeting notes on the Contrastive World Model (Bonnie Li, 2026): keep the RSSM, drop the pixel decoder, and learn from mutual information with features of future observations.",
     "file": "2026-09-28-contrastive-world-model.md"
-  },
-  {
-    "title": "Hello",
-    "date": "2026-02-28",
-    "description": "The first post.",
-    "file": "2026-02-28-hello.md"
   }
 ]

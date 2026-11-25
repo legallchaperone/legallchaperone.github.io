@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Notes | Wenxin Chen</title>
+    <meta name="author" content="Wenxin Chen" />
+    <meta name="description" content="Notes on research, math, and things I'm learning." />
+    <link rel="icon" href="/favicon.ico?v=20260822" sizes="any" />
+    <link rel="icon" href="/assets/img/favicon.png?v=20260822" type="image/png" />
+    <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png" />
+    <link rel="preload" href="/assets/fonts/hanken-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="alternate" type="application/rss+xml" title="Wenxin Chen — Notes" href="/feed.xml" />
+    <link rel="stylesheet" href="/assets/site.css?v=1c724cc8" />
+    <script>
+      try {
+        document.documentElement.dataset.lang = localStorage.getItem("lang") === "zh" ? "zh" : "en";
+      } catch (e) {}
+    </script>
+  </head>
+
+  <!-- The list of notes is written by `npm run build` from blog/posts.json. See blog/HOW-TO-POST.md. -->
+  <body data-active="notes">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <!-- gen:header -->
+    <!-- prettier-ignore -->
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="/"><img class="brand-mark" src="/assets/img/favicon.png?v=20260822" alt="" aria-hidden="true" width="24" height="24" />Wenxin Chen</a>
+        <nav class="nav" id="site-nav">
+          <a href="/">Home</a>
+          <a href="/notes/" class="active" aria-current="page">Notes</a>
+          <a href="/assets/pdf/cv.pdf?v=20260923" class="nav-cta"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 1.75h-5a1 1 0 0 0-1 1v10.5a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1v-8.5z"/><path d="M9.5 1.75v3h3M6 8.5h4M6 11h4"/></svg><span>CV</span></a>
+        </nav>
+        <button class="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-nav"><span class="burger" aria-hidden="true"></span></button>
+      </div>
+    </header>
+    <!-- /gen:header -->
+
+    <main>
+      <section class="page-hero">
+        <div class="page" id="main" tabindex="-1">
+          <h1>Notes</h1>
+          <p class="lede">Notes on research, math, and things I'm learning.</p>
+        </div>
+      </section>
+
+      <section class="journal">
+        <div class="page">
+          <h2 class="sr-only">Notes</h2>
+          <!-- gen:post-list -->
+          <!-- prettier-ignore -->
+          <div class="post-list">
+            <article class="post-row">
+              <div class="post-meta"><span>Nov 15, 2026</span></div>
+              <h3 class="post-title"><a href="/notes/distillation/">Generative Models 3: Distillation</a></h3>
+              <p class="post-desc">Notes on distilling diffusion models into few-step generators: flow-map-level objectives along the PF-ODE, then distribution-level methods (VSD and the DMD family) and their bilevel training.</p>
+              <div class="post-links"><a href="/notes/distillation/">Read</a></div>
+            </article>
+            <article class="post-row">
+              <div class="post-meta"><span>Nov 14, 2026</span></div>
+              <h3 class="post-title"><a href="/notes/optimal-transport/">Generative Models 2: Optimal Transport</a></h3>
+              <p class="post-desc">Notes on optimal transport for generative modeling, from stable matching and Sinkhorn through Kantorovich duality to Wasserstein distances, WGAN, FID and barycenters.</p>
+              <div class="post-links"><a href="/notes/optimal-transport/">Read</a></div>
+            </article>
+            <article class="post-row">
+              <div class="post-meta"><span>Nov 14, 2026</span></div>
+              <h3 class="post-title"><a href="/notes/gans/">Generative Models 1: Push-forward, Divergences &amp; GANs</a></h3>
+              <p class="post-desc">Notes on generative models as push-forward maps: maximum likelihood as KL minimization, variational forms of divergences, and the GANs that follow from them.</p>
+              <div class="post-links"><a href="/notes/gans/">Read</a></div>
+            </article>
+            <article class="post-row">
+              <div class="post-meta"><span>Sep 28, 2026</span></div>
+              <h3 class="post-title"><a href="/notes/contrastive-world-model/">Contrastive World Model</a></h3>
+              <p class="post-desc">Group-meeting notes on the Contrastive World Model (Bonnie Li, 2026): keep the RSSM, drop the pixel decoder, and learn from mutual information with features of future observations.</p>
+              <div class="post-links"><a href="/notes/contrastive-world-model/">Read</a></div>
+            </article>
+          </div>
+          <!-- /gen:post-list -->
+        </div>
+      </section>
+    </main>
+
+    <!-- gen:footer -->
+    <!-- prettier-ignore -->
+    <footer class="foot">
+      <div class="foot-inner">
+        <div>
+          <div class="foot-brand">Wenxin Chen</div>
+          <div class="foot-mail"><a href="mailto:cwx@umich.edu">cwx@umich.edu</a></div>
+        </div>
+        <div class="foot-meta">© 2026 · Design inspired by <a href="https://wenhaochai.com/" target="_blank" rel="noopener">Wenhao Chai</a></div>
+      </div>
+    </footer>
+    <!-- /gen:footer -->
+
+    <script src="/assets/site.js?v=0c5647cc" defer></script>
+  </body>
+</html>

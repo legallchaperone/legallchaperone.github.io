@@ -10,7 +10,13 @@
     <link rel="icon" href="/assets/img/favicon.png?v=20260822" type="image/png" />
     <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png" />
     <link rel="preload" href="/assets/fonts/hanken-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="stylesheet" href="/assets/site.css?v=16cb0742" />
+    <link rel="alternate" type="application/rss+xml" title="Wenxin Chen — Notes" href="/feed.xml" />
+    <link rel="stylesheet" href="/assets/site.css?v=1c724cc8" />
+    <script>
+      try {
+        document.documentElement.dataset.lang = localStorage.getItem("lang") === "zh" ? "zh" : "en";
+      } catch (e) {}
+    </script>
   </head>
 
   <!-- The list is written by `npm run build` from experiments/experiments.json. See blog/HOW-TO-POST.md. -->
@@ -23,7 +29,7 @@
         <a class="brand" href="/"><img class="brand-mark" src="/assets/img/favicon.png?v=20260822" alt="" aria-hidden="true" width="24" height="24" />Wenxin Chen</a>
         <nav class="nav" id="site-nav">
           <a href="/">Home</a>
-          <a href="/blog/">Blog</a>
+          <a href="/notes/">Notes</a>
           <a href="/assets/pdf/cv.pdf?v=20260923" class="nav-cta"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 1.75h-5a1 1 0 0 0-1 1v10.5a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1v-8.5z"/><path d="M9.5 1.75v3h3M6 8.5h4M6 11h4"/></svg><span>CV</span></a>
         </nav>
         <button class="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-nav"><span class="burger" aria-hidden="true"></span></button>
@@ -63,6 +69,6 @@
     </footer>
     <!-- /gen:footer -->
 
-    <script src="/assets/site.js?v=569166d6" defer></script>
+    <script src="/assets/site.js?v=0c5647cc" defer></script>
   </body>
 </html>
