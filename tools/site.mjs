@@ -125,7 +125,8 @@ async function loadCollection(key, { drafts }) {
     if (typeof e.date !== "string" || !ISO_DATE.test(e.date)) throw new Error(`${where}: "date" should look like 2026-11-25`);
     if (e.end !== undefined && e.end !== "now" && !ISO_DATE.test(e.end)) throw new Error(`${where}: "end" should be a date or "now"`);
     if (!e.file && !e.url) throw new Error(`${where}: needs "file" (a Markdown file in ${c.sources}/) or "url"`);
-    if (e.draft && !drafts) return;
+    // A template is never published, whatever its draft flag says (owner, 2026-11-25: nobody else may see it).
+    if ((e.draft || e.template) && !drafts) return;
 
     const entry = { ...e, kind: key, order: i };
     if (e.file) {
@@ -522,14 +523,16 @@ ${urls.map(([href, date]) => `  <url><loc>${xml(SITE.url + href)}</loc>${date ? 
  */
 export async function buildSite({ drafts = false } = {}) {
   const blog = await loadCollection("blog", { drafts });
-  const experiments = await loadCollection("experiments", { drafts });
+  // The template has a page in the preview, at /experiments/template/, but is in no list, menu or sitemap.
+  const withTemplate = await loadCollection("experiments", { drafts });
+  const experiments = withTemplate.filter((e) => !e.template);
   const katexVersion = JSON.parse(await read("writeup/node_modules/katex/package.json")).version;
   const ctx = { blog, experiments, katexVersion, byFile: new Map(blog.filter((p) => p.file).map((p) => [p.file, p])) };
   const versions = {};
   for (const name of STAMPED) versions[name] = await fileHash(`assets/${name}`);
 
   const outputs = new Map();
-  for (const entry of [...blog, ...experiments]) {
+  for (const entry of [...blog, ...withTemplate]) {
     if (entry.out) outputs.set(entry.out, stampAssets(await articlePage(entry, ctx), versions));
   }
 

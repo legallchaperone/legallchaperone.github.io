@@ -158,6 +158,10 @@ Not automated, on purpose. Rewriting history and force-pushing to a public repos
 3. Ask the owner before each public push, naming the branch and the destination. No standing approval.
 4. Only after the push do the `code` links in the record go live.
 
+## The template
+
+`experiments/src/template.md` is a starting point, not a page of the site (owner, 2026-11-25: nobody else may see it). It is never published and appears in no list or menu. `npm run dev` serves it at `/experiments/template/`.
+
 ## Drafts
 
 `"draft": true` in the manifest keeps a page out of the built site; `npm run dev` still shows it. This repository is public, so a draft's text and data are visible on GitHub even though the site does not serve them. Keep results that must stay private in the research repository until they can be published.
