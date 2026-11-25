@@ -139,11 +139,14 @@ function lineChart(spec) {
       const c = colorOf(s, i);
       const p = (s.points ?? []).map(([x, y]) => [r1(xs.at(x)), r1(ys.at(y)), x, y]);
       if (!p.length) return "";
-      const path = `<path d="M${p.map((q) => `${q[0]} ${q[1]}`).join("L")}" fill="none" stroke="${c}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"${s.dash ? ' stroke-dasharray="6 5"' : ""}/>`;
+      // Entrance (see hydrate): a solid line is drawn from the left, which pathLength="1" lets the stylesheet do
+      // with one dash; a dashed line keeps its dashes and fades in. Each point follows as the line reaches it.
+      const lead = i * 120;
+      const path = `<path class="${s.dash ? "a-fade" : "a-line"}" style="--d:${lead}ms" d="M${p.map((q) => `${q[0]} ${q[1]}`).join("L")}" fill="none" stroke="${c}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"${s.dash ? ' stroke-dasharray="6 5"' : ' pathLength="1"'}/>`;
       const dots = p
         .map(
-          (q) =>
-            `<circle class="mk" cx="${q[0]}" cy="${q[1]}" r="3.5" fill="${c}" stroke="var(--paper)" stroke-width="1.5" data-s="${i}" data-x="${fmt(q[2])}" data-v="${fmt(q[3])}"/>`
+          (q, k) =>
+            `<circle class="mk a-pop" style="--d:${Math.round(lead + 150 + (k / Math.max(p.length - 1, 1)) * 900)}ms;transform-origin:${q[0]}px ${q[1]}px" cx="${q[0]}" cy="${q[1]}" r="3.5" fill="${c}" stroke="var(--paper)" stroke-width="1.5" data-s="${i}" data-x="${fmt(q[2])}" data-v="${fmt(q[3])}"/>`
         )
         .join("");
       return `<g>${path}${dots}</g>`;
@@ -173,8 +176,10 @@ function barChart(spec) {
         .map(([k, v]) => {
           const x = r1(M.left + band * (k + 0.5) - group / 2 + bw * i);
           const y = r1(ys.at(v));
-          const h = r1(ys.at(Math.max(ys.lo, 0)) - y);
-          return `<rect class="mk" x="${x + 1}" y="${y}" width="${r1(bw - 2)}" height="${Math.max(h, 0)}" rx="2" fill="${colorOf(s, i)}" data-s="${i}" data-c="${k}" data-v="${fmt(v)}"/><text x="${r1(x + bw / 2)}" y="${y - 6}" text-anchor="middle" class="vl">${fmt(v)}</text>`;
+          const base = r1(ys.at(Math.max(ys.lo, 0)));
+          const h = r1(base - y);
+          const d = Math.min((k * series.length + i) * 45, 700);
+          return `<rect class="mk a-bar" style="--d:${d}ms;transform-origin:0 ${base}px" x="${x + 1}" y="${y}" width="${r1(bw - 2)}" height="${Math.max(h, 0)}" rx="2" fill="${colorOf(s, i)}" data-s="${i}" data-c="${k}" data-v="${fmt(v)}"/><text x="${r1(x + bw / 2)}" y="${y - 6}" text-anchor="middle" class="vl a-fade" style="--d:${d + 350}ms">${fmt(v)}</text>`;
         })
         .join("")
     )
@@ -190,8 +195,34 @@ export function chartSvg(spec) {
 
 // ---------- in the page ----------
 
+// The longest entrance: the last delay (0.9 s for points, 1.05 s for bar values) plus the slowest transition.
+const ENTRANCE_MS = 2400;
+
+/** Play a chart's entrance the first time it is scrolled into view (the stylesheet holds the motion itself). */
+function entrance(figs) {
+  const still = typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (still || typeof IntersectionObserver !== "function") return;
+  const seen = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (!e.isIntersecting) continue;
+        seen.unobserve(e.target);
+        e.target.classList.add("in");
+        // once drawn, the marks go back to their own rules, so the hover highlight is not delayed
+        setTimeout(() => e.target.classList.remove("anim", "in"), ENTRANCE_MS);
+      }
+    },
+    { rootMargin: "0px 0px -10% 0px", threshold: 0.25 }
+  );
+  for (const fig of figs) {
+    fig.classList.add("anim");
+    seen.observe(fig);
+  }
+}
+
 /** Redraw every chart on the page from the data embedded in its figure, and label the mark under the pointer. */
 export function hydrate(root = document) {
+  const drawn = [];
   for (const fig of root.querySelectorAll("figure.viz")) {
     const data = fig.querySelector("script.viz-data");
     const box = fig.querySelector(".viz-scroll");
@@ -204,6 +235,7 @@ export function hydrate(root = document) {
     }
     const both = fig.dataset.bi === "1";
     box.innerHTML = withLanguages(both, () => chartSvg(spec));
+    if ((spec.series ?? []).some((s) => s.points?.length)) drawn.push(fig);
 
     const tip = document.createElement("div");
     tip.className = "viz-tip";
@@ -253,6 +285,7 @@ export function hydrate(root = document) {
     });
     svg.addEventListener("pointerleave", () => show(null));
   }
+  entrance(drawn);
 }
 
 if (typeof document !== "undefined") {

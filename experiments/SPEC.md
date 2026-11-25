@@ -52,7 +52,7 @@ The two data files are produced by a script that lives in the research repositor
 
 ### How the page is drawn
 
-The build writes the page: text, the Questions map, the run tables and the record. Each chart is written twice, as a static picture and as the data it was drawn from. In the browser `assets/charts.mjs`, the same code the build uses, redraws every chart from that data and shows the value of the mark under the pointer (owner, 2026-11-25: draw the charts in the page). Without JavaScript the static picture stays.
+The build writes the page: text, the Questions map, the run tables and the record. Each chart is written twice, as a static picture and as the data it was drawn from. In the browser `assets/charts.mjs`, the same code the build uses, redraws every chart from that data and shows the value of the mark under the pointer (owner, 2026-11-25: draw the charts in the page). A chart with data draws itself the first time it scrolls into view: bars grow from the axis, lines are drawn from the left, points and values follow (owner, 2026-11-25). Without JavaScript, and for readers who ask for reduced motion, the static picture stays.
 
 The deploy runs the build, so pushing new data files is enough to update a published page.
 

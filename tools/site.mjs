@@ -174,6 +174,16 @@ const CODE_THEME = {
     { scope: ["keyword.operator"], settings: { foreground: "#3c4043" } },
   ],
 };
+// Shiki writes each colour into the markup. They are pointed at the stylesheet's tokens instead, so that a page which
+// redefines the tokens (notes and experiments do) recolours its code as well.
+const CODE_TOKENS = {
+  "#5f6368": "var(--tok-c)",
+  "#137333": "var(--tok-s)",
+  "#8430ce": "var(--tok-n)",
+  "#1967d2": "var(--tok-k)",
+  "#3c4043": "inherit",
+};
+const tokenColours = (html) => html.replace(/color:(#[0-9a-f]{6})/gi, (whole, hex) => `color:${CODE_TOKENS[hex.toLowerCase()] ?? hex}`);
 const PLAIN_CODE = new Set(["", "text", "txt", "plain", "plaintext"]);
 let shiki;
 
@@ -188,7 +198,7 @@ async function highlightCode(html) {
   for (const [whole, lang, code] of blocks) {
     if (!(lang in shiki.bundledLanguages) && !(lang in shiki.bundledLanguagesAlias)) continue;
     const out = await shiki.codeToHtml(unescapeHtml(code).replace(/\n$/, ""), { lang, theme: CODE_THEME });
-    html = html.replace(whole, () => out.replace(/^<pre[^>]*>/, '<pre tabindex="0">'));
+    html = html.replace(whole, () => tokenColours(out.replace(/^<pre[^>]*>/, '<pre tabindex="0">')));
   }
   return html;
 }
