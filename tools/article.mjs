@@ -101,6 +101,9 @@ const day = (s) => {
 };
 const num = (v) => (v >= 100 ? Math.round(v).toLocaleString("en-US") : v >= 10 ? v.toFixed(0) : v.toFixed(1));
 const gpuHours = (rows) => rows.reduce((s, r) => s + (r.gpus || 0) * (r.hours || 0), 0);
+const runs = (n) => `${n} ${n === 1 ? "run" : "runs"}`;
+// Hours appear only when some run recorded them: an experiment without tracked compute shows no "0.0" (agent, 2026-11-25).
+const timed = (rows) => rows.some((r) => r.hours != null);
 const ext = (url, label) => `<a href="${escapeHtml(url)}" target="_blank" rel="noopener">${label}</a>`;
 
 function checkRecord(record, where) {
@@ -244,7 +247,7 @@ function assemble({ en, zh, names, exp = null, citation = null }) {
     if (rows.length) {
       const mine = rows.filter((r) => owner.get(r) === open);
       const reusedFrom = new Map(rows.filter((r) => owner.get(r) !== open).map((r) => [r, owner.get(r).n]));
-      const count = L({ en: `${rows.length} runs, ${mine.length} new`, zh: `${rows.length} 个 run，其中 ${mine.length} 个新增` });
+      const count = L({ en: `${runs(rows.length)}, ${mine.length} new`, zh: `${rows.length} 个 run，其中 ${mine.length} 个新增` });
       out.push(
         `<details class="eo-runs"><summary><span>${L({ en: "Runs behind this question", zh: "这个问题用到的 run" })}</span><small>${count}</small></summary>\n${runsTable([...mine, ...reusedFrom.keys()], ctx, { reusedFrom })}\n</details>`
       );
@@ -318,7 +321,7 @@ function assemble({ en, zh, names, exp = null, citation = null }) {
     const groups = questions.map((q) => [q, exp.record.rows.filter((r) => owner.get(r) === q)]).filter(([, rows]) => rows.length);
     const unit = `${ctx.gpu}-hours`;
     const fold = (no, title, rows) =>
-      `<details class="eo-rq"><summary><span class="no">${no}</span><span class="tt">${title}</span><small>${L({ en: `${rows.length} runs · ${num(gpuHours(rows))} ${unit}`, zh: `${rows.length} 个 run · ${num(gpuHours(rows))} ${ctx.gpu} 小时` })}</small></summary>\n${runsTable(rows, ctx)}\n</details>`;
+      `<details class="eo-rq"><summary><span class="no">${no}</span><span class="tt">${title}</span><small>${L(timed(rows) ? { en: `${runs(rows.length)} · ${num(gpuHours(rows))} ${unit}`, zh: `${rows.length} 个 run · ${num(gpuHours(rows))} ${ctx.gpu} 小时` } : { en: runs(rows.length), zh: `${rows.length} 个 run` })}</small></summary>\n${runsTable(rows, ctx)}\n</details>`;
     const parts = groups.map(([q, rows]) => fold(q.n, both(q.title.en, q.title.zh), rows));
     if (loose.length) parts.push(fold("", L({ en: "Not in a figure yet", zh: "尚未出现在图中" }), loose));
     const cost = exp.record.cost;

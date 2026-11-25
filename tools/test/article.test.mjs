@@ -60,9 +60,9 @@ ok(
 );
 ok(
   "q1 owns run one; q2 reuses it",
-  /Runs behind this question<\/span><small>1 runs, 1 new/.test(d.html) && /<small>2 runs, 1 new/.test(d.html) && d.html.includes("from question 1")
+  /Runs behind this question<\/span><small>1 run, 1 new/.test(d.html) && /<small>2 runs, 1 new/.test(d.html) && d.html.includes("from question 1")
 );
-ok("record totals per question", d.html.includes("1 runs · 3.0 A100-hours") && d.html.includes("1 runs · 2.0 A100-hours"));
+ok("record totals per question", d.html.includes("1 run · 3.0 A100-hours") && d.html.includes("1 run · 2.0 A100-hours"));
 ok("loose run listed last", d.html.includes("Not in a figure yet"));
 ok("figures numbered in page order", d.html.includes("Figure 1.") && d.html.includes("Figure 2.") && d.html.includes('id="fig-f2"'));
 ok("placeholder shows its status", d.html.includes(">Planned<"));
