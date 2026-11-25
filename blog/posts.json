@@ -2,26 +2,31 @@
   {
     "title": "Generative Models 3: Distillation",
     "date": "2026-11-15",
+    "description": "Notes on distilling diffusion models into few-step generators: flow-map-level objectives along the PF-ODE, then distribution-level methods (VSD and the DMD family) and their bilevel training.",
     "file": "2026-11-15-distillation.md"
   },
   {
     "title": "Generative Models 2: Optimal Transport",
     "date": "2026-11-14",
+    "description": "Notes on optimal transport for generative modeling, from stable matching and Sinkhorn through Kantorovich duality to Wasserstein distances, WGAN, FID and barycenters.",
     "file": "2026-11-14-optimal-transport.md"
   },
   {
     "title": "Generative Models 1: Push-forward, Divergences & GANs",
     "date": "2026-11-14",
+    "description": "Notes on generative models as push-forward maps: maximum likelihood as KL minimization, variational forms of divergences, and the GANs that follow from them.",
     "file": "2026-11-14-gans.md"
   },
   {
     "title": "Contrastive World Model",
     "date": "2026-09-28",
+    "description": "Group-meeting notes on the Contrastive World Model (Bonnie Li, 2026): keep the RSSM, drop the pixel decoder, and learn from mutual information with features of future observations.",
     "file": "2026-09-28-contrastive-world-model.md"
   },
   {
     "title": "Hello",
     "date": "2026-02-28",
+    "description": "The first post.",
     "file": "2026-02-28-hello.md"
   }
 ]

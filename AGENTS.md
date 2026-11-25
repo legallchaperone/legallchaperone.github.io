@@ -1,4 +1,19 @@
-# Agent Guidelines for al-folio
+# Agent Guidelines
+
+## The live site (read this first)
+
+The site at cwx.world is a hand-built static site, not the al-folio Jekyll theme. The Jekyll files in this repository (`_config.yml`, `_layouts/`, `_includes/`, `_sass/`, Docker) are leftovers and are not deployed; `.github/workflows/deploy.yml` copies `index.html`, `assets/`, `blog/`, `experiments/`, `phd/` and `writeup/site/` as they are.
+
+- **Design**: one stylesheet, `assets/site.css` (tokens at the top), and `assets/site.js`. Reuse the existing components instead of adding page-specific CSS.
+- **Home page**: `index.html`, edited by hand. Regions between `<!-- gen:name -->` and `<!-- /gen:name -->` are rewritten by the build; change those in `tools/site.mjs`.
+- **Blog posts and experiments**: Markdown plus a JSON manifest, built into static pages by `npm run build` and previewed with `npm run dev`. The full guide, including the components a post can use, is [blog/HOW-TO-POST.md](blog/HOW-TO-POST.md).
+- **Generated files are committed.** After changing a post, a manifest, `tools/` or the shared top bar/footer, run `npm run build`; `npm run build -- --check` fails if anything is stale.
+- **Diagram-linked writeups** are a separate engine: [writeup/README.md](writeup/README.md).
+- The site text is English only.
+
+The rest of this file describes the old al-folio setup.
+
+## al-folio (legacy)
 
 A simple, clean, and responsive Jekyll theme for academics.
 

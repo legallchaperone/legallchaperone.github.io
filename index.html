@@ -1,213 +1,300 @@
-<!DOCTYPE HTML>
+<!doctype html>
 <html lang="en">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Wenxin Chen</title>
-
-    <meta name="author" content="Wenxin Chen">
-    <meta name="description" content="Wenxin Chen — undergraduate at the University of Michigan and Shanghai Jiao Tong University, interested in generative world modeling: world models, video generation, and robot learning.">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="favicon.ico?v=20260822" sizes="any">
-    <link rel="icon" href="assets/img/favicon.png?v=20260822" type="image/png">
-    <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
-    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+    <meta name="author" content="Wenxin Chen" />
+    <meta
+      name="description"
+      content="Wenxin Chen — undergraduate at the University of Michigan and Shanghai Jiao Tong University, interested in generative world modeling: world models, video generation, and robot learning."
+    />
+    <link rel="icon" href="/favicon.ico?v=20260822" sizes="any" />
+    <link rel="icon" href="/assets/img/favicon.png?v=20260822" type="image/png" />
+    <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png" />
+    <link rel="preload" href="/assets/fonts/hanken-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/assets/site.css?v=16cb0742" />
   </head>
 
-  <body>
-    <table style="width:100%;max-width:800px;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-      <tr style="padding:0px">
-        <td style="padding:0px">
-          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-            <tr class="header-row" style="padding:0px">
-              <td class="intro-cell" style="padding:20px 16px;width:63%;vertical-align:middle">
-                <p class="name">
-                  Wenxin Chen
+  <!--
+    How this page is put together
+    - Edit the text here directly: bio, papers, CV lists.
+    - Anything between "gen:name" and "/gen:name" comments is rewritten by `npm run build`
+      (the header, the footer, the Blog and Experiments lists). Do not edit inside those.
+  -->
+  <body data-active="home">
+    <!-- gen:header -->
+    <!-- prettier-ignore -->
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="/"><img class="brand-mark" src="/assets/img/favicon.png?v=20260822" alt="" aria-hidden="true" width="24" height="24" />Wenxin Chen</a>
+        <nav class="nav" id="site-nav">
+          <a href="/" class="active" aria-current="page">Home</a>
+          <a href="/blog/">Blog</a>
+          <a href="/assets/pdf/cv.pdf?v=20260923" class="nav-cta"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 1.75h-5a1 1 0 0 0-1 1v10.5a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1v-8.5z"/><path d="M9.5 1.75v3h3M6 8.5h4M6 11h4"/></svg><span>CV</span></a>
+        </nav>
+        <button class="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-nav"><span class="burger" aria-hidden="true"></span></button>
+      </div>
+    </header>
+    <!-- /gen:header -->
+
+    <main>
+      <section class="journal" id="hero">
+        <div class="page" id="main" tabindex="-1">
+          <div class="hero-grid">
+            <div>
+              <h1 class="hero-name">Wenxin Chen</h1>
+              <div class="hero-bio">
+                <p>
+                  I'm an undergraduate student pursuing a B.S.E. in Computer Science at the
+                  <a href="https://cse.engin.umich.edu/">University of Michigan</a> and a B.S.E. in Electrical and Computer Engineering at
+                  <a href="https://www.ji.sjtu.edu.cn/">Shanghai Jiao Tong University</a> (expected 2028). I currently work with
+                  <a href="https://qingqu.engin.umich.edu/">Qing Qu</a> in the DeepThink Lab at Michigan.
                 </p>
                 <p>
-                  I'm an undergraduate student pursuing a B.S.E. in Computer Science at the <a href="https://cse.engin.umich.edu/">University of Michigan</a> and a B.S.E. in Electrical and Computer Engineering at <a href="https://www.ji.sjtu.edu.cn/">Shanghai Jiao Tong University</a> (expected 2028).
-                  I currently work with <a href="https://qingqu.engin.umich.edu/">Qing Qu</a> in the DeepThink Lab at Michigan.
+                  I'm interested in generative world modeling: world models, video generation, and robot learning, with a focus on consistent and
+                  stable long-horizon generation.
                 </p>
-                <p>
-                  I am currently open to internship and research assistant opportunities.
+                <p>I am currently open to internship and research assistant opportunities.</p>
+              </div>
+            </div>
+
+            <aside class="aside">
+              <div class="avatar-frame">
+                <img
+                  src="/assets/img/25_photo.jpg?v=20261019"
+                  alt="Wenxin Chen portrait"
+                  width="640"
+                  height="640"
+                  fetchpriority="high"
+                  decoding="async"
+                />
+              </div>
+              <!-- Five slots per row. Add a link by copying one <a>; text links take class="dock-text". -->
+              <div class="dock">
+                <a href="mailto:cwx@umich.edu" title="Email" aria-label="Email">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2.5" y="4.5" width="19" height="15" rx="2.5" />
+                    <path d="m3.5 6.5 8.5 6.5 8.5-6.5" />
+                  </svg>
+                </a>
+                <a href="/assets/pdf/cv.pdf?v=20260923" title="Curriculum Vitae" class="dock-text">CV</a>
+                <a href="https://github.com/legallchaperone" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                      d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
+                    />
+                  </svg>
+                </a>
+              </div>
+              <!-- To show a logo, put <img src="/assets/img/logos/name.svg" alt="" width="32" height="32" /> before the <span>. -->
+              <ul class="hero-aff">
+                <li>
+                  <span><b>University of Michigan</b>B.S.E. student, Computer Science</span>
+                </li>
+                <li>
+                  <span><b>Shanghai Jiao Tong University</b>B.S.E. student, Electrical and Computer Engineering</span>
+                </li>
+              </ul>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="journal" id="research">
+        <div class="page">
+          <div class="sec-head">
+            <h2 class="sec-title">Research</h2>
+          </div>
+          <div class="prose sec-lede">
+            <p>My first-author paper is <mark class="hl">highlighted</mark>.</p>
+          </div>
+
+          <div class="pub-list">
+            <article class="pub-row is-highlight">
+              <span class="pub-thumb"
+                ><img src="/assets/img/teasers/rgr.png" alt="" width="1200" height="470" loading="lazy" decoding="async"
+              /></span>
+              <div class="pub-body">
+                <div class="post-meta"><span>Under review, 2026</span></div>
+                <h3 class="post-title">Reason, Ground, and Render: Consequence-Grounded Counterfactual Object Removal in Video</h3>
+                <p class="pub-authors"><b>Wenxin Chen</b>, J. Cao</p>
+                <p class="pub-desc">
+                  Removes an object from a video and fixes what it leaves behind &mdash; the shadow it cast, the things it was holding up.
                 </p>
-                <p class="links">
-                  <a href="mailto:cwx@umich.edu">Email</a> &nbsp;/&nbsp;
-                  <a href="assets/pdf/cv.pdf?v=20260923">CV</a> &nbsp;/&nbsp;
-                  <a href="https://github.com/legallchaperone">Github</a> &nbsp;/&nbsp;
-                  <a href="/blog/">Blog</a>
+              </div>
+            </article>
+
+            <article class="pub-row">
+              <a class="pub-thumb" href="https://arxiv.org/abs/2608.25798" tabindex="-1"
+                ><img src="/assets/img/teasers/tacforcing.png" alt="" width="1200" height="518" loading="lazy" decoding="async"
+              /></a>
+              <div class="pub-body">
+                <div class="post-meta"><span>arXiv, 2026</span></div>
+                <h3 class="post-title">
+                  <a href="https://arxiv.org/abs/2608.25798">TacForcing: Streaming Action Generation with Execution-Time Tactile Feedback</a>
+                </h3>
+                <p class="pub-authors">J. Zhou, B. Zhao, Y. Zhang, Y. Chen, <b>Wenxin Chen</b>, Q. Li, X. Gu, Y. Cao, X. Xia, Y. Hu, Z. Deng</p>
+                <p class="pub-desc">
+                  Lets a robot react to what it feels <em>while</em> it moves, instead of only planning from what it felt beforehand.
                 </p>
-              </td>
-              <td class="photo-cell" style="padding:20px 16px;width:37%;max-width:37%;vertical-align:middle">
-                <a href="assets/img/25_photo.jpg?v=20261019"><img class="photo" alt="profile photo" src="assets/img/25_photo_crop.jpg?v=20261030"></a>
-              </td>
-            </tr>
-          </tbody></table>
-          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-              <tr>
-              <td style="padding:16px;width:100%;vertical-align:middle">
-                <h2>Research</h2>
-                <p>
-                  I'm interested in generative world modeling: world models, video generation, and robot learning, with a focus on consistent and stable long-horizon generation. My first-author paper is <span class="highlight">highlighted</span>.
+                <div class="post-links">
+                  <a href="https://88runaway.github.io/tacforcing/">Project page</a>
+                  <a href="https://arxiv.org/abs/2608.25798">arXiv</a>
+                </div>
+              </div>
+            </article>
+
+            <article class="pub-row">
+              <a class="pub-thumb" href="https://openreview.net/forum?id=Xi1jkajWi9" tabindex="-1"
+                ><img src="/assets/img/teasers/cerebragloss.png" alt="" width="1200" height="276" loading="lazy" decoding="async"
+              /></a>
+              <div class="pub-body">
+                <div class="post-meta"><span>ICLR, 2026</span></div>
+                <h3 class="post-title">
+                  <a href="https://openreview.net/forum?id=Xi1jkajWi9"
+                    >CerebraGloss: Instruction-Tuning a Large Vision-Language Model for Fine-Grained Clinical EEG Interpretation</a
+                  >
+                </h3>
+                <p class="pub-authors">
+                  W. Gu, T. Luo, Q. Zhang, M. Ye, X. Shen, <b>Wenxin Chen</b>, Y. Li, Y. Zhang, J. Hong, B.-L. Lu, W.-L. Zheng
                 </p>
-              </td>
-            </tr>
-          </tbody></table>
-          <table class="papers" style="border:0px;border-spacing:0px 10px;border-collapse:separate;"><tbody>
+                <p class="pub-desc">Teaches a small vision-language model to read clinical EEG recordings and explain what it sees in plain words.</p>
+                <div class="post-links">
+                  <a href="https://openreview.net/forum?id=Xi1jkajWi9">Paper</a>
+                </div>
+              </div>
+            </article>
 
+            <article class="pub-row">
+              <a class="pub-thumb" href="https://github.com/iewug/BrainTune" tabindex="-1"
+                ><img src="/assets/img/teasers/braintune.png" alt="" width="1200" height="513" loading="lazy" decoding="async"
+              /></a>
+              <div class="pub-body">
+                <div class="post-meta"><span>CogSci, 2026</span></div>
+                <h3 class="post-title">
+                  <a href="https://github.com/iewug/BrainTune"
+                    >BrainTune: An Artifact-Aware Meta-Contrastive Framework for Fast and Lasting Personalization of EEG Emotion Models</a
+                  >
+                </h3>
+                <p class="pub-authors">W. Gu, <b>Wenxin Chen</b>, B.-L. Lu, W.-L. Zheng</p>
+                <p class="pub-desc">Everyone's brain signals look different &mdash; this adapts an emotion model to a new person in seconds.</p>
+                <div class="post-links">
+                  <a href="https://github.com/iewug/BrainTune">Code</a>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
 
-<tr class="paper" bgcolor="#ffffd0">
-  <td class="paper-img" style="padding:16px;width:25%;vertical-align:middle">
-    <img src='assets/img/teasers/rgr.png' width="200" alt="Reason, Ground, and Render">
-  </td>
-  <td class="paper-text" style="padding:8px;width:75%;vertical-align:middle">
-    <span class="papertitle">Reason, Ground, and Render: Consequence-Grounded Counterfactual Object Removal in Video</span>
-    <br>
-    <strong>Wenxin Chen</strong>,
-    J. Cao
-    <br>
-    <em>Under review</em>, 2026
-    <p></p>
-    <p>
-    Removes an object from a video and fixes what it leaves behind &mdash; the shadow it cast, the things it was holding up.
-    </p>
-  </td>
-</tr>
+      <section class="journal" id="blog">
+        <div class="page">
+          <div class="sec-head">
+            <h2 class="sec-title">Blog</h2>
+            <a class="sec-more" href="/blog/">All posts</a>
+          </div>
+          <!-- gen:home-posts -->
+          <!-- prettier-ignore -->
+          <div class="post-grid">
+            <article class="post-card">
+              <div class="post-meta"><span>Nov 15, 2026</span></div>
+              <h3 class="post-title"><a href="/blog/distillation/">Generative Models 3: Distillation</a></h3>
+              <p class="post-desc">Notes on distilling diffusion models into few-step generators: flow-map-level objectives along the PF-ODE, then distribution-level methods (VSD and the DMD family) and their bilevel training.</p>
+            </article>
+            <article class="post-card">
+              <div class="post-meta"><span>Nov 14, 2026</span></div>
+              <h3 class="post-title"><a href="/blog/optimal-transport/">Generative Models 2: Optimal Transport</a></h3>
+              <p class="post-desc">Notes on optimal transport for generative modeling, from stable matching and Sinkhorn through Kantorovich duality to Wasserstein distances, WGAN, FID and barycenters.</p>
+            </article>
+            <article class="post-card">
+              <div class="post-meta"><span>Nov 14, 2026</span></div>
+              <h3 class="post-title"><a href="/blog/gans/">Generative Models 1: Push-forward, Divergences &amp; GANs</a></h3>
+              <p class="post-desc">Notes on generative models as push-forward maps: maximum likelihood as KL minimization, variational forms of divergences, and the GANs that follow from them.</p>
+            </article>
+            <article class="post-card">
+              <div class="post-meta"><span>Sep 28, 2026</span></div>
+              <h3 class="post-title"><a href="/blog/contrastive-world-model/">Contrastive World Model</a></h3>
+              <p class="post-desc">Group-meeting notes on the Contrastive World Model (Bonnie Li, 2026): keep the RSSM, drop the pixel decoder, and learn from mutual information with features of future observations.</p>
+            </article>
+            <article class="post-card">
+              <div class="post-meta"><span>Feb 28, 2026</span></div>
+              <h3 class="post-title"><a href="/blog/hello/">Hello</a></h3>
+              <p class="post-desc">The first post.</p>
+            </article>
+          </div>
+          <!-- /gen:home-posts -->
+        </div>
+      </section>
 
+      <!-- gen:home-experiments -->
+      <!-- /gen:home-experiments -->
 
-<tr class="paper">
-  <td class="paper-img" style="padding:16px;width:25%;vertical-align:middle">
-    <a href="https://arxiv.org/abs/2608.25798"><img src='assets/img/teasers/tacforcing.png' width="200" alt="TacForcing"></a>
-  </td>
-  <td class="paper-text" style="padding:8px;width:75%;vertical-align:middle">
-    <a href="https://arxiv.org/abs/2608.25798">
-      <span class="papertitle">TacForcing: Streaming Action Generation with Execution-Time Tactile Feedback</span>
-    </a>
-    <br>
-    J. Zhou, B. Zhao, Y. Zhang, Y. Chen,
-    <strong>Wenxin Chen</strong>,
-    Q. Li, X. Gu, Y. Cao, X. Xia, Y. Hu, Z. Deng
-    <br>
-    <em>arXiv</em>, 2026
-    <br>
-    <a href="https://88runaway.github.io/tacforcing/">project page</a>
-    /
-    <a href="https://arxiv.org/abs/2608.25798">arXiv</a>
-    <p></p>
-    <p>
-    Lets a robot react to what it feels <em>while</em> it moves, instead of only planning from what it felt beforehand.
-    </p>
-  </td>
-</tr>
+      <section class="journal" id="cv">
+        <div class="page">
+          <div class="sec-head">
+            <h2 class="sec-title">CV</h2>
+            <a class="sec-more" href="/assets/pdf/cv.pdf?v=20260923">Full CV (PDF)</a>
+          </div>
+          <div class="cv-grid">
+            <div class="cv-block">
+              <h3>Education</h3>
+              <ul class="log">
+                <li>
+                  <span class="date">2026 &ndash; 2028</span>
+                  <span>B.S.E. in Computer Science, University of Michigan, Ann Arbor</span>
+                </li>
+                <li>
+                  <span class="date">2024 &ndash; 2028</span>
+                  <span>B.S.E. in Electrical and Computer Engineering, Shanghai Jiao Tong University (GPA 3.81/4.0)</span>
+                </li>
+              </ul>
+            </div>
 
+            <div class="cv-block">
+              <h3>Honors</h3>
+              <ul class="log">
+                <li><span class="date">2026</span><span>Jackson and Muriel Lum Scholarship, University of Michigan</span></li>
+                <li><span class="date">2025</span><span>Excellent Undergraduate Scholarship, SJTU</span></li>
+                <li><span class="date">2025</span><span>Outstanding Member, Student Union Technology Division, SJTU</span></li>
+                <li><span class="date">2024</span><span>Team Gold Medal, University Physics Competition</span></li>
+              </ul>
+            </div>
 
-<tr class="paper">
-  <td class="paper-img" style="padding:16px;width:25%;vertical-align:middle">
-    <a href="https://openreview.net/forum?id=Xi1jkajWi9"><img src='assets/img/teasers/cerebragloss.png' width="200" alt="CerebraGloss"></a>
-  </td>
-  <td class="paper-text" style="padding:8px;width:75%;vertical-align:middle">
-    <a href="https://openreview.net/forum?id=Xi1jkajWi9">
-      <span class="papertitle">CerebraGloss: Instruction-Tuning a Large Vision-Language Model for Fine-Grained Clinical EEG Interpretation</span>
-    </a>
-    <br>
-    W. Gu, T. Luo, Q. Zhang, M. Ye, X. Shen,
-    <strong>Wenxin Chen</strong>,
-    Y. Li, Y. Zhang, J. Hong, B.-L. Lu, W.-L. Zheng
-    <br>
-    <em>ICLR</em>, 2026
-    <br>
-    <a href="https://openreview.net/forum?id=Xi1jkajWi9">paper</a>
-    <p></p>
-    <p>
-    Teaches a small vision-language model to read clinical EEG recordings and explain what it sees in plain words.
-    </p>
-  </td>
-</tr>
+            <div class="cv-block">
+              <h3>Teaching</h3>
+              <ul class="log">
+                <li><span class="date">2026</span><span>Teaching Assistant, EECS215 Introduction to Circuits, SJTU</span></li>
+                <li><span class="date">2026</span><span>Teaching Assistant, ENGL200 Academic Writing II, SJTU</span></li>
+                <li><span class="date">2025</span><span>Teaching Assistant, MATH186 Honors Calculus II, SJTU</span></li>
+              </ul>
+            </div>
 
+            <div class="cv-block">
+              <h3>Service</h3>
+              <ul class="log">
+                <li><span class="date">2025 &ndash; Present</span><span>Academic Advisor, Advising Center, SJTU</span></li>
+                <li><span class="date">2024 &ndash; Present</span><span>Member, Student Union Technology Division, SJTU</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
 
-<tr class="paper">
-  <td class="paper-img" style="padding:16px;width:25%;vertical-align:middle">
-    <a href="https://github.com/iewug/BrainTune"><img src='assets/img/teasers/braintune.png' width="200" alt="BrainTune"></a>
-  </td>
-  <td class="paper-text" style="padding:8px;width:75%;vertical-align:middle">
-    <a href="https://github.com/iewug/BrainTune">
-      <span class="papertitle">BrainTune: An Artifact-Aware Meta-Contrastive Framework for Fast and Lasting Personalization of EEG Emotion Models</span>
-    </a>
-    <br>
-    W. Gu,
-    <strong>Wenxin Chen</strong>,
-    B.-L. Lu, W.-L. Zheng
-    <br>
-    <em>CogSci</em>, 2026
-    <br>
-    <a href="https://github.com/iewug/BrainTune">code</a>
-    <p></p>
-    <p>
-    Everyone's brain signals look different &mdash; this adapts an emotion model to a new person in seconds.
-    </p>
-  </td>
-</tr>
+    <!-- gen:footer -->
+    <!-- prettier-ignore -->
+    <footer class="foot">
+      <div class="foot-inner">
+        <div>
+          <div class="foot-brand">Wenxin Chen</div>
+          <div class="foot-mail"><a href="mailto:cwx@umich.edu">cwx@umich.edu</a></div>
+        </div>
+        <div class="foot-meta">© 2026 · Design inspired by <a href="https://wenhaochai.com/" target="_blank" rel="noopener">Wenhao Chai</a></div>
+      </div>
+    </footer>
+    <!-- /gen:footer -->
 
-
-          </tbody></table>
-          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-            <tr>
-              <td style="padding:16px;width:100%;vertical-align:middle">
-                <h2>Education</h2>
-                <ul class="cv">
-                  <li><span>B.S.E. in Computer Science, University of Michigan, Ann Arbor</span><span class="date">2026 &ndash; 2028</span></li>
-                  <li><span>B.S.E. in Electrical and Computer Engineering, Shanghai Jiao Tong University (GPA 3.81/4.0)</span><span class="date">2024 &ndash; 2028</span></li>
-                </ul>
-              </td>
-            </tr>
-          </tbody></table>
-          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-            <tr>
-              <td style="padding:16px;width:100%;vertical-align:middle">
-                <h2>Honors</h2>
-                <ul class="cv">
-                  <li><span>Jackson and Muriel Lum Scholarship, University of Michigan</span><span class="date">2026</span></li>
-                  <li><span>Excellent Undergraduate Scholarship, SJTU</span><span class="date">2025</span></li>
-                  <li><span>Outstanding Member, Student Union Technology Division, SJTU</span><span class="date">2025</span></li>
-                  <li><span>Team Gold Medal, University Physics Competition</span><span class="date">2024</span></li>
-                </ul>
-              </td>
-            </tr>
-          </tbody></table>
-          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-            <tr>
-              <td style="padding:16px;width:100%;vertical-align:middle">
-                <h2>Teaching</h2>
-                <ul class="cv">
-                  <li><span>Teaching Assistant, MATH186 Honors Calculus II, SJTU</span><span class="date">2025</span></li>
-                  <li><span>Teaching Assistant, EECS215 Introduction to Circuits, SJTU</span><span class="date">2026</span></li>
-                  <li><span>Teaching Assistant, ENGL200 Academic Writing II, SJTU</span><span class="date">2026</span></li>
-                </ul>
-              </td>
-            </tr>
-          </tbody></table>
-          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-            <tr>
-              <td style="padding:16px;width:100%;vertical-align:middle">
-                <h2>Service</h2>
-                <ul class="cv">
-                  <li><span>Academic Advisor, Advising Center, SJTU</span><span class="date">2025 &ndash; Present</span></li>
-                  <li><span>Member, Student Union Technology Division, SJTU</span><span class="date">2024 &ndash; Present</span></li>
-                </ul>
-              </td>
-            </tr>
-          </tbody></table>
-          <table style="width:100%;border:0px;border-spacing:0px;border-collapse:separate;margin-right:auto;margin-left:auto;"><tbody>
-            <tr>
-              <td style="padding:16px">
-                <p class="credit">
-                  Website template from <a href="https://github.com/jonbarron/jonbarron_website">Jon Barron</a>.
-                </p>
-              </td>
-            </tr>
-          </tbody></table>
-        </td>
-      </tr>
-    </table>
+    <script src="/assets/site.js?v=569166d6" defer></script>
   </body>
 </html>

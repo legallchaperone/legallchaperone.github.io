@@ -1,0 +1,11 @@
+[
+  {
+    "title": "Experiment Template",
+    "date": "2026-11-25",
+    "end": "now",
+    "description": "One paragraph that states the question, the setup and the main numbers, so a reader who stops here still knows the result. Copy template.md to start a new experiment.",
+    "file": "template.md",
+    "template": true,
+    "draft": true
+  }
+]

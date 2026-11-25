@@ -5,7 +5,7 @@
   "scripts": {
     "new": "node engine/cli.js new",
     "dev": "node engine/cli.js dev",
-    "build": "node engine/cli.js build",
+    "build": "node engine/cli.js build && node ../tools/build.mjs",
     "test": "node --test \"engine/test/*.test.js\"",
     "test:e2e": "node --test --test-concurrency=1 engine/test/viewer.e2e.js"
   },

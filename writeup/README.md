@@ -135,7 +135,8 @@ It:
 
 - builds every non-draft article into `site/<slug>/`;
 - writes each article's title, date and description into `blog/posts.json`, so the Blog list gets an entry linking to `/writeup/<slug>/`;
-- removes `site/<slug>/` and the Blog entry when an article goes back to draft or is deleted.
+- removes `site/<slug>/` and the Blog entry when an article goes back to draft or is deleted;
+- then runs the site build (`tools/build.mjs` in the repository root), which rewrites the Blog list in `blog/index.html` and on the home page from `blog/posts.json`.
 
 Any error stops the build and nothing is written. Common errors:
 
@@ -151,7 +152,7 @@ Any error stops the build and nothing is written. Common errors:
 ## 6. Publish: push
 
 ```bash
-git add writeup/posts/my-topic writeup/site/my-topic blog/posts.json
+git add writeup/posts/my-topic writeup/site/my-topic blog/posts.json blog/index.html index.html
 ```
 
 ```bash
