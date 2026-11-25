@@ -1,5 +1,14 @@
 [
   {
+    "title": "Tactile Guidance for Vision-Only Policies on OpenViTac",
+    "title_zh": "OpenViTac 上纯视觉策略的触觉引导",
+    "date": "2026-11-22",
+    "end": "now",
+    "tag": "Robot learning",
+    "file": "tacguide.md",
+    "draft": true
+  },
+  {
     "title": "Swift Targets in the ODE Initialization of Self Forcing",
     "title_zh": "Self Forcing 的 ODE 初始化中的 Swift 目标",
     "date": "2026-11-18",

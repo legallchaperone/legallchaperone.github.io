@@ -1,0 +1,154 @@
+{
+  "generated_by": "experiments/gen/tacguide.py",
+  "gpu": "RTX PRO 6000",
+  "factors": [
+    [
+      "task",
+      "Task",
+      "任务"
+    ],
+    [
+      "inputs",
+      "Inputs",
+      "输入"
+    ],
+    [
+      "steps",
+      "Steps",
+      "步数"
+    ]
+  ],
+  "rows": [
+    {
+      "setup": {
+        "en": "Policy with touch",
+        "zh": "带触觉的策略"
+      },
+      "task": "Grasp Chip",
+      "inputs": "vision + touch",
+      "steps": "0 → 10k",
+      "gpus": 1,
+      "hours": 22.9,
+      "start": "2026-11-22T20:29+0000",
+      "end": "2026-11-24T01:53+0000",
+      "code": "https://github.com/legallchaperone/TacGuide/tree/4c68285c5005476c7a384e484fa67757b291d3ee",
+      "figs": [
+        "success",
+        "miss",
+        "loss"
+      ]
+    },
+    {
+      "setup": {
+        "en": "Vision-only policy",
+        "zh": "纯视觉策略"
+      },
+      "task": "Grasp Chip",
+      "inputs": "vision",
+      "steps": "0 → 10k",
+      "gpus": 1,
+      "hours": 24.5,
+      "start": "2026-11-22T21:03+0000",
+      "end": "2026-11-24T03:48+0000",
+      "code": "https://github.com/legallchaperone/TacGuide/tree/09fc241a6f1c3306f39f43ca070ee60c0e17acff",
+      "figs": [
+        "success",
+        "miss",
+        "loss"
+      ]
+    },
+    {
+      "setup": {
+        "en": "Vision-only student distilled from the policy with touch",
+        "zh": "从带触觉策略蒸馏出的纯视觉学生"
+      },
+      "task": "Grasp Chip",
+      "inputs": "vision",
+      "steps": "0 → 10k",
+      "gpus": 1,
+      "hours": 23.7,
+      "start": "2026-11-24T01:54+0000",
+      "end": "2026-11-25T01:42+0000",
+      "code": "https://github.com/legallchaperone/TacGuide/tree/fa2e72a65a2593b372d3a5f4d502687e5bd15023",
+      "figs": [
+        "success",
+        "miss"
+      ]
+    },
+    {
+      "setup": {
+        "en": "Vision-only policy, continued",
+        "zh": "纯视觉策略，继续训练"
+      },
+      "task": "Grasp Chip",
+      "inputs": "vision",
+      "steps": "10k → 20k",
+      "gpus": 1,
+      "hours": 21.2,
+      "start": "2026-11-24T03:48+0000",
+      "code": "https://github.com/legallchaperone/TacGuide/tree/6d2bb167e95b77de8b48405b4487386a3c5d1615",
+      "figs": [
+        "loss-20k",
+        "success-20k"
+      ],
+      "state": "Running"
+    },
+    {
+      "setup": {
+        "en": "Policy with touch",
+        "zh": "带触觉的策略"
+      },
+      "task": "Gear Assembly",
+      "inputs": "vision + touch",
+      "steps": "0 → 20k",
+      "gpus": 1,
+      "hours": 18.5,
+      "start": "2026-11-25T03:51+0000",
+      "code": "https://github.com/legallchaperone/TacGuide/tree/6d2bb167e95b77de8b48405b4487386a3c5d1615",
+      "figs": [
+        "success-gear"
+      ],
+      "state": "Running"
+    },
+    {
+      "setup": {
+        "en": "Vision-only policy",
+        "zh": "纯视觉策略"
+      },
+      "task": "Gear Assembly",
+      "inputs": "vision",
+      "steps": "0 → 20k",
+      "gpus": 1,
+      "hours": 18.5,
+      "start": "2026-11-25T03:53+0000",
+      "code": "https://github.com/legallchaperone/TacGuide/tree/6d2bb167e95b77de8b48405b4487386a3c5d1615",
+      "figs": [
+        "success-gear"
+      ],
+      "state": "Running"
+    },
+    {
+      "setup": {
+        "en": "Vision-only student trained on the extrapolated target, w > 1",
+        "zh": "用外推目标训练的纯视觉学生，w > 1"
+      },
+      "task": "Grasp Chip",
+      "inputs": "vision",
+      "steps": "0 → 10k",
+      "figs": [
+        "success-guidance"
+      ],
+      "state": "Planned"
+    }
+  ],
+  "cost": {
+    "main": {
+      "gpu_hours": 129.3,
+      "jobs": 9
+    },
+    "other": {
+      "gpu_hours": 6.8,
+      "jobs": 10
+    }
+  }
+}
