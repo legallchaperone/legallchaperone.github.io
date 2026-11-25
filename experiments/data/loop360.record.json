@@ -1,0 +1,142 @@
+{
+  "generated_by": "experiments/gen/loop360.py",
+  "factors": [
+    [
+      "model",
+      "Model",
+      "模型"
+    ],
+    [
+      "scenes",
+      "Scenes",
+      "场景数"
+    ],
+    [
+      "stage",
+      "Stage",
+      "阶段"
+    ]
+  ],
+  "rows": [
+    {
+      "setup": {
+        "en": "Single-rater closure ratings, 109 scene pairs",
+        "zh": "单人回环人工评分，109 对场景"
+      },
+      "model": "4 models + pano",
+      "scenes": "109",
+      "stage": "human rating",
+      "figs": [
+        "human-return",
+        "human-agreement"
+      ],
+      "state": "",
+      "start": "2026-11-20T20:58+0000",
+      "end": "2026-11-21T20:57+0000"
+    },
+    {
+      "setup": {
+        "en": "Real panorama control, one-way and out-and-back rollouts",
+        "zh": "真实全景对照，单向与往返轨迹生成及评测"
+      },
+      "model": "Real panorama control",
+      "scenes": "4",
+      "stage": "rollouts + traces",
+      "figs": [
+        "arc-by-model",
+        "point-vs-arc",
+        "negative-control"
+      ],
+      "state": ""
+    },
+    {
+      "setup": {
+        "en": "WorldCrafter-Fast, one-way and out-and-back rollouts",
+        "zh": "WorldCrafter-Fast，单向与往返轨迹生成及评测"
+      },
+      "model": "WorldCrafter-Fast",
+      "scenes": "32",
+      "stage": "rollouts + traces",
+      "figs": [
+        "arc-by-model",
+        "point-vs-arc",
+        "negative-control"
+      ],
+      "state": ""
+    },
+    {
+      "setup": {
+        "en": "HY-WorldPlay, one-way and out-and-back rollouts",
+        "zh": "HY-WorldPlay，单向与往返轨迹生成及评测"
+      },
+      "model": "HY-WorldPlay",
+      "scenes": "52",
+      "stage": "rollouts + traces",
+      "figs": [
+        "arc-by-model",
+        "point-vs-arc",
+        "negative-control"
+      ],
+      "state": ""
+    },
+    {
+      "setup": {
+        "en": "Matrix-Game 3.0, one-way and out-and-back rollouts",
+        "zh": "Matrix-Game 3.0，单向与往返轨迹生成及评测"
+      },
+      "model": "Matrix-Game 3.0",
+      "scenes": "52",
+      "stage": "rollouts + traces",
+      "figs": [
+        "arc-by-model",
+        "point-vs-arc",
+        "negative-control"
+      ],
+      "state": ""
+    },
+    {
+      "setup": {
+        "en": "SANA-WM, one-way and out-and-back rollouts",
+        "zh": "SANA-WM，单向与往返轨迹生成及评测"
+      },
+      "model": "SANA-WM",
+      "scenes": "52",
+      "stage": "rollouts + traces",
+      "figs": [
+        "arc-by-model",
+        "point-vs-arc",
+        "negative-control"
+      ],
+      "state": ""
+    },
+    {
+      "setup": {
+        "en": "Matrix-Game 2.0, one-way and out-and-back rollouts",
+        "zh": "Matrix-Game 2.0，单向与往返轨迹生成及评测"
+      },
+      "model": "Matrix-Game 2.0",
+      "scenes": "52",
+      "stage": "rollouts + traces",
+      "figs": [
+        "arc-by-model",
+        "point-vs-arc",
+        "negative-control"
+      ],
+      "state": ""
+    },
+    {
+      "setup": {
+        "en": "Blind two-question human rating package, 60 videos",
+        "zh": "盲测双问题人工评分包，60 条视频"
+      },
+      "model": "All models",
+      "scenes": "60 videos",
+      "stage": "blind human eval",
+      "figs": [
+        "blind-eval"
+      ],
+      "code": "https://github.com/legallchaperone/loop360/tree/b640eba",
+      "state": "Running"
+    }
+  ]
+}

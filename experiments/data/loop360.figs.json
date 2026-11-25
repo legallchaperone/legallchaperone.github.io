@@ -1,0 +1,611 @@
+{
+  "human-return": {
+    "kind": "bar",
+    "status": "",
+    "title": {
+      "en": "Human-confirmed return rate by trajectory",
+      "zh": "不同轨迹下人工确认回到起点的比例"
+    },
+    "caption": {
+      "en": "Share of videos rated 2 on return to the starting view. Every memory-equipped model drops sharply from out-and-back to one-way.",
+      "zh": "人工评分为 2（明确回到起点画面）的视频占比。带记忆的模型在单向轨迹上均明显下降。"
+    },
+    "more": {
+      "en": "Single rater, not blind, question 1 only. Rated scene pairs per model: Real panorama control 4, HY-WorldPlay 19, Matrix-Game 3.0 19, SANA-WM 15, Matrix-Game 2.0 52. WorldCrafter-Fast is not yet rated in this pass.",
+      "zh": "单人非盲测评分，仅包含问题 1。各模型已评分场景对数：真实全景对照 4、HY-WorldPlay 19、Matrix-Game 3.0 19、SANA-WM 15、Matrix-Game 2.0 52。本轮尚未对 WorldCrafter-Fast 评分。"
+    },
+    "x": {
+      "categories": [
+        {
+          "en": "Real pano",
+          "zh": "真实全景"
+        },
+        {
+          "en": "HY-WorldPlay",
+          "zh": "HY-WorldPlay"
+        },
+        {
+          "en": "Matrix-Game 3",
+          "zh": "Matrix-Game 3"
+        },
+        {
+          "en": "SANA-WM",
+          "zh": "SANA-WM"
+        },
+        {
+          "en": "Matrix-Game 2",
+          "zh": "Matrix-Game 2"
+        }
+      ]
+    },
+    "y": {
+      "label": {
+        "en": "Returned (%)",
+        "zh": "回到起点 (%)"
+      },
+      "min": 0,
+      "max": 100
+    },
+    "series": [
+      {
+        "name": {
+          "en": "Out-and-back",
+          "zh": "往返"
+        },
+        "color": "ref",
+        "points": [
+          [
+            0,
+            100.0
+          ],
+          [
+            1,
+            100.0
+          ],
+          [
+            2,
+            100.0
+          ],
+          [
+            3,
+            13.3
+          ],
+          [
+            4,
+            0.0
+          ]
+        ]
+      },
+      {
+        "name": {
+          "en": "One-way",
+          "zh": "单向"
+        },
+        "color": "s1",
+        "points": [
+          [
+            0,
+            100.0
+          ],
+          [
+            1,
+            52.6
+          ],
+          [
+            2,
+            0.0
+          ],
+          [
+            3,
+            0.0
+          ],
+          [
+            4,
+            0.0
+          ]
+        ]
+      }
+    ]
+  },
+  "arc-by-model": {
+    "kind": "bar",
+    "status": "",
+    "title": {
+      "en": "Mean arc score across models and trajectories",
+      "zh": "各模型在两种轨迹上的平均弧分数"
+    },
+    "caption": {
+      "en": "Mean SIFT arc score at departure threshold 0.15 across all generated scenes. WorldCrafter-Fast leads on one-way turns, followed by HY-WorldPlay.",
+      "zh": "在离开阈值 0.15 下，所有已生成场景的平均 SIFT 弧分数。单向旋转中 WorldCrafter-Fast 最高，HY-WorldPlay 次之。"
+    },
+    "more": {
+      "en": "Computed on 640-pixel previews sampled every 2 frames (486 videos). WorldCrafter-Fast covers 32 of the 52 scenes. With the DINO aligner, one-way arc means are: Real panorama control 0.96, WorldCrafter-Fast 0.77, HY-WorldPlay 0.60, Matrix-Game 3.0 0.28, SANA-WM 0.17, Matrix-Game 2.0 0.11.",
+      "zh": "在 640 像素宽预览视频上每 2 帧采样计算（共 486 条）。WorldCrafter-Fast 覆盖 52 个场景中的 32 个。换用 DINO 对齐器时，单向弧分数均值依次为：真实全景对照 0.96、WorldCrafter-Fast 0.77、HY-WorldPlay 0.60、Matrix-Game 3.0 0.28、SANA-WM 0.17、Matrix-Game 2.0 0.11。"
+    },
+    "x": {
+      "categories": [
+        {
+          "en": "Real pano",
+          "zh": "真实全景"
+        },
+        {
+          "en": "WorldCrafter",
+          "zh": "WorldCrafter"
+        },
+        {
+          "en": "HY-WorldPlay",
+          "zh": "HY-WorldPlay"
+        },
+        {
+          "en": "Matrix-Game 3",
+          "zh": "Matrix-Game 3"
+        },
+        {
+          "en": "SANA-WM",
+          "zh": "SANA-WM"
+        },
+        {
+          "en": "Matrix-Game 2",
+          "zh": "Matrix-Game 2"
+        }
+      ]
+    },
+    "y": {
+      "label": {
+        "en": "Arc score",
+        "zh": "弧分数"
+      },
+      "min": 0,
+      "max": 1
+    },
+    "series": [
+      {
+        "name": {
+          "en": "Out-and-back",
+          "zh": "往返"
+        },
+        "color": "ref",
+        "points": [
+          [
+            0,
+            0.98
+          ],
+          [
+            1,
+            0.85
+          ],
+          [
+            2,
+            0.88
+          ],
+          [
+            3,
+            0.78
+          ],
+          [
+            4,
+            0.03
+          ],
+          [
+            5,
+            0.02
+          ]
+        ]
+      },
+      {
+        "name": {
+          "en": "One-way",
+          "zh": "单向"
+        },
+        "color": "s1",
+        "points": [
+          [
+            0,
+            0.96
+          ],
+          [
+            1,
+            0.67
+          ],
+          [
+            2,
+            0.3
+          ],
+          [
+            3,
+            0.06
+          ],
+          [
+            4,
+            0.02
+          ],
+          [
+            5,
+            0.0
+          ]
+        ]
+      }
+    ]
+  },
+  "point-vs-arc": {
+    "kind": "bar",
+    "status": "",
+    "title": {
+      "en": "One-way point score versus arc score",
+      "zh": "单向轨迹上的点分数与弧分数对比"
+    },
+    "caption": {
+      "en": "Point score measures only the best revisit frame; arc score requires the approach before it to match. The gap is largest on WorldCrafter-Fast.",
+      "zh": "点分数只看回访最好的单帧，弧分数则要求回归前的接近段也保持一致。两者在 WorldCrafter-Fast 上的差距最大。"
+    },
+    "more": {
+      "en": "SIFT aligner at departure threshold 0.15. In WorldCrafter-Fast one-way rollouts, 3 videos have arc below 0.6 times point; one has been inspected frame by frame and confirmed to jump abruptly to the remembered view.",
+      "zh": "SIFT 对齐器，离开阈值 0.15。在 WorldCrafter-Fast 的单向视频中，有 3 条满足弧分数低于点分数的 0.6 倍；其中一条已逐帧核对，确认画面在接近起点时发生跳变。"
+    },
+    "x": {
+      "categories": [
+        {
+          "en": "Real pano",
+          "zh": "真实全景"
+        },
+        {
+          "en": "WorldCrafter",
+          "zh": "WorldCrafter"
+        },
+        {
+          "en": "HY-WorldPlay",
+          "zh": "HY-WorldPlay"
+        },
+        {
+          "en": "Matrix-Game 3",
+          "zh": "Matrix-Game 3"
+        },
+        {
+          "en": "SANA-WM",
+          "zh": "SANA-WM"
+        },
+        {
+          "en": "Matrix-Game 2",
+          "zh": "Matrix-Game 2"
+        }
+      ]
+    },
+    "y": {
+      "label": {
+        "en": "Score",
+        "zh": "分数"
+      },
+      "min": 0,
+      "max": 1
+    },
+    "series": [
+      {
+        "name": {
+          "en": "Point score",
+          "zh": "点分数"
+        },
+        "color": "ref",
+        "points": [
+          [
+            0,
+            0.99
+          ],
+          [
+            1,
+            0.8
+          ],
+          [
+            2,
+            0.35
+          ],
+          [
+            3,
+            0.1
+          ],
+          [
+            4,
+            0.02
+          ],
+          [
+            5,
+            0.02
+          ]
+        ]
+      },
+      {
+        "name": {
+          "en": "Arc score",
+          "zh": "弧分数"
+        },
+        "color": "s2",
+        "points": [
+          [
+            0,
+            0.96
+          ],
+          [
+            1,
+            0.67
+          ],
+          [
+            2,
+            0.3
+          ],
+          [
+            3,
+            0.06
+          ],
+          [
+            4,
+            0.02
+          ],
+          [
+            5,
+            0.0
+          ]
+        ]
+      }
+    ]
+  },
+  "human-agreement": {
+    "kind": "line",
+    "status": "",
+    "title": {
+      "en": "Agreement with human ratings across departure thresholds",
+      "zh": "不同离开阈值下与人工评分的一致性"
+    },
+    "caption": {
+      "en": "AUC for separating rating 2 from 0 and 1, plus Spearman rank correlation on 218 rated videos. SIFT arc AUC is highest at 0.05 (0.972 vs 0.967 at 0.15), while Spearman peaks at 0.15 (0.793); both drop at 0.30.",
+      "zh": "在 218 条已评分视频上区分 2 分与 0/1 分的 AUC 及 Spearman 秩相关。SIFT 弧分数 AUC 在 0.05 最高（0.972，0.15 处为 0.967），Spearman 秩相关在 0.15 最高（0.793），到 0.30 时均下降。"
+    },
+    "more": {
+      "en": "SIFT covers 218 rated videos; DINO covers 214. On the shared 214 videos at threshold 0.15, mean SIFT arc is 0.01 for rating 0, 0.07 for rating 1 and 0.73 for rating 2.",
+      "zh": "SIFT 覆盖 218 条已评分视频，DINO 覆盖 214 条。在共同的 214 条视频、阈值 0.15 下，人工 0 / 1 / 2 分对应的 SIFT 弧分数均值分别为 0.01、0.07、0.73。"
+    },
+    "x": {
+      "label": {
+        "en": "Departure threshold",
+        "zh": "离开阈值"
+      },
+      "min": 0.05,
+      "max": 0.3
+    },
+    "y": {
+      "label": {
+        "en": "Agreement",
+        "zh": "一致性"
+      },
+      "min": 0.65,
+      "max": 1.0
+    },
+    "series": [
+      {
+        "name": {
+          "en": "SIFT arc AUC",
+          "zh": "SIFT 弧分数 AUC"
+        },
+        "color": "s1",
+        "points": [
+          [
+            0.05,
+            0.972
+          ],
+          [
+            0.15,
+            0.967
+          ],
+          [
+            0.3,
+            0.866
+          ]
+        ]
+      },
+      {
+        "name": {
+          "en": "SIFT point AUC",
+          "zh": "SIFT 点分数 AUC"
+        },
+        "color": "ref",
+        "dash": true,
+        "points": [
+          [
+            0.05,
+            0.967
+          ],
+          [
+            0.15,
+            0.964
+          ],
+          [
+            0.3,
+            0.866
+          ]
+        ]
+      },
+      {
+        "name": {
+          "en": "DINO arc AUC",
+          "zh": "DINO 弧分数 AUC"
+        },
+        "color": "s2",
+        "points": [
+          [
+            0.05,
+            0.963
+          ],
+          [
+            0.15,
+            0.949
+          ]
+        ]
+      },
+      {
+        "name": {
+          "en": "SIFT arc Spearman",
+          "zh": "SIFT 弧分数 Spearman"
+        },
+        "color": "s3",
+        "points": [
+          [
+            0.05,
+            0.756
+          ],
+          [
+            0.15,
+            0.793
+          ],
+          [
+            0.3,
+            0.701
+          ]
+        ]
+      }
+    ]
+  },
+  "negative-control": {
+    "kind": "line",
+    "status": "",
+    "title": {
+      "en": "False closure rate on mismatched scenes",
+      "zh": "错配场景上的误回环率"
+    },
+    "caption": {
+      "en": "Share of videos whose confirmed overlap with another scene's first frame crosses the threshold. DINO triggers far more false matches than SIFT below 0.20.",
+      "zh": "视频与另一场景第 0 帧的最大确认占比超过阈值的比例。在 0.20 以下，DINO 的误匹配率明显高于 SIFT。"
+    },
+    "more": {
+      "en": "SIFT covers 467 mismatched rollouts; DINO covers 107 rollouts, mostly HY-WorldPlay. Each video is paired with the next scene in alphabetical order, so a few consecutive real photos from the same location may inflate the tail.",
+      "zh": "SIFT 覆盖 467 条错配视频，DINO 覆盖 107 条（主要为 HY-WorldPlay）。每条视频与按文件名排序的下一个场景配对，少量同地点的连续实拍照片可能抬高尾部比例。"
+    },
+    "x": {
+      "label": {
+        "en": "Threshold",
+        "zh": "阈值"
+      },
+      "min": 0.05,
+      "max": 0.3
+    },
+    "y": {
+      "label": {
+        "en": "False closures (%)",
+        "zh": "误回环率 (%)"
+      },
+      "min": 0,
+      "max": 60
+    },
+    "series": [
+      {
+        "name": {
+          "en": "SIFT",
+          "zh": "SIFT"
+        },
+        "color": "s1",
+        "points": [
+          [
+            0.05,
+            21.0
+          ],
+          [
+            0.1,
+            10.5
+          ],
+          [
+            0.15,
+            4.1
+          ],
+          [
+            0.2,
+            2.4
+          ],
+          [
+            0.3,
+            0.2
+          ]
+        ]
+      },
+      {
+        "name": {
+          "en": "DINO",
+          "zh": "DINO"
+        },
+        "color": "s2",
+        "points": [
+          [
+            0.05,
+            51.4
+          ],
+          [
+            0.1,
+            50.5
+          ],
+          [
+            0.15,
+            12.1
+          ],
+          [
+            0.2,
+            2.8
+          ],
+          [
+            0.3,
+            0.0
+          ]
+        ]
+      }
+    ]
+  },
+  "blind-eval": {
+    "kind": "bar",
+    "status": "Running",
+    "title": {
+      "en": "Agreement with blind two-question human ratings",
+      "zh": "与盲测双问题人工评分的一致性"
+    },
+    "caption": {
+      "en": "Will compare point and arc scores against blind ratings on return and on approach consistency over the 60-video pilot package.",
+      "zh": "将在 60 条视频的盲测包上，对比点分数与弧分数在“是否回到起点”和“回程是否连贯”两问上与人工评分的一致性。"
+    },
+    "more": {
+      "en": "Pilot-1 package of 60 anonymized videos covering all five models and real panoramas, with two 0/1/2 questions per video.",
+      "zh": "首批 60 条匿名视频盲测包，覆盖全部五个模型与真实全景，每条视频包含两个 0/1/2 分问题。"
+    },
+    "x": {
+      "categories": [
+        {
+          "en": "Q1: Return",
+          "zh": "问题 1：回到起点"
+        },
+        {
+          "en": "Q2: Approach",
+          "zh": "问题 2：回程连贯"
+        }
+      ]
+    },
+    "y": {
+      "label": {
+        "en": "AUC",
+        "zh": "AUC"
+      },
+      "min": 0.5,
+      "max": 1.0
+    },
+    "series": [
+      {
+        "name": {
+          "en": "Point score",
+          "zh": "点分数"
+        },
+        "color": "ref",
+        "points": []
+      },
+      {
+        "name": {
+          "en": "Arc score",
+          "zh": "弧分数"
+        },
+        "color": "s1",
+        "points": []
+      }
+    ]
+  }
+}

@@ -1,5 +1,14 @@
 [
   {
+    "title": "One-Way Loop Closure in Video World Models",
+    "title_zh": "视频世界模型的单向回环一致性",
+    "date": "2026-11-20",
+    "end": "now",
+    "tag": "World models",
+    "file": "loop360.md",
+    "draft": true
+  },
+  {
     "title": "Tactile Guidance for Vision-Only Policies on OpenViTac",
     "title_zh": "OpenViTac 上纯视觉策略的触觉引导",
     "date": "2026-11-22",
