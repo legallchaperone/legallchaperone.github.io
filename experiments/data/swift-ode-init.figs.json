@@ -1,0 +1,118 @@
+{
+  "vbench-ode": {
+    "kind": "bar",
+    "status": "Queued",
+    "title": {
+      "en": "VBench scores after the ODE initialization",
+      "zh": "ODE 初始化之后的 VBench 分数"
+    },
+    "caption": {
+      "en": "Will show whether the student trained on the Swift target scores higher on VBench than the baseline at the end of the ODE initialization.",
+      "zh": "将显示在 ODE 初始化结束时，用 Swift 目标训练的学生模型的 VBench 分数是否高于基线。"
+    },
+    "more": {
+      "en": "Total is the VBench weighted mean of Quality and Semantic. Our scoring departs from the official protocol in one place: it scores temporal flickering on the standard videos, without the filter that removes static videos.",
+      "zh": "总分是 VBench 对质量分和语义分的加权平均。我们的评分与官方流程有一处不同：temporal flickering 在标准视频上直接评分，没有先过滤静态视频。"
+    },
+    "x": {
+      "categories": [
+        {
+          "en": "Total",
+          "zh": "总分"
+        },
+        {
+          "en": "Quality",
+          "zh": "质量"
+        },
+        {
+          "en": "Semantic",
+          "zh": "语义"
+        }
+      ]
+    },
+    "y": {
+      "label": {
+        "en": "VBench score",
+        "zh": "VBench 分数"
+      },
+      "min": 0,
+      "max": 100
+    },
+    "series": [
+      {
+        "name": {
+          "en": "Baseline",
+          "zh": "基线"
+        },
+        "color": "ref",
+        "points": []
+      },
+      {
+        "name": {
+          "en": "Swift target",
+          "zh": "Swift 目标"
+        },
+        "color": "s1",
+        "points": []
+      }
+    ]
+  },
+  "vbench-dmd": {
+    "kind": "bar",
+    "status": "Queued",
+    "title": {
+      "en": "VBench scores after DMD training",
+      "zh": "DMD 训练之后的 VBench 分数"
+    },
+    "caption": {
+      "en": "Will show whether a student that starts from the Swift initialization scores higher on VBench after DMD training.",
+      "zh": "将显示从 Swift 初始化出发的学生模型，在 DMD 训练之后的 VBench 分数是否更高。"
+    },
+    "more": {
+      "en": "Total is the VBench weighted mean of Quality and Semantic. Our scoring departs from the official protocol in one place: it scores temporal flickering on the standard videos, without the filter that removes static videos.",
+      "zh": "总分是 VBench 对质量分和语义分的加权平均。我们的评分与官方流程有一处不同：temporal flickering 在标准视频上直接评分，没有先过滤静态视频。"
+    },
+    "x": {
+      "categories": [
+        {
+          "en": "Total",
+          "zh": "总分"
+        },
+        {
+          "en": "Quality",
+          "zh": "质量"
+        },
+        {
+          "en": "Semantic",
+          "zh": "语义"
+        }
+      ]
+    },
+    "y": {
+      "label": {
+        "en": "VBench score",
+        "zh": "VBench 分数"
+      },
+      "min": 0,
+      "max": 100
+    },
+    "series": [
+      {
+        "name": {
+          "en": "Baseline",
+          "zh": "基线"
+        },
+        "color": "ref",
+        "points": []
+      },
+      {
+        "name": {
+          "en": "Swift target",
+          "zh": "Swift 目标"
+        },
+        "color": "s1",
+        "points": []
+      }
+    ]
+  }
+}

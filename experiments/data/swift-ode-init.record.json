@@ -1,0 +1,93 @@
+{
+  "generated_by": "experiments/gen/swift_ode_init.py",
+  "gpu": "GH200",
+  "factors": [
+    [
+      "target",
+      "Target",
+      "回归目标"
+    ],
+    [
+      "steps",
+      "Steps",
+      "步数"
+    ]
+  ],
+  "rows": [
+    {
+      "setup": {
+        "en": "Shared start for both arms",
+        "zh": "两组共用的起始阶段"
+      },
+      "target": "plain",
+      "steps": "0 → 750",
+      "gpus": 4,
+      "q": [
+        "ode"
+      ],
+      "state": "Queued"
+    },
+    {
+      "setup": {
+        "en": "Baseline: plain ODE target",
+        "zh": "基线：原始 ODE 目标"
+      },
+      "target": "plain",
+      "steps": "750 → 3000",
+      "gpus": 4,
+      "figs": [
+        "vbench-ode"
+      ],
+      "state": "Queued"
+    },
+    {
+      "setup": {
+        "en": "Swift target, α = 0.25",
+        "zh": "Swift 目标，α = 0.25"
+      },
+      "target": "Swift",
+      "steps": "750 → 3000",
+      "gpus": 4,
+      "figs": [
+        "vbench-ode"
+      ],
+      "state": "Queued"
+    },
+    {
+      "setup": {
+        "en": "DMD training from the baseline initialization",
+        "zh": "从基线初始化开始的 DMD 训练"
+      },
+      "target": "plain",
+      "steps": "DMD",
+      "gpus": 4,
+      "figs": [
+        "vbench-dmd"
+      ],
+      "state": "Queued"
+    },
+    {
+      "setup": {
+        "en": "DMD training from the Swift initialization",
+        "zh": "从 Swift 初始化开始的 DMD 训练"
+      },
+      "target": "Swift",
+      "steps": "DMD",
+      "gpus": 4,
+      "figs": [
+        "vbench-dmd"
+      ],
+      "state": "Queued"
+    }
+  ],
+  "cost": {
+    "main": {
+      "gpu_hours": 0.0,
+      "jobs": 0
+    },
+    "other": {
+      "gpu_hours": 181.1,
+      "jobs": 5
+    }
+  }
+}

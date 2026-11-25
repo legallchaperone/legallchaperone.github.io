@@ -1,9 +1,20 @@
 [
   {
+    "title": "Swift Targets in the ODE Initialization of Self Forcing",
+    "title_zh": "Self Forcing 的 ODE 初始化中的 Swift 目标",
+    "date": "2026-11-18",
+    "end": "now",
+    "tag": "Video generation",
+    "file": "swift-ode-init.md",
+    "draft": true
+  },
+  {
     "title": "Experiment Template",
+    "title_zh": "实验模板",
     "date": "2026-11-25",
     "end": "now",
-    "description": "One paragraph that states the question, the setup and the main numbers, so a reader who stops here still knows the result. Copy template.md to start a new experiment.",
+    "description": "One precise sentence with the result, written right before publishing.",
+    "description_zh": "发布前写下的一句准确的结论。",
     "file": "template.md",
     "template": true,
     "draft": true
