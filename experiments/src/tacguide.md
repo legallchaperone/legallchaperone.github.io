@@ -2,7 +2,7 @@ A robot policy that feels an object through tactile sensors can teach a policy t
 
 ## Setup
 
-The baseline is OpenVTLA, the policy released with the [OpenViTac](https://github.com/FVL-Repo/OpenViTac) benchmark: π0.5 with tactile tokens from AnyTouch 2 placed before its visual tokens, trained by flow matching with the released recipe. Next to it we train a vision-only π0.5 on the same demonstrations, and we combine the two velocity predictions as \(v = v_{\text{vision}} + w\,(v_{\text{touch}} - v_{\text{vision}})\), where \(w = 1\) gives back the policy with touch and \(w > 1\) extrapolates beyond it. The combination either runs at test time or is distilled into a vision-only student, which then needs no tactile sensor. Every policy trains on the released Grasp Chip demonstrations for 10k steps with 64 samples per step. The metric is closed-loop success in the OpenViTac simulator, judged by the benchmark's own task check. The code is a [fork of OpenViTac](https://github.com/legallchaperone/TacGuide), and the record links the commit each run started from.
+The baseline is OpenVTLA, the policy released with the [OpenViTac](https://github.com/FVL-Repo/OpenViTac) benchmark: π0.5 with tactile tokens from AnyTouch 2 placed before its visual tokens, trained by flow matching with the released recipe. Next to it we train a vision-only π0.5 on the same demonstrations, and we combine the two velocity predictions as \(v = v_{\text{vision}} + w\,(v_{\text{touch}} - v_{\text{vision}})\), where \(w = 1\) gives back the policy with touch and \(w > 1\) extrapolates beyond it. The combination either runs at test time or is distilled into a vision-only student, which then needs no tactile sensor. Every policy trains on the released demonstrations of Grasp Chip, a task in which the robot picks up a fragile potato chip and sets it on a tray, for 10k steps with 64 samples per step. The metric is closed-loop success in the OpenViTac simulator, judged by the benchmark's own task check. The code is a [fork of OpenViTac](https://github.com/legallchaperone/TacGuide), and the record links the commit each run started from.
 
 <details>
 <summary>Details</summary>
@@ -27,20 +27,17 @@ Almost never: the policy with touch completes a single episode, and the vision-o
 
 {{figure: success}}
 
+Grasp Chip may be unable to show an effect of tactile guidance at all. An [open issue](https://github.com/FVL-Repo/OpenViTac/issues/5) on the benchmark reports that every learned policy its authors tried scores 0 of 50 on this task, and attributes this to two tolerances in the success check that the scripted expert never approaches.
+
+<!-- (owner, 2026-11-25: this remark changes how the page is read, so it stays in the main text, not in a fold) -->
+
 The training loss gives no sign of the failure. Both policies trained on demonstrations converge smoothly.
 
 {{figure: loss}}
 
-<details>
-<summary>Details</summary>
-
-An [open issue](https://github.com/FVL-Repo/OpenViTac/issues/5) on the benchmark reports that every learned policy its authors tried scores 0 of 50 on this task. They attribute this to two tolerances in the success check that the scripted expert never approaches.
-
-</details>
-
 ### Where do the failed grasps go wrong? {#miss testing}
 
-We measure how far from the chip centre the gripper first comes down.
+We measure how far from the centre of the chip the gripper first comes down. This distance does not separate success from failure: the one successful episode lands farther from the centre than the failed episodes of the same policy do on average.
 
 {{figure: miss}}
 

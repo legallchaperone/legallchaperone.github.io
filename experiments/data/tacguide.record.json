@@ -77,6 +77,24 @@
     },
     {
       "setup": {
+        "en": "Policy with touch, continued",
+        "zh": "带触觉的策略，继续训练"
+      },
+      "task": "Grasp Chip",
+      "inputs": "vision + touch",
+      "steps": "10k → 20k",
+      "gpus": 1,
+      "hours": 0.2,
+      "start": "2026-11-24T01:53+0000",
+      "code": "https://github.com/legallchaperone/TacGuide/tree/6d2bb167e95b77de8b48405b4487386a3c5d1615",
+      "figs": [
+        "loss-20k",
+        "success-20k"
+      ],
+      "state": "Running"
+    },
+    {
+      "setup": {
         "en": "Vision-only policy, continued",
         "zh": "纯视觉策略，继续训练"
       },
@@ -84,7 +102,7 @@
       "inputs": "vision",
       "steps": "10k → 20k",
       "gpus": 1,
-      "hours": 21.2,
+      "hours": 21.7,
       "start": "2026-11-24T03:48+0000",
       "code": "https://github.com/legallchaperone/TacGuide/tree/6d2bb167e95b77de8b48405b4487386a3c5d1615",
       "figs": [
@@ -102,7 +120,7 @@
       "inputs": "vision + touch",
       "steps": "0 → 20k",
       "gpus": 1,
-      "hours": 18.5,
+      "hours": 19.0,
       "start": "2026-11-25T03:51+0000",
       "code": "https://github.com/legallchaperone/TacGuide/tree/6d2bb167e95b77de8b48405b4487386a3c5d1615",
       "figs": [
@@ -119,7 +137,7 @@
       "inputs": "vision",
       "steps": "0 → 20k",
       "gpus": 1,
-      "hours": 18.5,
+      "hours": 19.0,
       "start": "2026-11-25T03:53+0000",
       "code": "https://github.com/legallchaperone/TacGuide/tree/6d2bb167e95b77de8b48405b4487386a3c5d1615",
       "figs": [
@@ -143,8 +161,8 @@
   ],
   "cost": {
     "main": {
-      "gpu_hours": 129.3,
-      "jobs": 9
+      "gpu_hours": 131.1,
+      "jobs": 10
     },
     "other": {
       "gpu_hours": 6.8,

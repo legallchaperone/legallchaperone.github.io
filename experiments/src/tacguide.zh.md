@@ -2,7 +2,7 @@
 
 ## 设置
 
-基线是随 [OpenViTac](https://github.com/FVL-Repo/OpenViTac) benchmark 发布的策略 OpenVTLA：在 π0.5 的视觉 token 之前加入 AnyTouch 2 提取的触觉 token，按官方配方用 flow matching 训练。我们在同一批演示上再训练一个纯视觉的 π0.5，并把两者预测的速度组合为 \(v = v_{\text{vision}} + w\,(v_{\text{touch}} - v_{\text{vision}})\)，其中 \(w = 1\) 就是带触觉的策略，\(w > 1\) 则向外推。这个组合可以在测试时直接使用，也可以蒸馏进一个纯视觉学生，学生不再需要触觉传感器。所有策略都在官方发布的 Grasp Chip 演示上训练 1 万步，每步 64 个样本。指标是 OpenViTac 仿真器中的闭环成功率，由 benchmark 自带的任务判定给出。代码是 [OpenViTac 的一个 fork](https://github.com/legallchaperone/TacGuide)，实验记录里给出了每个 run 开始时所用的 commit。
+基线是随 [OpenViTac](https://github.com/FVL-Repo/OpenViTac) benchmark 发布的策略 OpenVTLA：在 π0.5 的视觉 token 之前加入 AnyTouch 2 提取的触觉 token，按官方配方用 flow matching 训练。我们在同一批演示上再训练一个纯视觉的 π0.5，并把两者预测的速度组合为 \(v = v_{\text{vision}} + w\,(v_{\text{touch}} - v_{\text{vision}})\)，其中 \(w = 1\) 就是带触觉的策略，\(w > 1\) 则向外推。这个组合可以在测试时直接使用，也可以蒸馏进一个纯视觉学生，学生不再需要触觉传感器。所有策略都在官方发布的 Grasp Chip 演示上训练 1 万步（这个任务要求机器人夹起一片易碎的薯片并放到托盘上），每步 64 个样本。指标是 OpenViTac 仿真器中的闭环成功率，由 benchmark 自带的任务判定给出。代码是 [OpenViTac 的一个 fork](https://github.com/legallchaperone/TacGuide)，实验记录里给出了每个 run 开始时所用的 commit。
 
 <details>
 <summary>详细说明</summary>
@@ -27,20 +27,17 @@
 
 {{figure: success}}
 
+Grasp Chip 可能根本测不出触觉引导的效果。benchmark 仓库里有一个[未关闭的 issue](https://github.com/FVL-Repo/OpenViTac/issues/5)，报告其作者试过的所有学习策略在这个任务上都是 50 次里 0 次成功，并认为原因是成功判定中的两个容差过严，而脚本专家从不会接近这两个容差。
+
+<!-- (owner, 2026-11-25: this remark changes how the page is read, so it stays in the main text, not in a fold) -->
+
 训练损失看不出这种失败。两个用演示训练的策略都平稳收敛。
 
 {{figure: loss}}
 
-<details>
-<summary>详细说明</summary>
-
-benchmark 仓库里有一个[未关闭的 issue](https://github.com/FVL-Repo/OpenViTac/issues/5)，报告其作者试过的所有学习策略在这个任务上都是 50 次里 0 次成功。他们认为原因是成功判定中的两个容差过严，而脚本专家从不会接近这两个容差。
-
-</details>
-
 ### 失败的抓取错在哪里？ {#miss testing}
 
-我们测量夹爪第一次落下时离芯片中心有多远。
+我们测量夹爪第一次落下时离薯片中心有多远。这个距离并不能区分成败：唯一成功的那个 episode，落点比同一策略失败 episode 的平均落点离中心更远。
 
 {{figure: miss}}
 
@@ -57,7 +54,7 @@ benchmark 仓库里有一个[未关闭的 issue](https://github.com/FVL-Repo/Ope
 
 </details>
 
-### 训练到 2 万步能让夹爪落到芯片上吗？ {#longer testing}
+### 训练到 2 万步能让夹爪落到薯片上吗？ {#longer testing}
 
 OpenViTac 论文训练 2 万步，而发布的代码默认 1 万步。
 

@@ -3,46 +3,57 @@
     "kind": "bar",
     "status": "",
     "title": {
-      "en": "Successful Grasp Chip episodes after 10k training steps",
-      "zh": "训练 1 万步后成功的 Grasp Chip episode 数"
+      "en": "Grasp Chip episodes run and completed after 10k training steps",
+      "zh": "训练 1 万步后运行和完成的 Grasp Chip episode 数"
     },
     "caption": {
-      "en": "Number of closed-loop episodes each policy completes, out of 19 in total, on new scenes and on scenes from the training demonstrations.",
-      "zh": "每个策略在闭环评测中完成的 episode 数，共 19 个，分为新场景和训练演示中出现过的场景。"
+      "en": "Closed-loop episodes each policy ran and the number it completed, on new scenes and on training scenes. 1 of 19 episodes succeed.",
+      "zh": "每个策略在新场景和训练场景上运行的闭环 episode 数，以及其中完成的个数。19 个 episode 中有 1 个成功。"
     },
     "more": {
-      "en": "Episodes run per policy: with touch: 4 new and 3 training; vision only: 5 new and 4 training; distilled student: 1 new and 2 training. A training scene is one whose demonstration is in the training set. 3 more episodes were run for diagnosis under other execution settings and are left out; 3 of them fail.",
-      "zh": "每个策略运行的 episode 数：带触觉：4 个新场景、3 个训练场景；纯视觉：5 个新场景、4 个训练场景；蒸馏学生：1 个新场景、2 个训练场景。训练场景指其演示在训练集中的场景。另有 3 个 episode 是在其他执行设置下为诊断而运行的，未计入；其中 3 个失败。"
+      "en": "A training scene uses a seed from the range that the demonstrations were collected with. The student is the vision-only student distilled from the policy with touch. 3 more episodes were run for diagnosis under other execution settings and are left out; 3 of them fail.",
+      "zh": "训练场景使用的种子落在演示采集的范围之内。学生指从带触觉策略蒸馏出的纯视觉学生。另有 3 个 episode 是在其他执行设置下为诊断而运行的，未计入；其中 3 个失败。"
     },
     "x": {
       "categories": [
         {
-          "en": "With touch",
-          "zh": "带触觉"
+          "en": "Touch, new",
+          "zh": "触觉，新场景"
         },
         {
-          "en": "Vision only",
-          "zh": "纯视觉"
+          "en": "Touch, training",
+          "zh": "触觉，训练场景"
         },
         {
-          "en": "Distilled student",
-          "zh": "蒸馏学生"
+          "en": "Vision, new",
+          "zh": "视觉，新场景"
+        },
+        {
+          "en": "Vision, training",
+          "zh": "视觉，训练场景"
+        },
+        {
+          "en": "Student, new",
+          "zh": "学生，新场景"
+        },
+        {
+          "en": "Student, training",
+          "zh": "学生，训练场景"
         }
       ]
     },
     "y": {
       "label": {
-        "en": "Successful episodes",
-        "zh": "成功的 episode 数"
+        "en": "Episodes",
+        "zh": "episode 数"
       },
-      "min": 0,
-      "max": 5
+      "min": 0
     },
     "series": [
       {
         "name": {
-          "en": "New scenes",
-          "zh": "新场景"
+          "en": "Completed",
+          "zh": "完成"
         },
         "color": "s1",
         "points": [
@@ -57,27 +68,51 @@
           [
             2,
             0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            5,
+            0
           ]
         ]
       },
       {
         "name": {
-          "en": "Training scenes",
-          "zh": "训练场景"
+          "en": "Run",
+          "zh": "运行"
         },
         "color": "ref",
         "points": [
           [
             0,
-            0
+            4
           ],
           [
             1,
-            0
+            3
           ],
           [
             2,
-            0
+            5
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            5,
+            2
           ]
         ]
       }
@@ -91,12 +126,12 @@
       "zh": "第一次下降的落点"
     },
     "caption": {
-      "en": "Mean horizontal distance between the gripper and the chip centre when the gripper first reaches grasp height, over the episodes of each policy.",
-      "zh": "夹爪第一次到达抓取高度时与芯片中心的水平距离，对每个策略的 episode 取平均。"
+      "en": "Mean horizontal distance between the gripper and the centre of the chip when the gripper first reaches grasp height. The one successful episode lands 8.9 mm away, farther than the 5.3 mm of the same policy's failed episodes.",
+      "zh": "夹爪第一次到达抓取高度时与薯片中心的平均水平距离。唯一成功的 episode 落点偏了 8.9 mm，大于同一策略失败 episode 的平均 5.3 mm。"
     },
     "more": {
-      "en": "Measured from the recorded joint angles with the arm's forward kinematics, at the first policy query where the gripper stops descending. The scripted expert that produced the demonstrations descends on the chip centre. The one successful episode lands 8.9 mm from the centre.",
-      "zh": "由记录的关节角经机械臂正运动学算出，取夹爪第一次停止下降时的那次策略查询。生成演示的脚本专家正对芯片中心下降。唯一成功的那个 episode 落点距中心 8.9 mm。"
+      "en": "Measured from the recorded joint angles with the arm's forward kinematics, at the first policy query where the gripper stops descending. The scripted expert that produced the demonstrations descends on the centre of the chip.",
+      "zh": "由记录的关节角经机械臂正运动学算出，取夹爪第一次停止下降时的那次策略查询。生成演示的脚本专家正对薯片中心下降。"
     },
     "x": {
       "categories": [
@@ -117,7 +152,7 @@
     "y": {
       "label": {
         "en": "Distance from the chip centre (mm)",
-        "zh": "到芯片中心的距离（mm）"
+        "zh": "到薯片中心的距离（mm）"
       },
       "min": 0
     },
@@ -174,8 +209,8 @@
       "zh": "Grasp Chip 上的训练损失"
     },
     "caption": {
-      "en": "Flow-matching loss of the two policies trained on demonstrations over their 10k steps, as a mean over 100 steps.",
-      "zh": "两个用演示训练的策略在 1 万步内的 flow-matching 损失，每 100 步取平均。"
+      "en": "Flow-matching loss of the two policies trained on demonstrations over their first 10k steps, as a mean over 100 steps.",
+      "zh": "两个用演示训练的策略在前 1 万步内的 flow-matching 损失，每 100 步取平均。"
     },
     "more": {
       "en": "The distilled student regresses the output of the policy with touch, a different loss, so it is not drawn here.",
@@ -1011,12 +1046,12 @@
     "kind": "line",
     "status": "Running",
     "title": {
-      "en": "Training loss of the vision-only policy up to 20k steps",
-      "zh": "纯视觉策略到 2 万步的训练损失"
+      "en": "Training loss up to 20k steps",
+      "zh": "到 2 万步的训练损失"
     },
     "caption": {
-      "en": "Flow-matching loss of the vision-only policy from the start of training through its continuation, as a mean over 100 steps.",
-      "zh": "纯视觉策略从训练开始到继续训练阶段的 flow-matching 损失，每 100 步取平均。"
+      "en": "Flow-matching loss of the two policies from the start of training through their continuation, as a mean over 100 steps.",
+      "zh": "两个策略从训练开始到继续训练阶段的 flow-matching 损失，每 100 步取平均。"
     },
     "x": {
       "label": {
@@ -1034,6 +1069,415 @@
       "scale": "log"
     },
     "series": [
+      {
+        "name": {
+          "en": "With touch",
+          "zh": "带触觉"
+        },
+        "color": "s1",
+        "points": [
+          [
+            100,
+            0.234
+          ],
+          [
+            200,
+            0.121
+          ],
+          [
+            300,
+            0.0568
+          ],
+          [
+            400,
+            0.0352
+          ],
+          [
+            500,
+            0.0255
+          ],
+          [
+            600,
+            0.0172
+          ],
+          [
+            700,
+            0.013
+          ],
+          [
+            800,
+            0.0103
+          ],
+          [
+            900,
+            0.00844
+          ],
+          [
+            1000,
+            0.00761
+          ],
+          [
+            1100,
+            0.00656
+          ],
+          [
+            1200,
+            0.00588
+          ],
+          [
+            1300,
+            0.00522
+          ],
+          [
+            1400,
+            0.00463
+          ],
+          [
+            1500,
+            0.00434
+          ],
+          [
+            1600,
+            0.00415
+          ],
+          [
+            1700,
+            0.00375
+          ],
+          [
+            1800,
+            0.00351
+          ],
+          [
+            1900,
+            0.00331
+          ],
+          [
+            2000,
+            0.00305
+          ],
+          [
+            2100,
+            0.00291
+          ],
+          [
+            2200,
+            0.00281
+          ],
+          [
+            2300,
+            0.00269
+          ],
+          [
+            2400,
+            0.00259
+          ],
+          [
+            2500,
+            0.00257
+          ],
+          [
+            2600,
+            0.00249
+          ],
+          [
+            2700,
+            0.0023
+          ],
+          [
+            2800,
+            0.00221
+          ],
+          [
+            2900,
+            0.00211
+          ],
+          [
+            3000,
+            0.00215
+          ],
+          [
+            3100,
+            0.00199
+          ],
+          [
+            3200,
+            0.00201
+          ],
+          [
+            3300,
+            0.00194
+          ],
+          [
+            3400,
+            0.00195
+          ],
+          [
+            3500,
+            0.00172
+          ],
+          [
+            3600,
+            0.00183
+          ],
+          [
+            3700,
+            0.00185
+          ],
+          [
+            3800,
+            0.0017
+          ],
+          [
+            3900,
+            0.00164
+          ],
+          [
+            4000,
+            0.00162
+          ],
+          [
+            4100,
+            0.00161
+          ],
+          [
+            4200,
+            0.00159
+          ],
+          [
+            4300,
+            0.00153
+          ],
+          [
+            4400,
+            0.00156
+          ],
+          [
+            4500,
+            0.00155
+          ],
+          [
+            4600,
+            0.00155
+          ],
+          [
+            4700,
+            0.00147
+          ],
+          [
+            4800,
+            0.00151
+          ],
+          [
+            4900,
+            0.00144
+          ],
+          [
+            5000,
+            0.00139
+          ],
+          [
+            5100,
+            0.00145
+          ],
+          [
+            5200,
+            0.00142
+          ],
+          [
+            5300,
+            0.00132
+          ],
+          [
+            5400,
+            0.0013
+          ],
+          [
+            5500,
+            0.00126
+          ],
+          [
+            5600,
+            0.00117
+          ],
+          [
+            5700,
+            0.00119
+          ],
+          [
+            5800,
+            0.0012
+          ],
+          [
+            5900,
+            0.00121
+          ],
+          [
+            6000,
+            0.00113
+          ],
+          [
+            6100,
+            0.00102
+          ],
+          [
+            6200,
+            0.00107
+          ],
+          [
+            6300,
+            0.000988
+          ],
+          [
+            6400,
+            0.001
+          ],
+          [
+            6500,
+            0.00105
+          ],
+          [
+            6600,
+            0.001
+          ],
+          [
+            6700,
+            0.001
+          ],
+          [
+            6800,
+            0.00108
+          ],
+          [
+            6900,
+            0.000851
+          ],
+          [
+            7000,
+            0.000978
+          ],
+          [
+            7100,
+            0.000955
+          ],
+          [
+            7200,
+            0.00096
+          ],
+          [
+            7300,
+            0.000969
+          ],
+          [
+            7400,
+            0.000846
+          ],
+          [
+            7500,
+            0.000906
+          ],
+          [
+            7600,
+            0.00082
+          ],
+          [
+            7700,
+            0.000841
+          ],
+          [
+            7800,
+            0.000877
+          ],
+          [
+            7900,
+            0.000844
+          ],
+          [
+            8000,
+            0.000907
+          ],
+          [
+            8100,
+            0.000827
+          ],
+          [
+            8200,
+            0.000815
+          ],
+          [
+            8300,
+            0.000765
+          ],
+          [
+            8400,
+            0.000806
+          ],
+          [
+            8500,
+            0.000746
+          ],
+          [
+            8600,
+            0.000814
+          ],
+          [
+            8700,
+            0.000685
+          ],
+          [
+            8800,
+            0.000787
+          ],
+          [
+            8900,
+            0.00073
+          ],
+          [
+            9000,
+            0.000717
+          ],
+          [
+            9100,
+            0.000706
+          ],
+          [
+            9200,
+            0.000734
+          ],
+          [
+            9300,
+            0.000692
+          ],
+          [
+            9400,
+            0.000752
+          ],
+          [
+            9500,
+            0.000767
+          ],
+          [
+            9600,
+            0.000729
+          ],
+          [
+            9700,
+            0.000737
+          ],
+          [
+            9800,
+            0.000684
+          ],
+          [
+            9900,
+            0.000682
+          ],
+          [
+            10051,
+            0.000723
+          ]
+        ]
+      },
       {
         "name": {
           "en": "Vision only",
@@ -1816,6 +2260,18 @@
           [
             19451,
             0.000568
+          ],
+          [
+            19551,
+            0.000466
+          ],
+          [
+            19651,
+            0.000502
+          ],
+          [
+            19751,
+            0.000573
           ]
         ]
       }
@@ -1829,8 +2285,8 @@
       "zh": "训练 1 万步与 2 万步后成功的 Grasp Chip episode 数"
     },
     "caption": {
-      "en": "Will show whether the vision-only policy completes more episodes after 20k training steps than after 10k.",
-      "zh": "将显示纯视觉策略训练 2 万步后完成的 episode 是否多于 1 万步时。"
+      "en": "Will show whether the two policies complete more episodes after 20k training steps than after 10k.",
+      "zh": "将显示两个策略训练 2 万步后完成的 episode 是否多于 1 万步时。"
     },
     "x": {
       "categories": [
@@ -1855,16 +2311,16 @@
     "series": [
       {
         "name": {
-          "en": "New scenes",
-          "zh": "新场景"
+          "en": "With touch",
+          "zh": "带触觉"
         },
         "color": "s1",
         "points": []
       },
       {
         "name": {
-          "en": "Training scenes",
-          "zh": "训练场景"
+          "en": "Vision only",
+          "zh": "纯视觉"
         },
         "color": "ref",
         "points": []

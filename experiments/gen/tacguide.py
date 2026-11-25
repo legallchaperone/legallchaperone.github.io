@@ -56,7 +56,8 @@ RUNS = [
         "key": "gc_A",
         "setup": {"en": "Policy with touch", "zh": "带触觉的策略"},
         "task": "Grasp Chip", "inputs": VT, "steps": "0 → 10k",
-        "logs": ["logs/train_gc_A.log"], "ckpt": "openvtla/gc/gc_A", "total": 10000, "code": "train",
+        "logs": ["logs/train_gc_A_to_*.log", "logs/train_gc_A.log"], "ckpt": "openvtla/gc/gc_A", "total": 10000,
+        "upto": 10000, "code": "train",
         "figs": ["success", "miss", "loss"],
     },
     {
@@ -73,6 +74,14 @@ RUNS = [
         "task": "Grasp Chip", "inputs": V, "steps": "0 → 10k",
         "logs": ["queue/logs/train_gc_C*.log"], "ckpt": "pi05/gc/gc_C", "total": 10000, "code": "distill",
         "figs": ["success", "miss"],
+    },
+    {
+        "key": "gc_A20",
+        "setup": {"en": "Policy with touch, continued", "zh": "带触觉的策略，继续训练"},
+        "task": "Grasp Chip", "inputs": VT, "steps": "10k → 20k",
+        "logs": ["logs/train_gc_A_to_*.log", "logs/train_gc_A.log"], "ckpt": "openvtla/gc/gc_A", "total": 20000,
+        "after": 10000, "code": "train",
+        "figs": ["loss-20k", "success-20k"],
     },
     {
         "key": "gc_B20",
@@ -113,6 +122,7 @@ POLICIES = [
     ("gc_B", {"en": "Vision only", "zh": "纯视觉"}),
     ("gc_C", {"en": "Distilled student", "zh": "蒸馏学生"}),
 ]
+SHORT = [("gc_A", {"en": "Touch", "zh": "触觉"}), ("gc_B", {"en": "Vision", "zh": "视觉"}), ("gc_C", {"en": "Student", "zh": "学生"})]
 SCENES = [
     ("new", {"en": "New scenes", "zh": "新场景"}, "s1"),
     ("train", {"en": "Training scenes", "zh": "训练场景"}, "ref"),
@@ -333,15 +343,13 @@ def build_figs(sections, logs, state_of):
     figs = {}
 
     # --- closed-loop success at 10k steps
-    count = {(p, s): [e["success"] for e in main if e["policy"] == p and e["scene"] == s] for p, _ in POLICIES for s, _, _ in SCENES}
-    series = []
-    for s, name, color in SCENES:
-        points = [[i, sum(count[(p, s)])] for i, (p, _) in enumerate(POLICIES) if count[(p, s)]]
-        series.append({"name": name, "color": color, "points": points})
-    ran_en = "; ".join(f"{label['en'].lower()}: {len(count[(p, 'new')])} new and {len(count[(p, 'train')])} training" for p, label in POLICIES)
-    ran_zh = "；".join(f"{label['zh']}：{len(count[(p, 'new')])} 个新场景、{len(count[(p, 'train')])} 个训练场景" for p, label in POLICIES)
-    more_en = f"Episodes run per policy: {ran_en}. A training scene is one whose demonstration is in the training set."
-    more_zh = f"每个策略运行的 episode 数：{ran_zh}。训练场景指其演示在训练集中的场景。"
+    # The groups ran different numbers of episodes, so each group shows its successes next to the episodes it ran
+    # (owner, 2026-11-25: the denominators must be visible in the figure).
+    groups = [(p, s, {"en": f"{pl['en']}, {'new' if s == 'new' else 'training'}", "zh": f"{pl['zh']}，{sl['zh']}"}) for p, pl in SHORT for s, sl, _ in SCENES]
+    count = {(p, s): [e["success"] for e in main if e["policy"] == p and e["scene"] == s] for p, s, _ in groups}
+    groups = [g for g in groups if count[(g[0], g[1])]]
+    more_en = "A training scene uses a seed from the range that the demonstrations were collected with. The student is the vision-only student distilled from the policy with touch."
+    more_zh = "训练场景使用的种子落在演示采集的范围之内。学生指从带触觉策略蒸馏出的纯视觉学生。"
     if left_out:
         fails = sum(not e["success"] for e in left_out)
         more_en += f" {len(left_out)} more episodes were run for diagnosis under other execution settings and are left out; {fails} of them fail."
@@ -349,15 +357,18 @@ def build_figs(sections, logs, state_of):
     figs["success"] = {
         "kind": "bar",
         "status": "",
-        "title": {"en": "Successful Grasp Chip episodes after 10k training steps", "zh": "训练 1 万步后成功的 Grasp Chip episode 数"},
+        "title": {"en": "Grasp Chip episodes run and completed after 10k training steps", "zh": "训练 1 万步后运行和完成的 Grasp Chip episode 数"},
         "caption": {
-            "en": f"Number of closed-loop episodes each policy completes, out of {len(main)} in total, on new scenes and on scenes from the training demonstrations.",
-            "zh": f"每个策略在闭环评测中完成的 episode 数，共 {len(main)} 个，分为新场景和训练演示中出现过的场景。",
+            "en": f"Closed-loop episodes each policy ran and the number it completed, on new scenes and on training scenes. {sum(e['success'] for e in main)} of {len(main)} episodes succeed.",
+            "zh": f"每个策略在新场景和训练场景上运行的闭环 episode 数，以及其中完成的个数。{len(main)} 个 episode 中有 {sum(e['success'] for e in main)} 个成功。",
         },
         "more": {"en": more_en, "zh": more_zh},
-        "x": {"categories": [label for _, label in POLICIES]},
-        "y": {"label": {"en": "Successful episodes", "zh": "成功的 episode 数"}, "min": 0, "max": max(4, max(len(v) for v in count.values()))},
-        "series": series,
+        "x": {"categories": [label for _, _, label in groups]},
+        "y": {"label": {"en": "Episodes", "zh": "episode 数"}, "min": 0},
+        "series": [
+            {"name": {"en": "Completed", "zh": "完成"}, "color": "s1", "points": [[i, sum(count[(p, s)])] for i, (p, s, _) in enumerate(groups)]},
+            {"name": {"en": "Run", "zh": "运行"}, "color": "ref", "points": [[i, len(count[(p, s)])] for i, (p, s, _) in enumerate(groups)]},
+        ],
     }
 
     # --- where the first descent lands
@@ -369,24 +380,31 @@ def build_figs(sections, logs, state_of):
             if d:
                 points.append([i, round(sum(d) / len(d), 1)])
         series.append({"name": name, "color": color, "points": points})
-    hit = [miss[e["name"]] for e in main if e["success"] and e["name"] in miss]
+    won = [e for e in main if e["success"] and e["name"] in miss]
     more = {
-        "en": "Measured from the recorded joint angles with the arm's forward kinematics, at the first policy query where the gripper stops descending. The scripted expert that produced the demonstrations descends on the chip centre."
-        + (f" The one successful episode lands {hit[0]:.1f} mm from the centre." if len(hit) == 1 else ""),
-        "zh": "由记录的关节角经机械臂正运动学算出，取夹爪第一次停止下降时的那次策略查询。生成演示的脚本专家正对芯片中心下降。"
-        + (f"唯一成功的那个 episode 落点距中心 {hit[0]:.1f} mm。" if len(hit) == 1 else ""),
+        "en": "Measured from the recorded joint angles with the arm's forward kinematics, at the first policy query where the gripper stops descending. The scripted expert that produced the demonstrations descends on the centre of the chip.",
+        "zh": "由记录的关节角经机械臂正运动学算出，取夹爪第一次停止下降时的那次策略查询。生成演示的脚本专家正对薯片中心下降。",
     }
+    compare = {"en": "", "zh": ""}
+    if len(won) == 1:  # say how the one success compares with the failures of the same policy
+        lost = [miss[e["name"]] for e in main if e["policy"] == won[0]["policy"] and not e["success"] and e["name"] in miss]
+        a, b = miss[won[0]["name"]], sum(lost) / len(lost)
+        word = ("farther than", "比") if a > b else ("closer than", "比")
+        compare = {
+            "en": f" The one successful episode lands {a:.1f} mm away, {word[0]} the {b:.1f} mm of the same policy's failed episodes.",
+            "zh": f"唯一成功的 episode 落点偏了 {a:.1f} mm，{'大于' if a > b else '小于'}同一策略失败 episode 的平均 {b:.1f} mm。",
+        }
     figs["miss"] = {
         "kind": "bar",
         "status": "",
         "title": {"en": "Where the first descent lands", "zh": "第一次下降的落点"},
         "caption": {
-            "en": "Mean horizontal distance between the gripper and the chip centre when the gripper first reaches grasp height, over the episodes of each policy.",
-            "zh": "夹爪第一次到达抓取高度时与芯片中心的水平距离，对每个策略的 episode 取平均。",
+            "en": "Mean horizontal distance between the gripper and the centre of the chip when the gripper first reaches grasp height." + compare["en"],
+            "zh": "夹爪第一次到达抓取高度时与薯片中心的平均水平距离。" + compare["zh"],
         },
         "more": more,
         "x": {"categories": [label for _, label in POLICIES]},
-        "y": {"label": {"en": "Distance from the chip centre (mm)", "zh": "到芯片中心的距离（mm）"}, "min": 0},
+        "y": {"label": {"en": "Distance from the chip centre (mm)", "zh": "到薯片中心的距离（mm）"}, "min": 0},
         "series": series,
     }
 
@@ -405,14 +423,14 @@ def build_figs(sections, logs, state_of):
 
     loss_y = {"label": {"en": "Loss", "zh": "损失"}, "scale": "log"}
     loss_x = {"label": {"en": "Training step", "zh": "训练步数"}}
-    vision = curve("gc_B20")  # the whole vision-only run, both rows
+    touch, vision = curve("gc_A20"), curve("gc_B20")  # the whole runs, both rows of each
     figs["loss"] = {
         "kind": "line",
         "status": "",
         "title": {"en": "Training loss on Grasp Chip", "zh": "Grasp Chip 上的训练损失"},
         "caption": {
-            "en": "Flow-matching loss of the two policies trained on demonstrations over their 10k steps, as a mean over 100 steps.",
-            "zh": "两个用演示训练的策略在 1 万步内的 flow-matching 损失，每 100 步取平均。",
+            "en": "Flow-matching loss of the two policies trained on demonstrations over their first 10k steps, as a mean over 100 steps.",
+            "zh": "两个用演示训练的策略在前 1 万步内的 flow-matching 损失，每 100 步取平均。",
         },
         "more": {
             "en": "The distilled student regresses the output of the policy with touch, a different loss, so it is not drawn here.",
@@ -421,34 +439,39 @@ def build_figs(sections, logs, state_of):
         "x": loss_x,
         "y": loss_y,
         "series": [
-            {"name": {"en": "With touch", "zh": "带触觉"}, "color": "s1", "points": curve("gc_A")},
+            {"name": {"en": "With touch", "zh": "带触觉"}, "color": "s1", "points": [p for p in touch if p[0] <= 10000]},
             {"name": {"en": "Vision only", "zh": "纯视觉"}, "color": "ref", "points": [p for p in vision if p[0] <= 10000]},
         ],
     }
+    longer = [state_of["gc_A20"], state_of["gc_B20"]]
+    longer = next((x for x in ("Running", "Queued", "Failed", "Planned") if x in longer), "")
     figs["loss-20k"] = {
         "kind": "line",
-        "status": state_of["gc_B20"],
-        "title": {"en": "Training loss of the vision-only policy up to 20k steps", "zh": "纯视觉策略到 2 万步的训练损失"},
+        "status": longer,
+        "title": {"en": "Training loss up to 20k steps", "zh": "到 2 万步的训练损失"},
         "caption": {
-            "en": "Flow-matching loss of the vision-only policy from the start of training through its continuation, as a mean over 100 steps.",
-            "zh": "纯视觉策略从训练开始到继续训练阶段的 flow-matching 损失，每 100 步取平均。",
+            "en": "Flow-matching loss of the two policies from the start of training through their continuation, as a mean over 100 steps.",
+            "zh": "两个策略从训练开始到继续训练阶段的 flow-matching 损失，每 100 步取平均。",
         },
         "x": dict(loss_x, min=0, max=20000),
         "y": loss_y,
-        "series": [{"name": {"en": "Vision only", "zh": "纯视觉"}, "color": "ref", "points": vision}],
+        "series": [
+            {"name": {"en": "With touch", "zh": "带触觉"}, "color": "s1", "points": touch},
+            {"name": {"en": "Vision only", "zh": "纯视觉"}, "color": "ref", "points": vision},
+        ],
     }
 
     # --- figures whose runs have not finished
     scene_series = [{"name": name, "color": color} for _, name, color in SCENES]
     figs["success-20k"] = placeholder(
-        state_of["gc_B20"] or "Planned",
+        longer or "Planned",
         {"en": "Successful Grasp Chip episodes after 10k and 20k training steps", "zh": "训练 1 万步与 2 万步后成功的 Grasp Chip episode 数"},
         {
-            "en": "Will show whether the vision-only policy completes more episodes after 20k training steps than after 10k.",
-            "zh": "将显示纯视觉策略训练 2 万步后完成的 episode 是否多于 1 万步时。",
+            "en": "Will show whether the two policies complete more episodes after 20k training steps than after 10k.",
+            "zh": "将显示两个策略训练 2 万步后完成的 episode 是否多于 1 万步时。",
         },
         [{"en": "10k steps", "zh": "1 万步"}, {"en": "20k steps", "zh": "2 万步"}],
-        scene_series,
+        [{"name": {"en": "With touch", "zh": "带触觉"}, "color": "s1"}, {"name": {"en": "Vision only", "zh": "纯视觉"}, "color": "ref"}],
     )
     gear = [state_of["ga_A"], state_of["ga_B"]]
     figs["success-gear"] = placeholder(
