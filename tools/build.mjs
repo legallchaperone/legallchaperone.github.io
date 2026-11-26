@@ -34,7 +34,7 @@ try {
     console.error(red("✖") + ` Out of date, run \`npm run build\`:\n  ${changed.join("\n  ")}`);
     process.exit(1);
   }
-  const what = `${counts.posts} notes, ${counts.experiments} experiments`;
+  const what = `${counts.posts} notes, ${counts.experiments} experiments${counts.unlisted ? `, ${counts.unlisted} unlisted ${counts.unlisted === 1 ? "draft" : "drafts"}` : ""}`;
   console.log(changed.length ? `✓ Built ${what}. Wrote:\n  ${changed.join("\n  ")}` : `✓ ${what}; everything is up to date.`);
 } catch (e) {
   console.error(red("✖") + " " + e.message);

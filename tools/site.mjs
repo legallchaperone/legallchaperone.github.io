@@ -126,7 +126,14 @@ async function loadCollection(key, { drafts }) {
     if (e.end !== undefined && e.end !== "now" && !ISO_DATE.test(e.end)) throw new Error(`${where}: "end" should be a date or "now"`);
     if (!e.file && !e.url) throw new Error(`${where}: needs "file" (a Markdown file in ${c.sources}/) or "url"`);
     // A template is never published, whatever its draft flag says (owner, 2026-11-25: nobody else may see it).
-    if ((e.draft || e.template) && !drafts) return;
+    if (e.template && !drafts) return;
+    // "draft": true keeps a page out of the build. "draft": "unlisted" builds an experiment's page and gives it a row
+    // on /experiments/, and nothing else points at it: not the home page, the top bar or the sitemap
+    // (owner, 2026-11-25: whoever opens /experiments/ sees the drafts).
+    // (agent, 2026-11-25: a draft is unlisted only when its entry says so, so a new draft never goes live by itself.)
+    if (![undefined, false, true, "unlisted"].includes(e.draft)) throw new Error(`${where}: "draft" should be true or "unlisted"`);
+    if (e.draft === "unlisted" && key !== "experiments") throw new Error(`${where}: "draft": "unlisted" is for experiments only`);
+    if (e.draft === true && !drafts) return;
 
     const entry = { ...e, kind: key, order: i };
     if (e.file) {
@@ -293,9 +300,12 @@ function footerHtml() {
 
 // ---------- lists ----------
 
+/** A draft says so wherever it shows: in the preview, and on /experiments/ when it is unlisted. */
+const draftTag = (e) => (e.draft && !e.template ? '<span class="tag">Draft</span>' : "");
+const NOINDEX = '<meta name="robots" content="noindex" />';
 const metaHtml = (e) => {
   const tag = e.template ? "Template" : e.tag;
-  return `<div class="post-meta"><span>${dateText(e)}</span>${tag ? `<span class="tag">${escapeHtml(tag)}</span>` : ""}</div>`;
+  return `<div class="post-meta"><span>${dateText(e)}</span>${tag ? `<span class="tag">${escapeHtml(tag)}</span>` : ""}${draftTag(e)}</div>`;
 };
 const linkAttrs = (href) => (/^https?:/.test(href) ? ` href="${escapeHtml(href)}" target="_blank" rel="noopener"` : ` href="${escapeHtml(href)}"`);
 const thumbHtml = (e) =>
@@ -409,7 +419,7 @@ async function articlePage(entry, ctx) {
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="generator" content="${GENERATOR}" />
 <title>${title} | ${SITE.name}</title>
-<meta name="author" content="${SITE.name}" />${desc ? `\n<meta name="description" content="${desc}" />` : ""}
+<meta name="author" content="${SITE.name}" />${desc ? `\n<meta name="description" content="${desc}" />` : ""}${entry.draft ? `\n${NOINDEX}` : ""}
 <link rel="canonical" href="${canonical}" />
 <meta property="og:type" content="article" />
 <meta property="og:title" content="${title}" />${desc ? `\n<meta property="og:description" content="${desc}" />` : ""}
@@ -430,7 +440,7 @@ ${headerHtml(c.dir, ctx)}
 <div class="ar-page">
 <div class="ar-head" id="main" tabindex="-1">
 <div class="ar-crumb"><b><a href="/${c.dir}/">${tr(c.label, c.labelZh)}</a></b><span>›</span><span>${text(entry, "title")}</span></div>
-<div class="ar-eyebrow"><span>${dateText(entry)}</span>${tag ? `<span class="tag">${escapeHtml(tag)}</span>` : ""}${toggle}</div>
+<div class="ar-eyebrow"><span>${dateText(entry)}</span>${tag ? `<span class="tag">${escapeHtml(tag)}</span>` : ""}${draftTag(entry)}${toggle}</div>
 <h1>${text(entry, "title")}</h1>${standfirst}
 <div class="ar-authors"><span class="av"><img src="${SITE.avatar}" alt="" width="36" height="36" /></span><span>${tr(`By ${SITE.name}`, `作者 ${SITE.name}`)}</span></div>
 </div>
@@ -535,7 +545,10 @@ export async function buildSite({ drafts = false } = {}) {
   const blog = await loadCollection("blog", { drafts });
   // The template has a page in the preview, at /experiments/template/, but is in no list, menu or sitemap.
   const withTemplate = await loadCollection("experiments", { drafts });
-  const experiments = withTemplate.filter((e) => !e.template);
+  // An unlisted draft has a page and a row on /experiments/. Everything else (top bar, home page, sitemap) is drawn
+  // from the published experiments alone. The preview treats every draft as published, as it always has.
+  const listed = withTemplate.filter((e) => !e.template);
+  const experiments = drafts ? listed : listed.filter((e) => !e.draft);
   const katexVersion = JSON.parse(await read("writeup/node_modules/katex/package.json")).version;
   const ctx = { blog, experiments, katexVersion, byFile: new Map(blog.filter((p) => p.file).map((p) => [p.file, p])) };
   const versions = {};
@@ -556,7 +569,9 @@ export async function buildSite({ drafts = false } = {}) {
       "home-posts": homePostsHtml(blog),
       "home-experiments": homeExperimentsHtml(experiments),
       "post-list": postListHtml(blog),
-      "experiment-list": experimentListHtml(experiments),
+      "experiment-list": experimentListHtml(listed),
+      // while /experiments/ lists drafts only, search engines are told to leave it alone
+      "experiments-robots": listed.length && !experiments.length ? NOINDEX : "",
     };
     outputs.set(rel, stampAssets(fillRegions(page, regions, rel), versions));
   }
@@ -576,5 +591,5 @@ export async function buildSite({ drafts = false } = {}) {
     }
   }
 
-  return { outputs, stale, counts: { posts: blog.length, experiments: experiments.length } };
+  return { outputs, stale, counts: { posts: blog.length, experiments: experiments.length, unlisted: listed.length - experiments.length } };
 }

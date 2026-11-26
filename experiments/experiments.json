@@ -6,7 +6,7 @@
     "end": "now",
     "tag": "World models",
     "file": "loop360.md",
-    "draft": true
+    "draft": "unlisted"
   },
   {
     "title": "Tactile Guidance for Vision-Only Policies on OpenViTac",
@@ -15,7 +15,7 @@
     "end": "now",
     "tag": "Robot learning",
     "file": "tacguide.md",
-    "draft": true
+    "draft": "unlisted"
   },
   {
     "title": "Swift Targets in the ODE Initialization of Self Forcing",
@@ -24,7 +24,7 @@
     "end": "now",
     "tag": "Video generation",
     "file": "swift-ode-init.md",
-    "draft": true
+    "draft": "unlisted"
   },
   {
     "title": "Experiment Template",

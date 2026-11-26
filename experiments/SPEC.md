@@ -164,4 +164,8 @@ Not automated, on purpose. Rewriting history and force-pushing to a public repos
 
 ## Drafts
 
-`"draft": true` in the manifest keeps a page out of the built site; `npm run dev` still shows it. This repository is public, so a draft's text and data are visible on GitHub even though the site does not serve them. Keep results that must stay private in the research repository until they can be published.
+`"draft": true` in the manifest keeps a page out of the built site; `npm run dev` still shows it.
+
+`"draft": "unlisted"` shares a draft with the people who are given the address (owner, 2026-11-25: whoever opens `/experiments/` sees the drafts). The page is built at its final address, `/experiments/<slug>/`, and has a row on `/experiments/`; both carry a Draft tag. Nothing else points at it: not the home page, the top bar or the sitemap, and search engines are asked to stay away. This is not access control: anyone who types the address gets the page. A draft is unlisted only when its entry says so (agent, 2026-11-25), and once one experiment is published the top bar links `/experiments/`, drafts included.
+
+This repository is public, so a draft's text and data are visible on GitHub even though the site does not serve them. Keep results that must stay private in the research repository until they can be published.

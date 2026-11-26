@@ -133,6 +133,8 @@ In short, for an experiment with the slug `my-experiment`:
 
 The build draws the charts and writes the Questions map, the runs behind each question, the Experiment record and the Citation from those files. In the browser the charts are redrawn from the same data, with values on hover. The deploy runs the build as well, so a push of fresh data files from the experiment's machine updates the page without a local build. The Experiments link in the top bar and the Experiments section on the home page appear by themselves once one experiment is published (not a draft).
 
+To show a draft to a few people, set `"draft": "unlisted"`: the page is built and listed on `/experiments/` with a Draft tag, and nothing else links to it. See "Drafts" in [experiments/SPEC.md](../experiments/SPEC.md).
+
 ## 5. Edit the home page
 
 `index.html` is written by hand: change the bio, the papers and the CV lists directly. Only the parts between `<!-- gen:name -->` and `<!-- /gen:name -->` (top bar, footer, Blog and Experiments lists) are rewritten by `npm run build`; edit those in `tools/site.mjs`.
