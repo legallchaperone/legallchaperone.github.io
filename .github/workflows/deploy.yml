@@ -15,11 +15,10 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
+# Two jobs on purpose: deployed from the job that had just uploaded it, the artifact was not always found, and a
+# push then went live only after a manual run (agent, 2026-11-25). The deploy job starts after the upload has settled.
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
@@ -55,10 +54,17 @@ jobs:
           if [ -d writeup/site ]; then cp -r writeup/site _staging/writeup; fi
 
       - name: Upload artifact 📦
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: _staging
 
+  deploy:
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
       - name: Deploy to GitHub Pages 🚀
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
